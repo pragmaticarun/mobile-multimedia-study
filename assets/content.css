@@ -1,0 +1,39 @@
+/* Shared typography for study content (site + PDF) */
+:root {
+  --ink: #1f2937; --muted: #6b7280; --line: #e5e7eb; --brand: #1f5fa8; --brand-2: #e07b16;
+  --bg-soft: #f6f8fb; --code-bg: #f6f8fa; --note: #1f5fa8; --tip: #2e8b57; --warn: #c0392b; --example: #7b4fa8;
+}
+.content { color: var(--ink); line-height: 1.62; }
+.content h2 { font-size: 1.55em; margin: 1.6em 0 0.5em; padding-bottom: 0.25em; border-bottom: 2px solid var(--brand); color: #0f2f57; }
+.content h3 { font-size: 1.18em; margin: 1.35em 0 0.4em; color: #12355e; }
+.content h4 { font-size: 1.02em; margin: 1.1em 0 0.3em; }
+.content p { margin: 0.55em 0; }
+.content a { color: var(--brand); }
+.content ul, .content ol { padding-left: 1.4em; margin: 0.5em 0; }
+.content li { margin: 0.2em 0; }
+.content code { font-family: "IBM Plex Mono", "Fira Code", "DejaVu Sans Mono", ui-monospace, Menlo, monospace; font-size: 0.86em;
+  background: var(--code-bg); border: 1px solid #eceff3; border-radius: 4px; padding: 0.05em 0.3em; }
+.content pre { background: var(--code-bg); border: 1px solid #e3e8ef; border-left: 4px solid var(--brand); border-radius: 6px;
+  padding: 0.75em 0.9em; overflow-x: auto; line-height: 1.42; font-size: 0.84em; }
+.content pre code { background: none; border: 0; padding: 0; font-size: 1em; white-space: pre; }
+.content .highlight { margin: 0.8em 0; }
+.content table { border-collapse: collapse; width: 100%; margin: 0.9em 0; font-size: 0.9em; }
+.content th, .content td { border: 1px solid var(--line); padding: 0.4em 0.55em; vertical-align: top; text-align: left; }
+.content thead th { background: #eaf1fa; color: #0f2f57; }
+.content tbody tr:nth-child(even) td { background: #fafbfc; }
+.content figure { margin: 1.1em 0; text-align: center; }
+.content figure img { max-width: 100%; height: auto; }
+.content figcaption { font-size: 0.86em; color: var(--muted); margin-top: 0.35em; }
+.content figcaption b { color: var(--ink); }
+.content p.eq { text-align: center; font-family: inherit; font-size: 1.04em; background: var(--bg-soft);
+  border-radius: 6px; padding: 0.55em 0.8em; margin: 0.9em 0; }
+.content .admonition { border: 1px solid var(--line); border-left: 5px solid var(--note); border-radius: 6px; background: #f7faff;
+  padding: 0.55em 0.95em; margin: 1em 0; }
+.content .admonition-title { font-weight: 700; margin: 0.15em 0 0.35em; color: var(--note); }
+.content .admonition.tip { border-left-color: var(--tip); background: #f4fbf7; } .content .admonition.tip .admonition-title { color: var(--tip); }
+.content .admonition.warning { border-left-color: var(--warn); background: #fdf5f4; } .content .admonition.warning .admonition-title { color: var(--warn); }
+.content .admonition.example { border-left-color: var(--example); background: #f8f5fc; } .content .admonition.example .admonition-title { color: var(--example); }
+.content .admonition pre { background: #fff; }
+.content .answer-key ol > li { margin: 0.45em 0; }
+.content sub, .content sup { line-height: 0; }
+.content .highlight { background: none; }

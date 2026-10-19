@@ -1,0 +1,663 @@
+<!doctype html><html lang="en-IN"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Week 3: Digital Video Basics — Mobile Multimedia Study</title>
+<link rel="stylesheet" href="../assets/pygments.css"><link rel="stylesheet" href="../assets/content.css">
+<link rel="stylesheet" href="../assets/site.css">
+<script defer src="../assets/app.js"></script></head><body><div class="topbar"><div class="inner">
+<a class="brand" href="../index.html">Mobile Multimedia Study<small>52-week roadmap</small></a>
+<nav><a href="week-01.html">W1</a><a href="week-02.html">W2</a><a href="week-03.html">W3</a><a href="week-04.html">W4</a><a href="../index.html">Roadmap</a></nav></div><div class="readbar"></div></div>
+<section class="wk-hero"><div class="inner">
+  <div class="kicker">Week 3 of 52 · Phase 1 — Foundations (weeks 1–5)</div>
+  <h1>Digital Video Basics</h1>
+  <div class="meta"><span><span class="badge b-sent">SENT</span></span><span>Tutorial § 1.3 Digital Video Basics</span>
+    <span>Sent: 2026-10-19</span><span>Study time: 8–10 hours</span></div>
+  <p class="summary">Video as a timed sequence of images: frame rates as rational numbers (and why 29.97 ≠ 30), variable frame rate on phones, resolution and aspect ratio (SAR/DAR, rotation), progressive vs interlaced and pulldown, raw data-rate maths, PTS/DTS and timebases across MP4, MPEG-TS, MediaCodec and CMTime, and colour metadata (primaries, transfer, matrix, range).</p>
+  <div class="actions">
+    <a class="btn" href="../pdf/Week03_Digital_Video_Basics.pdf" download>⬇ Download PDF · 16 pages</a>
+    <button class="btn secondary" id="mark-done" type="button">Mark week as completed</button>
+    <span id="items-progress" style="color:#4b5563;font-size:.92rem"></span>
+  </div>
+</div></section>
+<div class="layout">
+  <aside class="toc"><h4>On this page</h4><ol><li class="l2"><a href="#how-to-use-this-guide">How to use this guide</a></li><li class="l2"><a href="#1-frames-and-frame-rates">1. Frames and frame rates</a></li><li class="l3"><a href="#11-motion-from-stills">1.1 Motion from stills</a></li><li class="l3"><a href="#12-why-1001">1.2 Why 1001?</a></li><li class="l3"><a href="#13-the-cost-of-approximating">1.3 The cost of approximating</a></li><li class="l3"><a href="#14-drop-frame-timecode">1.4 Drop-frame timecode</a></li><li class="l3"><a href="#15-constant-vs-variable-frame-rate">1.5 Constant vs variable frame rate</a></li><li class="l2"><a href="#2-resolution-aspect-ratio-and-rotation">2. Resolution, aspect ratio and rotation</a></li><li class="l3"><a href="#21-common-resolutions">2.1 Common resolutions</a></li><li class="l3"><a href="#22-sar-dar-and-par">2.2 SAR, DAR and PAR</a></li><li class="l3"><a href="#23-rotation-metadata">2.3 Rotation metadata</a></li><li class="l2"><a href="#3-scanning-progressive-interlaced-and-pulldown">3. Scanning: progressive, interlaced and pulldown</a></li><li class="l3"><a href="#31-progressive-and-interlaced">3.1 Progressive and interlaced</a></li><li class="l3"><a href="#32-23-pulldown">3.2 2:3 pulldown</a></li><li class="l2"><a href="#4-raw-data-rates">4. Raw data rates</a></li><li class="l3"><a href="#41-the-formula">4.1 The formula</a></li><li class="l3"><a href="#42-memory-bandwidth-not-just-storage">4.2 Memory bandwidth, not just storage</a></li><li class="l2"><a href="#5-timestamps-and-timebases">5. Timestamps and timebases</a></li><li class="l3"><a href="#51-integers-in-a-timebase">5.1 Integers in a timebase</a></li><li class="l3"><a href="#52-converting-between-timebases">5.2 Converting between timebases</a></li><li class="l3"><a href="#53-pts-and-dts">5.3 PTS and DTS</a></li><li class="l3"><a href="#54-timing-on-android-and-ios">5.4 Timing on Android and iOS</a></li><li class="l2"><a href="#6-colour-metadata">6. Colour metadata</a></li><li class="l3"><a href="#61-the-four-fields">6.1 The four fields</a></li><li class="l3"><a href="#62-on-android-and-ios">6.2 On Android and iOS</a></li><li class="l3"><a href="#63-mismatch-symptoms">6.3 Mismatch symptoms</a></li><li class="l2"><a href="#7-hands-on-exercises">7. Hands-on exercises</a></li><li class="l3"><a href="#exercise-a-rates-and-timebases-of-a-known-clip">Exercise A — Rates and timebases of a known clip</a></li><li class="l3"><a href="#exercise-b-calculate-by-hand">Exercise B — Calculate by hand</a></li><li class="l3"><a href="#exercise-c-see-pts-and-dts">Exercise C — See PTS and DTS</a></li><li class="l3"><a href="#exercise-d-same-stream-different-container-timebase">Exercise D — Same stream, different container timebase</a></li><li class="l3"><a href="#exercise-e-colour-metadata-and-rotation">Exercise E — Colour metadata and rotation</a></li><li class="l3"><a href="#exercise-f-device-lab-your-phones-recordings">Exercise F — Device lab: your phone&#x27;s recordings</a></li><li class="l2"><a href="#8-common-pitfalls">8. Common pitfalls</a></li><li class="l2"><a href="#9-self-test">9. Self-test</a></li><li class="l2"><a href="#10-further-reading">10. Further reading</a></li><li class="l2"><a href="#answer-key">Answer key</a></li></ol></aside>
+  <article class="content" data-week="3"><h2 id="how-to-use-this-guide">How to use this guide</h2>
+<p>This guide expands section <strong>1.3 Digital Video Basics</strong> of the tutorial. Week 2 gave you a single image; this week adds <strong>time</strong>. Video bugs are very often timing bugs — drift, stutter, A/V offset, frames shown in the wrong order — and almost all of them come from treating time as a floating-point number instead of as an integer in a rational timebase.</p>
+<table>
+<thead>
+<tr>
+<th>Session</th>
+<th>Suggested activity</th>
+<th>Time</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>1</td>
+<td>Sections 1–2: frame rates, VFR, resolution, aspect ratio, rotation. Exercise A.</td>
+<td>2 h</td>
+</tr>
+<tr>
+<td>2</td>
+<td>Sections 3–4: scan types, pulldown, raw data rates. Exercise B (calculations).</td>
+<td>1.5 h</td>
+</tr>
+<tr>
+<td>3</td>
+<td>Section 5: timestamps and timebases. Exercises C and D.</td>
+<td>2.5 h</td>
+</tr>
+<tr>
+<td>4</td>
+<td>Section 6: colour metadata. Exercise E. Device lab: Exercise F on your phone.</td>
+<td>2 h</td>
+</tr>
+<tr>
+<td>5</td>
+<td>Self-test, answer key, update your "media facts" notebook.</td>
+<td>1 h</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Learning objectives.</strong></p>
+<ol>
+<li>Express any frame rate as an exact rational number and compute the drift caused by approximating it.</li>
+<li>Distinguish <code>r_frame_rate</code> from <code>avg_frame_rate</code>, and constant from variable frame rate.</li>
+<li>Compute display aspect ratio from storage size and sample aspect ratio, and handle rotation metadata.</li>
+<li>Explain interlacing and 2:3 pulldown well enough to recognise them in a source.</li>
+<li>Compute raw video data rates and compression ratios for any format.</li>
+<li>Explain PTS, DTS and timebases; convert timestamps exactly between MP4, MPEG-TS, <code>MediaCodec</code> (µs) and <code>CMTime</code>.</li>
+<li>Read and set the four colour-metadata fields and predict what a mismatch looks like.</li>
+</ol>
+<h2 id="1-frames-and-frame-rates">1. Frames and frame rates</h2>
+<h3 id="11-motion-from-stills">1.1 Motion from stills</h3>
+<p>A video is a sequence of still images (<strong>frames</strong>) shown in quick succession. Above roughly 16–24 frames per second we perceive continuous motion; higher rates make fast motion smoother and reduce <strong>judder</strong> (uneven motion) and <strong>motion blur</strong> trade-offs. The <strong>frame rate</strong> is how many frames are shown per second.</p>
+<table>
+<thead>
+<tr>
+<th>Rate</th>
+<th>Exact value</th>
+<th>Where you meet it</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>23.976</td>
+<td>24000/1001</td>
+<td>Film content transferred for NTSC-region video and streaming</td>
+</tr>
+<tr>
+<td>24</td>
+<td>24/1</td>
+<td>Cinema, "cinematic" phone modes</td>
+</tr>
+<tr>
+<td>25</td>
+<td>25/1</td>
+<td>PAL/SECAM regions (including India's broadcast heritage)</td>
+</tr>
+<tr>
+<td>29.97</td>
+<td>30000/1001</td>
+<td>NTSC-region video; many phones in "30 fps" mode actually record 30/1, some 30000/1001</td>
+</tr>
+<tr>
+<td>30</td>
+<td>30/1</td>
+<td>Most phone recording, screen recording</td>
+</tr>
+<tr>
+<td>50</td>
+<td>50/1</td>
+<td>PAL-region HD/broadcast, sport</td>
+</tr>
+<tr>
+<td>59.94</td>
+<td>60000/1001</td>
+<td>NTSC-region HD, some phone 60 fps modes</td>
+</tr>
+<tr>
+<td>60</td>
+<td>60/1</td>
+<td>Phone 60 fps recording, games, UI</td>
+</tr>
+<tr>
+<td>120 / 240</td>
+<td>120/1, 240/1</td>
+<td>Slow-motion capture</td>
+</tr>
+</tbody>
+</table>
+<h3 id="12-why-1001">1.2 Why 1001?</h3>
+<p>When colour was added to American (NTSC) television in the 1950s, the frame rate was reduced by a factor of 1000/1001 to avoid interference between the new colour subcarrier and the sound carrier. The legacy survives: "29.97" is really 30 000/1001 = 29.970 029 97… fps, which is not 29.97 exactly and certainly not 30.</p>
+<p><strong>Always store frame rates as a numerator/denominator pair.</strong> FFmpeg uses <code>AVRational</code>, <code>ffprobe</code> prints <code>30000/1001</code>, Media3 and <code>MediaFormat.KEY_FRAME_RATE</code> use a number (so be careful there), and Apple's <code>CMTime</code> is a value/timescale pair (<code>CMTime(value: 1001, timescale: 30000)</code> is one frame at 29.97).</p>
+<h3 id="13-the-cost-of-approximating">1.3 The cost of approximating</h3>
+<div class="admonition example">
+<p class="admonition-title">Worked example — drift</p>
+<p>A one-hour 30000/1001 recording contains 3600 × 30000/1001 = <strong>107 892.1</strong> frames.</p>
+<ul>
+<li>If a player times frames at 1/30 s each (treating 29.97 as 30), the video finishes in 107 892.1 / 30 = 3596.4 s: <strong>3.6 s early</strong> against an audio track that plays at the correct 48 kHz rate.</li>
+<li>If a muxer writes each frame's duration as a rounded <strong>33 ms</strong> (instead of 33.3667 ms), the error is 1.1%: after one hour the video is <strong>39.6 s</strong> ahead of the audio.</li>
+<li>With exact rational arithmetic — frame <em>n</em> at <em>n</em> × 1001/30000 s — the error is <strong>zero</strong>, forever.</li>
+</ul>
+</div>
+<figure id="fig-3-1"><img src="../figures/w03_drift.svg" alt="Drift of video against audio when the frame rate is approximated." loading="lazy"><figcaption><b>Figure 3.1</b> — Drift of video against audio when the frame rate is approximated.</figcaption></figure>
+<p>The same applies to Android's <code>MediaCodec</code>, whose timestamps are integer microseconds. One frame at 30000/1001 is 33 366.67 µs, which is not an integer. Compute each timestamp from the frame index — <code>ptsUs = n * 1_001_000_000L / 30_000</code> — rather than repeatedly adding a rounded duration, so rounding errors never accumulate.</p>
+<h3 id="14-drop-frame-timecode">1.4 Drop-frame timecode</h3>
+<p>Broadcast <strong>timecode</strong> (HH:MM:SS:FF) counts whole frames. At 29.97 fps, counting 30 frames per "second" makes the timecode run slow by 3.6 s per hour. <strong>Drop-frame timecode</strong> fixes the <em>labels</em> (not the frames): it skips frame numbers 00 and 01 at the start of every minute except every tenth minute. That skips 2 × 54 = <strong>108</strong> labels per hour, which matches the 107 892-frame hour almost exactly. Drop-frame timecode is written with a semicolon: <code>01:00:00;00</code>.</p>
+<h3 id="15-constant-vs-variable-frame-rate">1.5 Constant vs variable frame rate</h3>
+<p>Phones commonly record <strong>variable frame rate (VFR)</strong>. In low light the camera lengthens the exposure, which may stretch the frame interval (for example from 33 ms to 40 ms or more); under load frames can be dropped. Every frame still has an accurate timestamp, so playback is correct — but tools that assume a constant rate get confused.</p>
+<p><code>ffprobe</code> reports two rates:</p>
+<ul>
+<li><strong><code>r_frame_rate</code></strong> — the "real base frame rate": the lowest rate that can represent all timestamps accurately. Often the nominal rate.</li>
+<li><strong><code>avg_frame_rate</code></strong> — frames divided by duration. For VFR content it is a non-round number such as <code>5994/200</code> or <code>11982/400</code>.</li>
+</ul>
+<p>If they differ, the file is probably VFR. Editing software, some hardware decoders and frame-accurate tools may need a constant-rate version (<code>ffmpeg -i in.mp4 -fps_mode cfr -r 30 out.mp4</code>), at the cost of duplicated or dropped frames.</p>
+<h2 id="2-resolution-aspect-ratio-and-rotation">2. Resolution, aspect ratio and rotation</h2>
+<h3 id="21-common-resolutions">2.1 Common resolutions</h3>
+<table>
+<thead>
+<tr>
+<th>Name</th>
+<th>Pixels</th>
+<th>Aspect</th>
+<th>Pixels per frame</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>480p (SD, NTSC-derived)</td>
+<td>720 × 480 or 640 × 480</td>
+<td>4:3 or 16:9 (anamorphic)</td>
+<td>345 600 / 307 200</td>
+</tr>
+<tr>
+<td>576p (SD, PAL-derived)</td>
+<td>720 × 576</td>
+<td>4:3 or 16:9 (anamorphic)</td>
+<td>414 720</td>
+</tr>
+<tr>
+<td>720p (HD)</td>
+<td>1280 × 720</td>
+<td>16:9</td>
+<td>921 600</td>
+</tr>
+<tr>
+<td>1080p (Full HD)</td>
+<td>1920 × 1080</td>
+<td>16:9</td>
+<td>2 073 600</td>
+</tr>
+<tr>
+<td>1440p (QHD)</td>
+<td>2560 × 1440</td>
+<td>16:9</td>
+<td>3 686 400</td>
+</tr>
+<tr>
+<td>4K UHD</td>
+<td>3840 × 2160</td>
+<td>16:9</td>
+<td>8 294 400</td>
+</tr>
+<tr>
+<td>DCI 4K</td>
+<td>4096 × 2160</td>
+<td>≈ 1.9:1</td>
+<td>8 847 360</td>
+</tr>
+<tr>
+<td>8K UHD</td>
+<td>7680 × 4320</td>
+<td>16:9</td>
+<td>33 177 600</td>
+</tr>
+</tbody>
+</table>
+<h3 id="22-sar-dar-and-par">2.2 SAR, DAR and PAR</h3>
+<p>Pixels are not always square. Three ratios describe the geometry:</p>
+<ul>
+<li><strong>Storage aspect ratio</strong> = width ÷ height of the coded frame (e.g. 1440/1080 = 4:3).</li>
+<li><strong>Sample (pixel) aspect ratio, SAR/PAR</strong> = the shape of one pixel (1:1 = square).</li>
+<li><strong>Display aspect ratio, DAR</strong> = the shape of the displayed picture.</li>
+</ul>
+<p class="eq">DAR = (width ÷ height) × SAR</p>
+
+<div class="admonition example">
+<p class="admonition-title">Worked examples — anamorphic video</p>
+<ul>
+<li>HDV/broadcast 1440 × 1080 with SAR 4:3: DAR = (1440/1080) × (4/3) = 16/9.</li>
+<li>PAL widescreen 720 × 576 with SAR 64:45: DAR = 1.25 × 1.4222 = 1.7778 = 16:9.</li>
+<li>Phone recordings are almost always SAR 1:1 — but files edited or transcoded elsewhere may not be, and <code>ffprobe</code> shows <code>[SAR x:y DAR a:b]</code>.</li>
+</ul>
+</div>
+<h3 id="23-rotation-metadata">2.3 Rotation metadata</h3>
+<p>Phone sensors are mounted in landscape orientation. When you record in portrait, most phones store <strong>landscape</strong> frames (e.g. 1920 × 1080) and attach a <strong>display matrix</strong> (MP4 <code>tkhd</code> matrix) telling the player to rotate by 90°. <code>ffprobe</code> prints this as side data, e.g. <code>displaymatrix: rotation of -90.00 degrees</code>, while <code>width</code>/<code>height</code> still say 1920 × 1080.</p>
+<p>Consequences for app developers: a player or thumbnailer that ignores the matrix shows sideways video; code that computes layout from <code>width</code>/<code>height</code> without considering rotation gets the aspect ratio wrong; and <code>MediaMetadataRetriever.METADATA_KEY_VIDEO_ROTATION</code> / <code>MediaFormat.KEY_ROTATION</code> are how you read it on Android. FFmpeg auto-rotates when transcoding (disable with <code>-noautorotate</code>).</p>
+<h2 id="3-scanning-progressive-interlaced-and-pulldown">3. Scanning: progressive, interlaced and pulldown</h2>
+<h3 id="31-progressive-and-interlaced">3.1 Progressive and interlaced</h3>
+<p><strong>Progressive</strong> video (the "p" in 1080p) transmits each frame as a complete image. <strong>Interlaced</strong> video (the "i" in 1080i) transmits <strong>fields</strong>: first the even lines, then the odd lines, each captured at a different instant. 1080i50 is 50 fields (25 interlaced frames) per second; it doubles motion smoothness for the same bandwidth, an analogue-era trick.</p>
+<figure id="fig-3-2"><img src="../figures/w03_interlace.svg" alt="Interlaced scan: two fields, captured 1/50 s apart, woven into one frame." loading="lazy"><figcaption><b>Figure 3.2</b> — Interlaced scan: two fields, captured 1/50 s apart, woven into one frame.</figcaption></figure>
+<p>Phones capture and display progressively, but interlaced sources (broadcast TV, old camcorder footage, some IPTV) still arrive in apps. Shown without <strong>deinterlacing</strong>, moving edges show "combing" (alternate lines offset). FFmpeg's <code>yadif</code> and <code>bwdif</code> filters deinterlace; <code>ffprobe</code> reports <code>field_order</code> (<code>progressive</code>, <code>tt</code>, <code>bb</code>, <code>tb</code>, <code>bt</code>).</p>
+<h3 id="32-23-pulldown">3.2 2:3 pulldown</h3>
+<p>How is 24 fps film carried in 60-field-per-second video? <strong>2:3 pulldown</strong> (often called "3:2") repeats film frames for alternately 2 and 3 fields, so 4 film frames become 10 fields (= 5 interlaced video frames). Motion becomes slightly uneven (judder). Recovering the original 24p frames is <strong>inverse telecine</strong> (FFmpeg <code>fieldmatch,decimate</code>). In 25 fps regions, film is usually just sped up by 4% (24 → 25), which also raises audio pitch unless corrected.</p>
+<figure id="fig-3-3"><img src="../figures/w03_pulldown.svg" alt="2:3 pulldown maps 4 film frames onto 10 video fields." loading="lazy"><figcaption><b>Figure 3.3</b> — 2:3 pulldown maps 4 film frames onto 10 video fields.</figcaption></figure>
+<h2 id="4-raw-data-rates">4. Raw data rates</h2>
+<h3 id="41-the-formula">4.1 The formula</h3>
+<p class="eq">raw bit rate = width × height × samples per pixel × bits per sample × frames per second</p>
+
+<p>where samples per pixel is 3 for 4:4:4, 2 for 4:2:2 and 1.5 for 4:2:0 (Week 2).</p>
+<table>
+<thead>
+<tr>
+<th>Format</th>
+<th>Calculation</th>
+<th>Raw bit rate</th>
+<th>Per minute</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>720p30, 8-bit 4:2:0</td>
+<td>1280 × 720 × 1.5 × 8 × 30</td>
+<td>331.8 Mbit/s</td>
+<td>2.49 GB</td>
+</tr>
+<tr>
+<td>1080p30, 8-bit 4:2:0</td>
+<td>1920 × 1080 × 1.5 × 8 × 30</td>
+<td>746.5 Mbit/s</td>
+<td>5.60 GB</td>
+</tr>
+<tr>
+<td>1080p60, 8-bit 4:2:0</td>
+<td>1920 × 1080 × 1.5 × 8 × 60</td>
+<td>1.49 Gbit/s</td>
+<td>11.2 GB</td>
+</tr>
+<tr>
+<td>4K30, 8-bit 4:2:0</td>
+<td>3840 × 2160 × 1.5 × 8 × 30</td>
+<td>2.99 Gbit/s</td>
+<td>22.4 GB</td>
+</tr>
+<tr>
+<td>4K60, 10-bit 4:2:0</td>
+<td>3840 × 2160 × 1.5 × 10 × 60</td>
+<td>7.46 Gbit/s</td>
+<td>56.0 GB</td>
+</tr>
+<tr>
+<td>8K30, 8-bit 4:2:0</td>
+<td>7680 × 4320 × 1.5 × 8 × 30</td>
+<td>11.94 Gbit/s</td>
+<td>89.6 GB</td>
+</tr>
+</tbody>
+</table>
+<p>(GB = 10⁹ bytes.)</p>
+<figure id="fig-3-4"><img src="../figures/w03_rawrates.svg" alt="Raw rates compared with illustrative compressed phone-recording bitrates (log scale)." loading="lazy"><figcaption><b>Figure 3.4</b> — Raw rates compared with illustrative compressed phone-recording bitrates (log scale).</figcaption></figure>
+<div class="admonition example">
+<p class="admonition-title">Worked example — compression ratios</p>
+<ul>
+<li>1080p30 at 746.5 Mbit/s raw, recorded as H.264 at 16 Mbit/s: 746.5 / 16 ≈ <strong>47:1</strong>. Streamed at 5 Mbit/s: ≈ <strong>149:1</strong>.</li>
+<li>4K60 10-bit at 7.46 Gbit/s, recorded in HEVC at 50 Mbit/s: ≈ <strong>149:1</strong> (the tutorial's Exercise 6).</li>
+<li><strong>Bits per pixel</strong> normalises bitrate by resolution and frame rate: 16 Mbit/s ÷ (1920 × 1080 × 30) = <strong>0.257 bpp</strong>; 5 Mbit/s → 0.080 bpp. Week 4 uses bpp to compare encodes.</li>
+</ul>
+</div>
+<h3 id="42-memory-bandwidth-not-just-storage">4.2 Memory bandwidth, not just storage</h3>
+<p>Inside the phone, raw frames move between camera ISP, encoder, GPU and display many times. 10-bit content usually sits in memory as <strong>P010</strong> (16 bits per sample), so 4K60 10-bit is 3840 × 2160 × 1.5 × 16 × 60 ≈ <strong>11.9 Gbit/s ≈ 1.5 GB/s</strong> per pass. Each extra copy of every frame costs real power and thermal headroom — the reason for zero-copy pipelines, which you will meet in Phase 5.</p>
+<h2 id="5-timestamps-and-timebases">5. Timestamps and timebases</h2>
+<h3 id="51-integers-in-a-timebase">5.1 Integers in a timebase</h3>
+<p>Media systems store time as an <strong>integer count of ticks</strong> in a <strong>timebase</strong> (a rational number of seconds per tick):</p>
+<p class="eq">time in seconds = timestamp × timebase &nbsp;&nbsp;&nbsp; e.g. 3003 × 1/90000 = 0.033367 s</p>
+
+<table>
+<thead>
+<tr>
+<th>System</th>
+<th>Typical timebase</th>
+<th>One frame at 30000/1001</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>MPEG-TS / RTP video</td>
+<td>1/90000 (90 kHz clock)</td>
+<td>3003 ticks</td>
+</tr>
+<tr>
+<td>MP4 track (FFmpeg default for 29.97)</td>
+<td>1/30000</td>
+<td>1001 ticks</td>
+</tr>
+<tr>
+<td>MP4 from Android recorders</td>
+<td>often 1/90000</td>
+<td>3003 ticks</td>
+</tr>
+<tr>
+<td>QuickTime/older Apple files</td>
+<td>often 1/600</td>
+<td>20.02 ticks — not an integer, so durations alternate</td>
+</tr>
+<tr>
+<td>Audio track</td>
+<td>1/sample rate, e.g. 1/48000</td>
+<td>(an AAC frame = 1024 ticks)</td>
+</tr>
+<tr>
+<td>Android <code>MediaCodec</code> / <code>MediaExtractor</code></td>
+<td>microseconds (1/1 000 000)</td>
+<td>33 366.67 µs — round per frame from the index</td>
+</tr>
+<tr>
+<td>Apple <code>CMTime</code></td>
+<td>value / timescale, any timescale</td>
+<td><code>CMTime(value: 1001, timescale: 30000)</code></td>
+</tr>
+<tr>
+<td>Media3 / ExoPlayer</td>
+<td>microseconds internally</td>
+<td></td>
+</tr>
+</tbody>
+</table>
+<p>Note the 90 kHz clock is divisible by 24, 25, 30, 50 and 60, and 30000/1001 gives an integer 3003 ticks, but 24000/1001 gives <strong>3753.75</strong> ticks — so 23.976 fps content in MPEG-TS has durations that alternate between 3753 and 3754. That is normal; what matters is that each timestamp is computed exactly.</p>
+<figure id="fig-3-5"><img src="../figures/w03_timebases.svg" alt="Different streams tick at incommensurate rates; only exact rational timebases keep them aligned." loading="lazy"><figcaption><b>Figure 3.5</b> — Different streams tick at incommensurate rates; only exact rational timebases keep them aligned.</figcaption></figure>
+<h3 id="52-converting-between-timebases">5.2 Converting between timebases</h3>
+<p>To convert timestamp <em>t</em> from timebase <em>a</em>/<em>b</em> to <em>c</em>/<em>d</em>: <em>t</em>′ = <em>t</em> × (<em>a</em>/<em>b</em>) ÷ (<em>c</em>/<em>d</em>) = <em>t</em> × <em>a</em> × <em>d</em> / (<em>b</em> × <em>c</em>), computed in integer (64-bit) arithmetic <strong>with a single rounding at the end</strong>. FFmpeg provides <code>av_rescale_q()</code> for exactly this. Example: PTS 3003 at 1/90000 → 1/30000: 3003 × 30000 / 90000 = <strong>1001</strong>; → µs: 3003 × 1 000 000 / 90 000 = 33 366.67 → <strong>33 367</strong>.</p>
+<div class="highlight"><pre><span></span><code><span class="cm">/** Rescale a timestamp between rational timebases (num/den seconds per tick), rounding to nearest. */</span>
+<span class="kd">fun</span><span class="w"> </span><span class="nf">rescale</span><span class="p">(</span><span class="n">ts</span><span class="p">:</span><span class="w"> </span><span class="kt">Long</span><span class="p">,</span><span class="w"> </span><span class="n">fromNum</span><span class="p">:</span><span class="w"> </span><span class="kt">Long</span><span class="p">,</span><span class="w"> </span><span class="n">fromDen</span><span class="p">:</span><span class="w"> </span><span class="kt">Long</span><span class="p">,</span><span class="w"> </span><span class="n">toNum</span><span class="p">:</span><span class="w"> </span><span class="kt">Long</span><span class="p">,</span><span class="w"> </span><span class="n">toDen</span><span class="p">:</span><span class="w"> </span><span class="kt">Long</span><span class="p">):</span><span class="w"> </span><span class="kt">Long</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="kd">val</span><span class="w"> </span><span class="nv">num</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">java</span><span class="p">.</span><span class="na">math</span><span class="p">.</span><span class="na">BigInteger</span><span class="p">.</span><span class="na">valueOf</span><span class="p">(</span><span class="n">ts</span><span class="p">)</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="p">(</span><span class="n">fromNum</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="n">toDen</span><span class="p">).</span><span class="na">toBigInteger</span><span class="p">()</span>
+<span class="w">    </span><span class="kd">val</span><span class="w"> </span><span class="nv">den</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">(</span><span class="n">fromDen</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="n">toNum</span><span class="p">).</span><span class="na">toBigInteger</span><span class="p">()</span>
+<span class="w">    </span><span class="kd">val</span><span class="w"> </span><span class="p">(</span><span class="nv">q</span><span class="p">,</span><span class="w"> </span><span class="nv">r</span><span class="p">)</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">num</span><span class="p">.</span><span class="na">divideAndRemainder</span><span class="p">(</span><span class="n">den</span><span class="p">).</span><span class="na">let</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nb">it</span><span class="o">[</span><span class="m">0</span><span class="o">]</span><span class="w"> </span><span class="n">to</span><span class="w"> </span><span class="nb">it</span><span class="o">[</span><span class="m">1</span><span class="o">]</span><span class="w"> </span><span class="p">}</span>
+<span class="w">    </span><span class="k">return</span><span class="w"> </span><span class="p">(</span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">r</span><span class="p">.</span><span class="na">shiftLeft</span><span class="p">(</span><span class="m">1</span><span class="p">).</span><span class="na">abs</span><span class="p">()</span><span class="w"> </span><span class="o">&gt;=</span><span class="w"> </span><span class="n">den</span><span class="p">)</span><span class="w"> </span><span class="n">q</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="n">num</span><span class="p">.</span><span class="na">signum</span><span class="p">().</span><span class="na">toBigInteger</span><span class="p">()</span><span class="w"> </span><span class="k">else</span><span class="w"> </span><span class="n">q</span><span class="p">).</span><span class="na">toLong</span><span class="p">()</span>
+<span class="p">}</span>
+<span class="c1">// rescale(3003, 1, 90_000, 1, 1_000_000) == 33_367L</span>
+</code></pre></div>
+<p>(For production code, 64-bit arithmetic is usually enough if you order the multiplication carefully; the <code>BigInteger</code> version is simply impossible to overflow.)</p>
+<h3 id="53-pts-and-dts">5.3 PTS and DTS</h3>
+<p>Each compressed video frame (a <strong>packet</strong>) carries:</p>
+<ul>
+<li><strong>PTS (presentation timestamp)</strong> — when the frame should be <strong>shown</strong>.</li>
+<li><strong>DTS (decoding timestamp)</strong> — when the frame must be <strong>decoded</strong>.</li>
+</ul>
+<p>Without B-frames, frames are decoded in the order they are shown, and PTS = DTS (up to a constant). With <strong>B-frames</strong> — frames predicted from both a past and a <em>future</em> frame (Week 4) — the future reference must be decoded first, so <strong>decode order differs from display order</strong>:</p>
+<figure id="fig-3-6"><img src="../figures/w03_pts_dts.svg" alt="Decode order vs display order for an I B B P stream, with the timestamps FFmpeg actually writes." loading="lazy"><figcaption><b>Figure 3.6</b> — Decode order vs display order for an I B B P stream, with the timestamps FFmpeg actually writes.</figcaption></figure>
+<p>Rules to remember:</p>
+<ol>
+<li>Packets are stored in a file in <strong>decode (DTS) order</strong>. Demuxers return them in that order; decoders output frames in <strong>PTS order</strong>.</li>
+<li>DTS is monotonically increasing; PTS is not (in packet order).</li>
+<li>For every frame, DTS ≤ PTS. To make that possible for the first P-frame, the DTS sequence starts slightly negative (or the PTS sequence starts slightly positive). MP4 stores DTS as sample durations (<code>stts</code>) and the PTS−DTS offset as composition offsets (<code>ctts</code>); an <strong>edit list</strong> (<code>elst</code>) shifts the presentation timeline so playback starts at 0.</li>
+<li>The decoder's <strong>reorder delay</strong> (how many frames it must hold before outputting) depends on the B-frame structure. More B-frames → more latency. Real-time video calls usually disable B-frames.</li>
+<li><strong>Audio</strong> usually has PTS = DTS, but AAC/Opus encoders add <strong>priming samples</strong>: the first packets' PTS can be negative (−1024 for FFmpeg's AAC encoder), with an edit list or codec delay field telling players to skip them.</li>
+</ol>
+<h3 id="54-timing-on-android-and-ios">5.4 Timing on Android and iOS</h3>
+<ul>
+<li><strong><code>MediaExtractor.getSampleTime()</code></strong> returns the PTS (µs) of the current sample, and samples come in decode order — so with B-frames the values you log are <em>not</em> increasing.</li>
+<li><strong><code>MediaCodec</code></strong>: you pass <code>presentationTimeUs</code> with each input buffer; output buffers come back in presentation order with the matching <code>BufferInfo.presentationTimeUs</code>. There is no separate DTS in the API; the codec handles reordering.</li>
+<li><strong><code>MediaMuxer.writeSampleData()</code></strong> takes encoded samples in decode order with their PTS; it derives the DTS/<code>ctts</code> itself.</li>
+<li><strong><code>AVFoundation</code></strong>: <code>CMSampleBuffer</code> carries both <code>presentationTimeStamp</code> and <code>decodeTimeStamp</code> as <code>CMTime</code>. Use <code>CMTimeConvertScale</code> or arithmetic in a common timescale; avoid <code>CMTimeGetSeconds</code> except for display.</li>
+</ul>
+<h2 id="6-colour-metadata">6. Colour metadata</h2>
+<h3 id="61-the-four-fields">6.1 The four fields</h3>
+<p>Week 2 showed that the same Y′CbCr numbers can mean different colours. A video stream therefore signals how to interpret them, in the bitstream's <strong>VUI</strong> (H.264/HEVC video usability information) and/or the container (MP4 <code>colr</code> box of type <code>nclx</code>, Matroska <code>Colour</code> element). The code points are defined in <strong>ITU-T H.273</strong>:</p>
+<table>
+<thead>
+<tr>
+<th>Field</th>
+<th>Meaning</th>
+<th>Common values (H.273 code → FFmpeg name)</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Colour primaries</td>
+<td>Which R, G, B and white</td>
+<td>1 <code>bt709</code>; 5 <code>bt470bg</code> (PAL SD); 6 <code>smpte170m</code> (NTSC SD); 9 <code>bt2020</code>; 12 <code>smpte432</code> (Display P3)</td>
+</tr>
+<tr>
+<td>Transfer characteristics</td>
+<td>Code value ↔ light</td>
+<td>1 <code>bt709</code>; 6 <code>smpte170m</code>; 13 <code>iec61966-2-1</code> (sRGB); 14/15 <code>bt2020-10/-12</code>; 16 <code>smpte2084</code> (PQ, HDR10); 18 <code>arib-std-b67</code> (HLG)</td>
+</tr>
+<tr>
+<td>Matrix coefficients</td>
+<td>Y′CbCr ↔ R′G′B′ (K<sub>R</sub>, K<sub>B</sub>)</td>
+<td>0 <code>gbr</code> (RGB); 1 <code>bt709</code>; 5 <code>bt470bg</code> and 6 <code>smpte170m</code> (both BT.601); 9 <code>bt2020nc</code></td>
+</tr>
+<tr>
+<td>Range</td>
+<td>Limited or full</td>
+<td><code>video_full_range_flag</code> 0 → <code>tv</code> (limited), 1 → <code>pc</code> (full)</td>
+</tr>
+</tbody>
+</table>
+<p>Code 2 means <strong>unspecified</strong>, which is common in files from simple tools. Players then guess — usually BT.709 for HD sizes and BT.601 for SD sizes — and different players guess differently. That is why a clip can look right in one app and wrong in another.</p>
+<h3 id="62-on-android-and-ios">6.2 On Android and iOS</h3>
+<ul>
+<li>Android's <code>MediaFormat</code> carries <code>KEY_COLOR_STANDARD</code> (<code>COLOR_STANDARD_BT709</code>, <code>COLOR_STANDARD_BT601_PAL</code>, <code>COLOR_STANDARD_BT601_NTSC</code>, <code>COLOR_STANDARD_BT2020</code>), <code>KEY_COLOR_TRANSFER</code> (<code>COLOR_TRANSFER_SDR_VIDEO</code>, <code>COLOR_TRANSFER_ST2084</code>, <code>COLOR_TRANSFER_HLG</code>, <code>COLOR_TRANSFER_LINEAR</code>) and <code>KEY_COLOR_RANGE</code> (<code>COLOR_RANGE_LIMITED</code>, <code>COLOR_RANGE_FULL</code>). Decoders report them in the output format; when encoding, set them explicitly.</li>
+<li>Media3/ExoPlayer exposes them as <code>androidx.media3.common.ColorInfo</code> on <code>Format.colorInfo</code>.</li>
+<li>On iOS, <code>CVPixelBuffer</code> attachments (<code>kCVImageBufferColorPrimariesKey</code>, <code>kCVImageBufferTransferFunctionKey</code>, <code>kCVImageBufferYCbCrMatrixKey</code>) carry the same information, and the pixel format itself encodes range (<code>'420v'</code> limited vs <code>'420f'</code> full).</li>
+</ul>
+<h3 id="63-mismatch-symptoms">6.3 Mismatch symptoms</h3>
+<table>
+<thead>
+<tr>
+<th>Mismatch</th>
+<th>Symptom</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Range: limited shown as full</td>
+<td>Washed out: grey blacks, dim whites</td>
+</tr>
+<tr>
+<td>Range: full shown as limited</td>
+<td>Crushed shadows, clipped highlights, too contrasty</td>
+</tr>
+<tr>
+<td>Matrix: BT.601 data decoded as BT.709 (or vice versa)</td>
+<td>Subtle hue shift: skin tones slightly red/orange or green; saturated reds/greens off</td>
+</tr>
+<tr>
+<td>Primaries ignored (e.g. P3 or BT.2020 shown as BT.709)</td>
+<td>Desaturated or oversaturated colours</td>
+</tr>
+<tr>
+<td>Transfer ignored (e.g. HLG/PQ shown as SDR)</td>
+<td>Flat, grey, low-contrast image (HDR shown as SDR)</td>
+</tr>
+</tbody>
+</table>
+<h2 id="7-hands-on-exercises">7. Hands-on exercises</h2>
+<p>Expected outputs were produced with FFmpeg 7.1. Use <code>testclip.mp4</code> (generated below) for deterministic results and a phone recording for the device lab.</p>
+<h3 id="exercise-a-rates-and-timebases-of-a-known-clip">Exercise A — Rates and timebases of a known clip</h3>
+<div class="highlight"><pre><span></span><code>ffmpeg<span class="w"> </span>-f<span class="w"> </span>lavfi<span class="w"> </span>-i<span class="w"> </span><span class="s2">"testsrc2=size=1280x720:rate=30000/1001:duration=4"</span><span class="w"> </span><span class="se">\</span>
+<span class="w">       </span>-f<span class="w"> </span>lavfi<span class="w"> </span>-i<span class="w"> </span><span class="s2">"sine=f=1000:sample_rate=48000:duration=4"</span><span class="w"> </span><span class="se">\</span>
+<span class="w">       </span>-vf<span class="w"> </span><span class="s2">"setparams=color_primaries=bt709:color_trc=bt709:colorspace=bt709:range=tv,format=yuv420p"</span><span class="w"> </span><span class="se">\</span>
+<span class="w">       </span>-c:v<span class="w"> </span>libx264<span class="w"> </span>-preset<span class="w"> </span>fast<span class="w"> </span>-bf<span class="w"> </span><span class="m">2</span><span class="w"> </span>-x264-params<span class="w"> </span>b-adapt<span class="o">=</span><span class="m">0</span><span class="w"> </span>-g<span class="w"> </span><span class="m">30</span><span class="w"> </span>-keyint_min<span class="w"> </span><span class="m">30</span><span class="w"> </span>-sc_threshold<span class="w"> </span><span class="m">0</span><span class="w"> </span><span class="se">\</span>
+<span class="w">       </span>-c:a<span class="w"> </span>aac<span class="w"> </span>-b:a<span class="w"> </span>128k<span class="w"> </span>-shortest<span class="w"> </span>testclip.mp4
+
+ffprobe<span class="w"> </span>-v<span class="w"> </span>error<span class="w"> </span>-select_streams<span class="w"> </span>v:0<span class="w"> </span><span class="se">\</span>
+<span class="w">  </span>-show_entries<span class="w"> </span><span class="nv">stream</span><span class="o">=</span>codec_name,profile,width,height,pix_fmt,r_frame_rate,avg_frame_rate,time_base,nb_frames<span class="w"> </span><span class="se">\</span>
+<span class="w">  </span>-of<span class="w"> </span><span class="nv">default</span><span class="o">=</span><span class="nv">noprint_wrappers</span><span class="o">=</span><span class="m">1</span><span class="w"> </span>testclip.mp4
+ffprobe<span class="w"> </span>-v<span class="w"> </span>error<span class="w"> </span>-select_streams<span class="w"> </span>a:0<span class="w"> </span>-show_entries<span class="w"> </span><span class="nv">stream</span><span class="o">=</span>codec_name,sample_rate,time_base<span class="w"> </span><span class="se">\</span>
+<span class="w">  </span>-of<span class="w"> </span><span class="nv">default</span><span class="o">=</span><span class="nv">noprint_wrappers</span><span class="o">=</span><span class="m">1</span><span class="w"> </span>testclip.mp4
+</code></pre></div>
+<p><strong>Expected:</strong></p>
+<div class="highlight"><pre><span></span><code>codec_name=h264
+profile=High
+width=1280
+height=720
+pix_fmt=yuv420p
+r_frame_rate=30000/1001
+avg_frame_rate=30000/1001
+time_base=1/30000
+nb_frames=119
+codec_name=aac
+sample_rate=48000
+time_base=1/48000
+</code></pre></div>
+<p>Why 119 frames? 4 s × 30000/1001 = 119.88, and only whole frames fit. Note that the video and audio tracks have <strong>different</strong> timebases in the same file.</p>
+<h3 id="exercise-b-calculate-by-hand">Exercise B — Calculate by hand</h3>
+<ol>
+<li>Raw bit rate of 1080p60 10-bit 4:2:2 (a typical professional camera format).</li>
+<li>The compression ratio if it is recorded at 150 Mbit/s.</li>
+<li>Bits per pixel of 720p30 at 2.5 Mbit/s and of 4K30 at 45 Mbit/s.</li>
+<li>The duration of frame 1000 (start time) at 24000/1001 fps, in seconds and in a 1/90000 timebase.</li>
+</ol>
+<p>(Answers: self-test questions 15–18.)</p>
+<h3 id="exercise-c-see-pts-and-dts">Exercise C — See PTS and DTS</h3>
+<div class="highlight"><pre><span></span><code>ffprobe<span class="w"> </span>-v<span class="w"> </span>error<span class="w"> </span>-select_streams<span class="w"> </span>v:0<span class="w"> </span>-show_entries<span class="w"> </span><span class="nv">packet</span><span class="o">=</span>pts,dts,duration,size,flags<span class="w"> </span><span class="se">\</span>
+<span class="w">        </span>-of<span class="w"> </span><span class="nv">csv</span><span class="o">=</span><span class="nv">p</span><span class="o">=</span><span class="m">0</span><span class="w"> </span>-read_intervals<span class="w"> </span><span class="s2">"%+#10"</span><span class="w"> </span>testclip.mp4
+ffprobe<span class="w"> </span>-v<span class="w"> </span>error<span class="w"> </span>-select_streams<span class="w"> </span>v:0<span class="w"> </span>-show_entries<span class="w"> </span><span class="nv">frame</span><span class="o">=</span>pts,pict_type<span class="w"> </span><span class="se">\</span>
+<span class="w">        </span>-of<span class="w"> </span><span class="nv">csv</span><span class="o">=</span><span class="nv">p</span><span class="o">=</span><span class="m">0</span><span class="w"> </span>-read_intervals<span class="w"> </span><span class="s2">"%+#10"</span><span class="w"> </span>testclip.mp4
+</code></pre></div>
+<p><strong>Expected</strong> — packets (decode order: <code>pts,dts,duration,size,flags</code>):</p>
+<div class="highlight"><pre><span></span><code>0,-2002,1001,24479,K__
+3003,-1001,1001,18733,___
+1001,0,1001,11315,___
+2002,1001,1001,10171,___
+6006,2002,1001,15433,___
+4004,3003,1001,10631,___
+5005,4004,1001,10012,___
+9009,5005,1001,14775,___
+7007,6006,1001,10703,___
+8008,7007,1001,10167,___
+</code></pre></div>
+<p>and frames (display order): <code>0,I  1001,B  2002,B  3003,P  4004,B  5005,B  6006,P …</code>.</p>
+<p>Read it: timestamps are in units of 1/30000 s, so every frame is 1001 ticks. The packet order is I, P, B, B, P, B, B …, while the frame order is I, B, B, P … The P-frame with PTS 3003 is the second packet, decoded before the two B-frames it helps to predict. DTS starts at −2002 (two frames early) so that DTS ≤ PTS for every packet, and the MP4 edit list makes playback start at PTS 0. Only the first packet carries the <code>K</code> (key frame) flag. (Exact sizes can differ slightly between x264 versions.)</p>
+<p>Add <code>pts_time,dts_time</code> to the entries to see the same values in seconds (0.000000, −0.066733, …).</p>
+<h3 id="exercise-d-same-stream-different-container-timebase">Exercise D — Same stream, different container timebase</h3>
+<div class="highlight"><pre><span></span><code>ffmpeg<span class="w"> </span>-i<span class="w"> </span>testclip.mp4<span class="w"> </span>-c<span class="w"> </span>copy<span class="w"> </span>testclip.ts
+ffprobe<span class="w"> </span>-v<span class="w"> </span>error<span class="w"> </span>-select_streams<span class="w"> </span>v:0<span class="w"> </span>-show_entries<span class="w"> </span><span class="nv">stream</span><span class="o">=</span>time_base<span class="w"> </span>-of<span class="w"> </span><span class="nv">csv</span><span class="o">=</span><span class="nv">p</span><span class="o">=</span><span class="m">0</span><span class="w"> </span>testclip.ts
+ffprobe<span class="w"> </span>-v<span class="w"> </span>error<span class="w"> </span>-select_streams<span class="w"> </span>v:0<span class="w"> </span>-show_entries<span class="w"> </span><span class="nv">packet</span><span class="o">=</span>pts,dts<span class="w"> </span>-of<span class="w"> </span><span class="nv">csv</span><span class="o">=</span><span class="nv">p</span><span class="o">=</span><span class="m">0</span><span class="w"> </span>-read_intervals<span class="w"> </span><span class="s2">"%+#4"</span><span class="w"> </span>testclip.ts
+</code></pre></div>
+<p><strong>Expected:</strong> <code>time_base</code> is <strong>1/90000</strong>, and each frame now advances by <strong>3003</strong> ticks. The first packets look like <code>132006,126000</code> / <code>135009,129003</code> / … — the MPEG-TS muxer starts timestamps at an offset of about 1.4 s (126 000 / 90 000) by default, and PTS − DTS = 6006 ticks = 2 frames, the same reordering as before. Nothing in the video data changed; only the units and offset of time.</p>
+<p>Also try <code>-c copy testclip.mkv</code> and check the timebase (Matroska uses 1/1000 by default, i.e. millisecond precision, so frame times are rounded — another reason MKV → MP4 remuxes sometimes show slightly irregular durations).</p>
+<h3 id="exercise-e-colour-metadata-and-rotation">Exercise E — Colour metadata and rotation</h3>
+<div class="highlight"><pre><span></span><code>ffprobe<span class="w"> </span>-v<span class="w"> </span>error<span class="w"> </span>-select_streams<span class="w"> </span>v:0<span class="w"> </span><span class="se">\</span>
+<span class="w">  </span>-show_entries<span class="w"> </span><span class="nv">stream</span><span class="o">=</span>color_range,color_space,color_transfer,color_primaries<span class="w"> </span>-of<span class="w"> </span><span class="nv">default</span><span class="o">=</span><span class="nv">nw</span><span class="o">=</span><span class="m">1</span><span class="w"> </span>testclip.mp4
+
+<span class="c1"># Simulate a portrait phone recording: add a 90-degree display matrix without re-encoding</span>
+ffmpeg<span class="w"> </span>-display_rotation:v:0<span class="w"> </span><span class="m">90</span><span class="w"> </span>-i<span class="w"> </span>testclip.mp4<span class="w"> </span>-c<span class="w"> </span>copy<span class="w"> </span>rotated.mp4
+ffprobe<span class="w"> </span>-hide_banner<span class="w"> </span>rotated.mp4<span class="w"> </span><span class="m">2</span>&gt;<span class="p">&amp;</span><span class="m">1</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-E<span class="w"> </span><span class="s2">"Video:|displaymatrix"</span>
+</code></pre></div>
+<p><strong>Expected:</strong> <code>color_range=tv</code>, <code>color_space=bt709</code>, <code>color_transfer=bt709</code>, <code>color_primaries=bt709</code>. For <code>rotated.mp4</code>, the stream still says <code>1280x720</code>, followed by <code>displaymatrix: rotation of 90.00 degrees</code>. Play both with <code>ffplay</code> (which honours the matrix) and open <code>rotated.mp4</code> in a tool that does not; note which ones rotate.</p>
+<p>Now remove the tags to see what "unspecified" looks like: re-encode without <code>setparams</code> and observe <code>color_transfer=unknown</code> / <code>color_primaries=unknown</code>.</p>
+<h3 id="exercise-f-device-lab-your-phones-recordings">Exercise F — Device lab: your phone's recordings</h3>
+<ol>
+<li>Record ~10 s at 1080p30 and ~10 s at 4K60 (or the highest mode available), one in portrait and one in landscape, one in bright light and one in a dark room.</li>
+<li>Pull them:</li>
+</ol>
+<div class="highlight"><pre><span></span><code>adb<span class="w"> </span>shell<span class="w"> </span>ls<span class="w"> </span>-t<span class="w"> </span>/sdcard/DCIM/Camera<span class="w"> </span><span class="p">|</span><span class="w"> </span>head<span class="w"> </span>-5
+adb<span class="w"> </span>pull<span class="w"> </span>/sdcard/DCIM/Camera/&lt;file&gt;.mp4<span class="w"> </span>.
+</code></pre></div>
+<ol start="3">
+<li>For each file, record in your notebook:</li>
+</ol>
+<div class="highlight"><pre><span></span><code>ffprobe<span class="w"> </span>-v<span class="w"> </span>error<span class="w"> </span>-show_entries<span class="w"> </span><span class="nv">format</span><span class="o">=</span>duration,bit_rate:format_tags<span class="w"> </span><span class="se">\</span>
+<span class="w">  </span>-show_entries<span class="w"> </span><span class="nv">stream</span><span class="o">=</span>codec_name,profile,width,height,pix_fmt,r_frame_rate,avg_frame_rate,time_base,bit_rate,color_range,color_space,color_transfer,color_primaries:stream_side_data<span class="w"> </span><span class="se">\</span>
+<span class="w">  </span>-of<span class="w"> </span><span class="nv">default</span><span class="o">=</span><span class="nv">nw</span><span class="o">=</span><span class="m">1</span><span class="w"> </span>&lt;file&gt;.mp4
+ffprobe<span class="w"> </span>-v<span class="w"> </span>error<span class="w"> </span>-select_streams<span class="w"> </span>v:0<span class="w"> </span>-show_entries<span class="w"> </span><span class="nv">packet</span><span class="o">=</span>pts_time,dts_time,flags<span class="w"> </span>-of<span class="w"> </span><span class="nv">csv</span><span class="o">=</span><span class="nv">p</span><span class="o">=</span><span class="m">0</span><span class="w"> </span>-read_intervals<span class="w"> </span><span class="s2">"%+#12"</span><span class="w"> </span>&lt;file&gt;.mp4
+</code></pre></div>
+<ol start="4">
+<li>Compute: raw bit rate, actual video bit rate, compression ratio, and bits per pixel.</li>
+</ol>
+<p><strong>What to look for:</strong> the codec (H.264 vs HEVC), <code>time_base</code> (often 1/90000 on Android), whether <code>avg_frame_rate</code> differs from <code>r_frame_rate</code> in the dark recording (VFR), the display matrix on the portrait clip (commonly −90 or 90 degrees), whether PTS = DTS (many phone hardware encoders do not use B-frames for camera recording), colour tags (usually BT.709 limited range for SDR; BT.2020 + HLG or PQ for HDR modes), and vendor tags in <code>format_tags</code> (Android recordings often include <code>com.android.version</code>; some include <code>com.android.capture.fps</code>).</p>
+<ol start="5">
+<li>Optional Kotlin check of the same file on the device:</li>
+</ol>
+<div class="highlight"><pre><span></span><code><span class="kd">val</span><span class="w"> </span><span class="nv">ex</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">MediaExtractor</span><span class="p">()</span>
+<span class="n">ex</span><span class="p">.</span><span class="na">setDataSource</span><span class="p">(</span><span class="n">context</span><span class="p">,</span><span class="w"> </span><span class="n">uri</span><span class="p">,</span><span class="w"> </span><span class="kc">null</span><span class="p">)</span>
+<span class="kd">var</span><span class="w"> </span><span class="nv">videoTrack</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="o">-</span><span class="m">1</span>
+<span class="k">for</span><span class="w"> </span><span class="p">(</span><span class="n">i</span><span class="w"> </span><span class="k">in</span><span class="w"> </span><span class="m">0</span><span class="w"> </span><span class="n">until</span><span class="w"> </span><span class="n">ex</span><span class="p">.</span><span class="na">trackCount</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="kd">val</span><span class="w"> </span><span class="nv">fmt</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">ex</span><span class="p">.</span><span class="na">getTrackFormat</span><span class="p">(</span><span class="n">i</span><span class="p">)</span>
+<span class="w">    </span><span class="n">Log</span><span class="p">.</span><span class="na">i</span><span class="p">(</span><span class="s">"Inspect"</span><span class="p">,</span><span class="w"> </span><span class="s">"track </span><span class="si">$</span><span class="n">i</span><span class="s">: </span><span class="si">$</span><span class="n">fmt</span><span class="s">"</span><span class="p">)</span>
+<span class="w">    </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">fmt</span><span class="p">.</span><span class="na">getString</span><span class="p">(</span><span class="n">MediaFormat</span><span class="p">.</span><span class="na">KEY_MIME</span><span class="p">)</span><span class="o">?.</span><span class="na">startsWith</span><span class="p">(</span><span class="s">"video/"</span><span class="p">)</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="kc">true</span><span class="p">)</span><span class="w"> </span><span class="n">videoTrack</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">i</span>
+<span class="p">}</span>
+<span class="n">ex</span><span class="p">.</span><span class="na">selectTrack</span><span class="p">(</span><span class="n">videoTrack</span><span class="p">)</span>
+<span class="kd">var</span><span class="w"> </span><span class="nv">n</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="m">0</span>
+<span class="k">while</span><span class="w"> </span><span class="p">(</span><span class="n">n</span><span class="w"> </span><span class="o">&lt;</span><span class="w"> </span><span class="m">12</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="kd">val</span><span class="w"> </span><span class="nv">key</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">(</span><span class="n">ex</span><span class="p">.</span><span class="na">sampleFlags</span><span class="w"> </span><span class="n">and</span><span class="w"> </span><span class="n">MediaExtractor</span><span class="p">.</span><span class="na">SAMPLE_FLAG_SYNC</span><span class="p">)</span><span class="w"> </span><span class="o">!=</span><span class="w"> </span><span class="m">0</span>
+<span class="w">    </span><span class="n">Log</span><span class="p">.</span><span class="na">i</span><span class="p">(</span><span class="s">"Inspect"</span><span class="p">,</span><span class="w"> </span><span class="s">"sample </span><span class="si">$</span><span class="n">n</span><span class="s">: pts=</span><span class="si">${</span><span class="n">ex</span><span class="p">.</span><span class="na">sampleTime</span><span class="si">}</span><span class="s"> us key=</span><span class="si">$</span><span class="n">key</span><span class="s">"</span><span class="p">)</span>
+<span class="w">    </span><span class="n">n</span><span class="o">++</span>
+<span class="w">    </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="o">!</span><span class="n">ex</span><span class="p">.</span><span class="na">advance</span><span class="p">())</span><span class="w"> </span><span class="k">break</span>
+<span class="p">}</span>
+<span class="n">ex</span><span class="p">.</span><span class="na">release</span><span class="p">()</span>
+</code></pre></div>
+<p>The track formats print <code>frame-rate</code>, <code>rotation-degrees</code>, <code>color-standard</code>, <code>color-transfer</code>, <code>color-range</code> and <code>durationUs</code>. Sample times appear in <strong>decode order</strong>.</p>
+<h2 id="8-common-pitfalls">8. Common pitfalls</h2>
+<ul>
+<li><strong>Treating 29.97 as 30</strong> or storing frame durations as rounded milliseconds — A/V drift.</li>
+<li><strong>Accumulating rounded durations</strong> instead of computing timestamps from the frame index.</li>
+<li><strong>Assuming constant frame rate</strong> for phone recordings — use timestamps, not frame counts, for timing.</li>
+<li><strong>Assuming PTS order = file order</strong> — with B-frames, packets arrive in DTS order.</li>
+<li><strong>Dropping or ignoring edit lists</strong> — audio/video offsets of a frame or two, or a visible first-frame glitch.</li>
+<li><strong>Ignoring rotation metadata</strong> — sideways thumbnails and wrong aspect ratios.</li>
+<li><strong>Ignoring SAR</strong> — squashed or stretched anamorphic video.</li>
+<li><strong>Playing interlaced content without deinterlacing</strong> — combing on motion.</li>
+<li><strong>Losing colour tags in a pipeline</strong> (decode → process → encode) — the output becomes "unspecified" and players guess.</li>
+<li><strong>Using floating-point seconds for timestamps</strong> in long-running pipelines — precision loss after hours.</li>
+</ul>
+<h2 id="9-self-test">9. Self-test</h2>
+<ol>
+<li>Write 23.976, 29.97 and 59.94 fps as exact fractions.</li>
+<li>Why is 29.97 fps really 30000/1001? What happens over an hour if a player treats it as 30 fps?</li>
+<li>What is drop-frame timecode, and does it drop any video frames?</li>
+<li>What do <code>r_frame_rate</code> and <code>avg_frame_rate</code> mean, and what does it tell you when they differ?</li>
+<li>A file is 1440 × 1080 with SAR 4:3. What is its DAR? How should a player size it?</li>
+<li>A portrait phone video shows <code>1920x1080</code> in <code>ffprobe</code>. Why, and how does the player know to show it upright?</li>
+<li>What is the difference between 1080i50 and 1080p25? Between 1080p25 and 1080p50?</li>
+<li>Explain 2:3 pulldown in one sentence.</li>
+<li>What is the difference between PTS and DTS, and when do they differ?</li>
+<li>In what order are packets stored in an MP4 with B-frames? In what order does a decoder output frames?</li>
+<li>Why does the first DTS in an MP4 with B-frames often start below zero?</li>
+<li>Convert PTS 450 450 in a 1/90000 timebase to seconds, to a 1/30000 timebase, and to microseconds.</li>
+<li>Why is a 90 kHz clock convenient, and why does 23.976 fps still produce non-integer frame durations in it?</li>
+<li>Which four fields describe a video's colour interpretation? What does a BT.601-vs-BT.709 matrix mismatch look like?</li>
+<li>What is the raw bit rate of 1080p60 10-bit 4:2:2?</li>
+<li>What is the compression ratio if that format is recorded at 150 Mbit/s?</li>
+<li>What are the bits per pixel of 720p30 at 2.5 Mbit/s and of 4K30 at 45 Mbit/s?</li>
+<li>At 24000/1001 fps, when does frame 1000 start, in seconds and in 1/90000 ticks?</li>
+</ol>
+<h2 id="10-further-reading">10. Further reading</h2>
+<ul>
+<li><strong>Charles Poynton, <em>Digital Video and HD: Algorithms and Interfaces</em></strong> (2nd ed.) — frame rates, scanning, interlace, timecode, colour coding; the definitive reference.</li>
+<li><strong>ITU-T H.273</strong> — <em>Coding-independent code points for video signal type identification</em> (the colour metadata code points; free from itu.int).</li>
+<li><strong>ITU-R BT.709 and BT.2020</strong> — HD and UHD parameter values, including frame rates and colour.</li>
+<li><strong>FFmpeg documentation</strong> — <code>ffprobe</code> (<code>-show_packets</code>, <code>-show_frames</code>, <code>-read_intervals</code>), the <code>setparams</code>, <code>yadif</code>/<code>bwdif</code> and <code>fieldmatch</code>/<code>decimate</code> filters, and the <code>libavutil</code> <code>av_rescale_q</code> API.</li>
+<li><strong>ISO/IEC 14496-12</strong> (ISO Base Media File Format) — <code>stts</code>, <code>ctts</code>, <code>elst</code> and <code>tkhd</code> boxes; publicly available from ISO's free standards list.</li>
+<li><strong>Android Developers:</strong> <code>MediaExtractor</code>, <code>MediaCodec</code> ("Data processing" and timestamps), <code>MediaFormat</code> (colour keys), <code>MediaMuxer</code> reference pages.</li>
+<li><strong>Apple Developer:</strong> <code>CMTime</code> and Core Media documentation; AVFoundation programming guides.</li>
+<li><strong>Leandro Moreira, <em>digital_video_introduction</em></strong> (github.com/leandromoreira/digital_video_introduction) — friendly hands-on primer that pairs well with this week and next.</li>
+</ul>
+<section class="answer-key" id="answers"><h2 id="answer-key">Answer key</h2>
+<ol>
+<li><strong>24000/1001</strong>, <strong>30000/1001</strong>, <strong>60000/1001</strong>.</li>
+<li>The NTSC colour system reduced the rate by 1000/1001 to avoid interference between the colour subcarrier and the sound carrier. Treating it as 30 fps makes video run 0.1% fast: about <strong>3.6 s</strong> of drift per hour (107 892 frames shown in 3596.4 s).</li>
+<li>A timecode labelling scheme that skips frame <em>numbers</em> 00 and 01 at the start of each minute except every tenth minute (108 labels per hour), so that timecode matches wall-clock time at 29.97 fps. <strong>No frames are dropped</strong>; only labels are skipped.</li>
+<li><code>r_frame_rate</code>: the lowest frame rate that represents all timestamps exactly (nominal rate). <code>avg_frame_rate</code>: total frames ÷ duration. A difference suggests <strong>variable frame rate</strong> (or dropped/duplicated frames).</li>
+<li>DAR = (1440/1080) × (4/3) = <strong>16:9</strong>. The player should scale it horizontally to e.g. 1920 × 1080 (square pixels) for display.</li>
+<li>The sensor is landscape, so frames are stored landscape; a <strong>display matrix</strong> (rotation metadata, e.g. −90°) in the MP4 track header tells the player to rotate. On Android read <code>KEY_ROTATION</code>/<code>METADATA_KEY_VIDEO_ROTATION</code>.</li>
+<li>1080i50 sends 50 fields per second (each half the lines, captured at different instants) = 25 interlaced frames; 1080p25 sends 25 complete progressive frames. 1080p50 sends 50 complete frames per second — double the data and smoother motion.</li>
+<li>Film frames are alternately repeated for 2 and 3 fields so that 24 film frames fill 60 video fields per second (4 frames → 10 fields).</li>
+<li>PTS is when a frame is displayed, DTS is when it is decoded. They differ when the stream uses <strong>B-frames</strong> (or other reordering), because future reference frames must be decoded before the frames that are displayed before them.</li>
+<li>Stored in <strong>decode (DTS) order</strong>; output in <strong>presentation (PTS) order</strong>.</li>
+<li>So that DTS ≤ PTS for every frame while the first displayed frame still has PTS 0: the reordering delay (e.g. 2 frames) is applied as a negative DTS offset; an edit list then aligns presentation to zero.</li>
+<li>450 450 / 90 000 = <strong>5.005 s</strong>; × 30000/90000 = <strong>150 150</strong> ticks at 1/30000; <strong>5 005 000 µs</strong>.</li>
+<li>90 000 is divisible by 24, 25, 30, 50 and 60, and gives an integer 3003 ticks for 30000/1001. For 24000/1001: 90 000 × 1001 / 24 000 = <strong>3753.75</strong> ticks, so durations alternate between 3753 and 3754.</li>
+<li><strong>Colour primaries, transfer characteristics, matrix coefficients, range.</strong> A matrix mismatch gives subtle hue shifts — skin tones and saturated colours slightly wrong — while neutrals stay correct.</li>
+<li>1920 × 1080 × 2 samples/pixel × 10 bits × 60 = <strong>2.488 Gbit/s</strong>.</li>
+<li>2488 / 150 ≈ <strong>16.6:1</strong>.</li>
+<li>2.5 × 10⁶ / (1280 × 720 × 30) = <strong>0.090 bpp</strong>; 45 × 10⁶ / (3840 × 2160 × 30) = <strong>0.181 bpp</strong>.</li>
+<li>1000 × 1001/24000 = <strong>41.708 s</strong> (41.7083…); in 1/90000 ticks: 1000 × 3753.75 = <strong>3 753 750</strong> (an integer, because frame 1000 is a multiple of 4).</li>
+</ol></section>
+    <div class="pager"><a href="week-02.html">← Week 2: Digital Image Basics</a><a href="week-04.html">Week 4: Compression Basics →</a></div>
+  </article>
+</div>
+<footer class="site">Prepared for Arunkumar Maniam Rajan · Built 2026-10-19 ·
+Progress checkmarks are stored only in this browser (localStorage).</footer></body></html>

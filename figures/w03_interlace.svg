@@ -1,0 +1,1636 @@
+<?xml version="1.0" encoding="utf-8" standalone="no"?>
+<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN"
+  "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
+<svg xmlns:xlink="http://www.w3.org/1999/xlink" width="545.879196pt" height="196.992pt" viewBox="0 0 545.879196 196.992" xmlns="http://www.w3.org/2000/svg" version="1.1">
+ <metadata>
+  <rdf:RDF xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:cc="http://creativecommons.org/ns#" xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#">
+   <cc:Work>
+    <dc:type rdf:resource="http://purl.org/dc/dcmitype/StillImage"/>
+    <dc:date>2026-10-19T11:22:54.893715</dc:date>
+    <dc:format>image/svg+xml</dc:format>
+    <dc:creator>
+     <cc:Agent>
+      <dc:title>Matplotlib v3.11.2, https://matplotlib.org/</dc:title>
+     </cc:Agent>
+    </dc:creator>
+   </cc:Work>
+  </rdf:RDF>
+ </metadata>
+ <defs>
+  <style type="text/css">*{stroke-linejoin: round; stroke-linecap: butt}</style>
+ </defs>
+ <g id="figure_1">
+  <g id="patch_1">
+   <path d="M 0 196.992 
+L 545.879196 196.992 
+L 545.879196 0 
+L 0 0 
+z
+" style="fill: #ffffff"/>
+  </g>
+  <g id="axes_1">
+   <g id="patch_2">
+    <path d="M 5.76 48.936 
+L 161.671765 48.936 
+L 161.671765 37.9404 
+L 5.76 37.9404 
+z
+" clip-path="url(#p72d4391cd6)" style="fill: #1f5fa8"/>
+   </g>
+   <g id="patch_3">
+    <path d="M 5.76 61.872 
+L 161.671765 61.872 
+L 161.671765 50.8764 
+L 5.76 50.8764 
+z
+" clip-path="url(#p72d4391cd6)" style="fill: #e07b16"/>
+   </g>
+   <g id="patch_4">
+    <path d="M 5.76 74.808 
+L 161.671765 74.808 
+L 161.671765 63.8124 
+L 5.76 63.8124 
+z
+" clip-path="url(#p72d4391cd6)" style="fill: #1f5fa8"/>
+   </g>
+   <g id="patch_5">
+    <path d="M 5.76 87.744 
+L 161.671765 87.744 
+L 161.671765 76.7484 
+L 5.76 76.7484 
+z
+" clip-path="url(#p72d4391cd6)" style="fill: #e07b16"/>
+   </g>
+   <g id="patch_6">
+    <path d="M 5.76 100.68 
+L 161.671765 100.68 
+L 161.671765 89.6844 
+L 5.76 89.6844 
+z
+" clip-path="url(#p72d4391cd6)" style="fill: #1f5fa8"/>
+   </g>
+   <g id="patch_7">
+    <path d="M 5.76 113.616 
+L 161.671765 113.616 
+L 161.671765 102.6204 
+L 5.76 102.6204 
+z
+" clip-path="url(#p72d4391cd6)" style="fill: #e07b16"/>
+   </g>
+   <g id="patch_8">
+    <path d="M 5.76 126.552 
+L 161.671765 126.552 
+L 161.671765 115.5564 
+L 5.76 115.5564 
+z
+" clip-path="url(#p72d4391cd6)" style="fill: #1f5fa8"/>
+   </g>
+   <g id="patch_9">
+    <path d="M 5.76 139.488 
+L 161.671765 139.488 
+L 161.671765 128.4924 
+L 5.76 128.4924 
+z
+" clip-path="url(#p72d4391cd6)" style="fill: #e07b16"/>
+   </g>
+   <g id="patch_10">
+    <path d="M 5.76 152.424 
+L 161.671765 152.424 
+L 161.671765 141.4284 
+L 5.76 141.4284 
+z
+" clip-path="url(#p72d4391cd6)" style="fill: #1f5fa8"/>
+   </g>
+   <g id="patch_11">
+    <path d="M 5.76 165.36 
+L 161.671765 165.36 
+L 161.671765 154.3644 
+L 5.76 154.3644 
+z
+" clip-path="url(#p72d4391cd6)" style="fill: #e07b16"/>
+   </g>
+   <g id="patch_12">
+    <path d="M 5.76 178.296 
+L 161.671765 178.296 
+L 161.671765 167.3004 
+L 5.76 167.3004 
+z
+" clip-path="url(#p72d4391cd6)" style="fill: #1f5fa8"/>
+   </g>
+   <g id="patch_13">
+    <path d="M 5.76 191.232 
+L 161.671765 191.232 
+L 161.671765 180.2364 
+L 5.76 180.2364 
+z
+" clip-path="url(#p72d4391cd6)" style="fill: #e07b16"/>
+   </g>
+   <g id="text_1">
+    <!-- frame (all lines) -->
+    <g transform="translate(49.924085 30) scale(0.095 -0.095)">
+     <defs>
+      <path id="FiraSans-Bold-1c9" d="M 1952 4109 
+Q 1734 4109 1638 4006 
+Q 1542 3904 1542 3661 
+L 1542 3398 
+L 2342 3398 
+L 2234 2694 
+L 1542 2694 
+L 1542 0 
+L 531 0 
+L 531 2694 
+L 19 2694 
+L 19 3398 
+L 531 3398 
+L 531 3699 
+Q 531 4211 867 4534 
+Q 1203 4858 1830 4858 
+Q 2336 4858 2758 4640 
+L 2483 3981 
+Q 2227 4109 1952 4109 
+z
+" transform="scale(0.015625)"/>
+      <path id="FiraSans-Bold-26d" d="M 2240 3494 
+Q 2426 3494 2579 3450 
+L 2419 2470 
+Q 2227 2515 2112 2515 
+Q 1811 2515 1654 2307 
+Q 1498 2099 1408 1683 
+L 1408 0 
+L 397 0 
+L 397 3398 
+L 1280 3398 
+L 1363 2739 
+Q 1478 3091 1712 3292 
+Q 1946 3494 2240 3494 
+z
+" transform="scale(0.015625)"/>
+      <path id="FiraSans-Bold-154" d="M 3098 986 
+Q 3098 794 3152 704 
+Q 3206 614 3328 570 
+L 3117 -90 
+Q 2803 -64 2604 48 
+Q 2406 160 2298 403 
+Q 1965 -109 1274 -109 
+Q 768 -109 467 185 
+Q 166 480 166 954 
+Q 166 1510 576 1804 
+Q 986 2099 1760 2099 
+L 2106 2099 
+L 2106 2246 
+Q 2106 2547 1978 2659 
+Q 1850 2771 1530 2771 
+Q 1363 2771 1126 2723 
+Q 890 2675 640 2592 
+L 410 3258 
+Q 730 3379 1066 3443 
+Q 1402 3507 1690 3507 
+Q 2419 3507 2758 3206 
+Q 3098 2906 3098 2304 
+L 3098 986 
+z
+M 1568 614 
+Q 1914 614 2106 941 
+L 2106 1542 
+L 1856 1542 
+Q 1510 1542 1340 1420 
+Q 1171 1299 1171 1043 
+Q 1171 838 1276 726 
+Q 1382 614 1568 614 
+z
+" transform="scale(0.015625)"/>
+      <path id="FiraSans-Bold-21f" d="M 4154 3507 
+Q 4557 3507 4800 3235 
+Q 5043 2963 5043 2483 
+L 5043 0 
+L 4032 0 
+L 4032 2310 
+Q 4032 2765 3744 2765 
+Q 3584 2765 3462 2656 
+Q 3341 2547 3226 2323 
+L 3226 0 
+L 2214 0 
+L 2214 2310 
+Q 2214 2765 1926 2765 
+Q 1773 2765 1648 2653 
+Q 1523 2541 1408 2323 
+L 1408 0 
+L 397 0 
+L 397 3398 
+L 1280 3398 
+L 1350 3002 
+Q 1549 3258 1789 3382 
+Q 2029 3507 2336 3507 
+Q 2624 3507 2832 3366 
+Q 3040 3226 3136 2970 
+Q 3341 3245 3587 3376 
+Q 3834 3507 4154 3507 
+z
+" transform="scale(0.015625)"/>
+      <path id="FiraSans-Bold-1a1" d="M 3360 1766 
+Q 3360 1555 3341 1402 
+L 1235 1402 
+Q 1286 973 1478 800 
+Q 1670 627 2010 627 
+Q 2214 627 2406 700 
+Q 2598 774 2822 928 
+L 3238 365 
+Q 2643 -109 1914 -109 
+Q 1088 -109 646 377 
+Q 205 864 205 1683 
+Q 205 2202 390 2614 
+Q 576 3027 934 3267 
+Q 1293 3507 1792 3507 
+Q 2528 3507 2944 3046 
+Q 3360 2586 3360 1766 
+z
+M 2368 2054 
+Q 2355 2835 1818 2835 
+Q 1555 2835 1411 2643 
+Q 1267 2451 1235 2010 
+L 2368 2010 
+L 2368 2054 
+z
+" transform="scale(0.015625)"/>
+      <path id="FiraSans-Bold-2" transform="scale(0.015625)"/>
+      <path id="FiraSans-Bold-88e" d="M 2003 5062 
+Q 1549 4410 1344 3760 
+Q 1139 3110 1139 2240 
+Q 1139 1370 1344 720 
+Q 1549 70 2003 -582 
+L 1357 -1018 
+Q 941 -442 691 -22 
+Q 442 397 278 960 
+Q 115 1523 115 2240 
+Q 115 2957 278 3520 
+Q 442 4083 691 4502 
+Q 941 4922 1357 5498 
+L 2003 5062 
+z
+" transform="scale(0.015625)"/>
+      <path id="FiraSans-Bold-20d" d="M 1299 -109 
+Q 858 -109 611 144 
+Q 365 397 365 864 
+L 365 4749 
+L 1376 4858 
+L 1376 902 
+Q 1376 691 1549 691 
+Q 1638 691 1715 723 
+L 1914 6 
+Q 1638 -109 1299 -109 
+z
+" transform="scale(0.015625)"/>
+      <path id="FiraSans-Bold-1eb" d="M 1408 3398 
+L 1408 0 
+L 397 0 
+L 397 3398 
+L 1408 3398 
+z
+M 896 5190 
+Q 1159 5190 1328 5027 
+Q 1498 4864 1498 4614 
+Q 1498 4365 1328 4201 
+Q 1159 4038 896 4038 
+Q 634 4038 467 4201 
+Q 301 4365 301 4614 
+Q 301 4864 467 5027 
+Q 634 5190 896 5190 
+z
+" transform="scale(0.015625)"/>
+      <path id="FiraSans-Bold-225" d="M 2387 3507 
+Q 2829 3507 3078 3238 
+Q 3328 2970 3328 2483 
+L 3328 0 
+L 2317 0 
+L 2317 2310 
+Q 2317 2566 2237 2665 
+Q 2157 2765 1997 2765 
+Q 1690 2765 1408 2323 
+L 1408 0 
+L 397 0 
+L 397 3398 
+L 1280 3398 
+L 1350 2995 
+Q 1568 3251 1821 3379 
+Q 2074 3507 2387 3507 
+z
+" transform="scale(0.015625)"/>
+      <path id="FiraSans-Bold-27d" d="M 1594 3507 
+Q 1958 3507 2278 3398 
+Q 2598 3290 2842 3091 
+L 2470 2522 
+Q 2054 2784 1632 2784 
+Q 1434 2784 1328 2717 
+Q 1222 2650 1222 2528 
+Q 1222 2432 1270 2371 
+Q 1318 2310 1465 2246 
+Q 1613 2182 1920 2093 
+Q 2451 1939 2710 1692 
+Q 2970 1446 2970 1011 
+Q 2970 666 2771 413 
+Q 2573 160 2227 25 
+Q 1882 -109 1459 -109 
+Q 1030 -109 662 25 
+Q 294 160 38 397 
+L 531 947 
+Q 960 614 1434 614 
+Q 1664 614 1795 697 
+Q 1926 781 1926 934 
+Q 1926 1056 1875 1126 
+Q 1824 1197 1677 1257 
+Q 1530 1318 1210 1408 
+Q 704 1555 454 1817 
+Q 205 2080 205 2470 
+Q 205 2765 374 2998 
+Q 544 3232 861 3369 
+Q 1178 3507 1594 3507 
+z
+" transform="scale(0.015625)"/>
+      <path id="FiraSans-Bold-88f" d="M 723 5498 
+Q 1139 4915 1385 4499 
+Q 1632 4083 1795 3520 
+Q 1958 2957 1958 2240 
+Q 1958 1523 1795 960 
+Q 1632 397 1385 -19 
+Q 1139 -435 723 -1018 
+L 77 -582 
+Q 531 77 736 726 
+Q 941 1376 941 2240 
+Q 941 3104 736 3753 
+Q 531 4403 77 5062 
+L 723 5498 
+z
+" transform="scale(0.015625)"/>
+     </defs>
+     <use xlink:href="#FiraSans-Bold-1c9"/>
+     <use xlink:href="#FiraSans-Bold-26d" transform="translate(35.59375 0)"/>
+     <use xlink:href="#FiraSans-Bold-154" transform="translate(72.1875 0)"/>
+     <use xlink:href="#FiraSans-Bold-21f" transform="translate(126.984375 0)"/>
+     <use xlink:href="#FiraSans-Bold-1a1" transform="translate(211.484375 0)"/>
+     <use xlink:href="#FiraSans-Bold-2" transform="translate(266.6875 0)"/>
+     <use xlink:href="#FiraSans-Bold-88e" transform="translate(290.390625 0)"/>
+     <use xlink:href="#FiraSans-Bold-154" transform="translate(322.890625 0)"/>
+     <use xlink:href="#FiraSans-Bold-20d" transform="translate(376.6875 0)"/>
+     <use xlink:href="#FiraSans-Bold-20d" transform="translate(406.390625 0)"/>
+     <use xlink:href="#FiraSans-Bold-2" transform="translate(436.09375 0)"/>
+     <use xlink:href="#FiraSans-Bold-20d" transform="translate(459.796875 0)"/>
+     <use xlink:href="#FiraSans-Bold-1eb" transform="translate(489.5 0)"/>
+     <use xlink:href="#FiraSans-Bold-225" transform="translate(517.703125 0)"/>
+     <use xlink:href="#FiraSans-Bold-1a1" transform="translate(575.40625 0)"/>
+     <use xlink:href="#FiraSans-Bold-27d" transform="translate(630.609375 0)"/>
+     <use xlink:href="#FiraSans-Bold-88f" transform="translate(678.90625 0)"/>
+    </g>
+   </g>
+  </g>
+  <g id="axes_2">
+   <g id="patch_14">
+    <path d="M 192.854118 48.936 
+L 348.765882 48.936 
+L 348.765882 37.9404 
+L 192.854118 37.9404 
+z
+" clip-path="url(#pbfe813d0d7)" style="fill: #1f5fa8"/>
+   </g>
+   <g id="patch_15">
+    <path d="M 192.854118 61.872 
+L 348.765882 61.872 
+L 348.765882 50.8764 
+L 192.854118 50.8764 
+z
+" clip-path="url(#pbfe813d0d7)" style="fill: #f3f4f6"/>
+   </g>
+   <g id="patch_16">
+    <path d="M 192.854118 74.808 
+L 348.765882 74.808 
+L 348.765882 63.8124 
+L 192.854118 63.8124 
+z
+" clip-path="url(#pbfe813d0d7)" style="fill: #1f5fa8"/>
+   </g>
+   <g id="patch_17">
+    <path d="M 192.854118 87.744 
+L 348.765882 87.744 
+L 348.765882 76.7484 
+L 192.854118 76.7484 
+z
+" clip-path="url(#pbfe813d0d7)" style="fill: #f3f4f6"/>
+   </g>
+   <g id="patch_18">
+    <path d="M 192.854118 100.68 
+L 348.765882 100.68 
+L 348.765882 89.6844 
+L 192.854118 89.6844 
+z
+" clip-path="url(#pbfe813d0d7)" style="fill: #1f5fa8"/>
+   </g>
+   <g id="patch_19">
+    <path d="M 192.854118 113.616 
+L 348.765882 113.616 
+L 348.765882 102.6204 
+L 192.854118 102.6204 
+z
+" clip-path="url(#pbfe813d0d7)" style="fill: #f3f4f6"/>
+   </g>
+   <g id="patch_20">
+    <path d="M 192.854118 126.552 
+L 348.765882 126.552 
+L 348.765882 115.5564 
+L 192.854118 115.5564 
+z
+" clip-path="url(#pbfe813d0d7)" style="fill: #1f5fa8"/>
+   </g>
+   <g id="patch_21">
+    <path d="M 192.854118 139.488 
+L 348.765882 139.488 
+L 348.765882 128.4924 
+L 192.854118 128.4924 
+z
+" clip-path="url(#pbfe813d0d7)" style="fill: #f3f4f6"/>
+   </g>
+   <g id="patch_22">
+    <path d="M 192.854118 152.424 
+L 348.765882 152.424 
+L 348.765882 141.4284 
+L 192.854118 141.4284 
+z
+" clip-path="url(#pbfe813d0d7)" style="fill: #1f5fa8"/>
+   </g>
+   <g id="patch_23">
+    <path d="M 192.854118 165.36 
+L 348.765882 165.36 
+L 348.765882 154.3644 
+L 192.854118 154.3644 
+z
+" clip-path="url(#pbfe813d0d7)" style="fill: #f3f4f6"/>
+   </g>
+   <g id="patch_24">
+    <path d="M 192.854118 178.296 
+L 348.765882 178.296 
+L 348.765882 167.3004 
+L 192.854118 167.3004 
+z
+" clip-path="url(#pbfe813d0d7)" style="fill: #1f5fa8"/>
+   </g>
+   <g id="patch_25">
+    <path d="M 192.854118 191.232 
+L 348.765882 191.232 
+L 348.765882 180.2364 
+L 192.854118 180.2364 
+z
+" clip-path="url(#pbfe813d0d7)" style="fill: #f3f4f6"/>
+   </g>
+   <g id="text_2">
+    <!-- top field: even lines, time t -->
+    <g transform="translate(213.441875 30) scale(0.095 -0.095)">
+     <defs>
+      <path id="FiraSans-Bold-28b" d="M 2528 160 
+Q 2342 32 2096 -38 
+Q 1850 -109 1606 -109 
+Q 493 -102 493 1120 
+L 493 2694 
+L 13 2694 
+L 13 3398 
+L 493 3398 
+L 493 4134 
+L 1504 4250 
+L 1504 3398 
+L 2285 3398 
+L 2176 2694 
+L 1504 2694 
+L 1504 1133 
+Q 1504 896 1581 793 
+Q 1658 691 1824 691 
+Q 1997 691 2189 800 
+L 2528 160 
+z
+" transform="scale(0.015625)"/>
+      <path id="FiraSans-Bold-236" d="M 1869 3507 
+Q 2650 3507 3091 3030 
+Q 3533 2554 3533 1696 
+Q 3533 1152 3331 745 
+Q 3130 339 2755 115 
+Q 2381 -109 1869 -109 
+Q 1094 -109 649 368 
+Q 205 845 205 1702 
+Q 205 2246 406 2652 
+Q 608 3059 982 3283 
+Q 1357 3507 1869 3507 
+z
+M 1869 2765 
+Q 1562 2765 1408 2505 
+Q 1254 2246 1254 1702 
+Q 1254 1146 1404 890 
+Q 1555 634 1869 634 
+Q 2176 634 2329 893 
+Q 2483 1152 2483 1696 
+Q 2483 2253 2332 2509 
+Q 2182 2765 1869 2765 
+z
+" transform="scale(0.015625)"/>
+      <path id="FiraSans-Bold-262" d="M 2317 3507 
+Q 2957 3507 3270 3033 
+Q 3584 2560 3584 1709 
+Q 3584 1184 3421 771 
+Q 3258 358 2950 124 
+Q 2643 -109 2234 -109 
+Q 1722 -109 1408 243 
+L 1408 -1312 
+L 397 -1421 
+L 397 3398 
+L 1286 3398 
+L 1338 3021 
+Q 1536 3270 1792 3388 
+Q 2048 3507 2317 3507 
+z
+M 1926 634 
+Q 2534 634 2534 1696 
+Q 2534 2298 2400 2531 
+Q 2266 2765 1997 2765 
+Q 1824 2765 1673 2662 
+Q 1523 2560 1408 2368 
+L 1408 934 
+Q 1613 634 1926 634 
+z
+" transform="scale(0.015625)"/>
+      <path id="FiraSans-Bold-2ea" d="M 1952 4858 
+Q 2554 4858 3078 4602 
+L 2797 3955 
+Q 2419 4109 2067 4109 
+Q 1773 4109 1661 4006 
+Q 1549 3904 1549 3654 
+L 1549 3398 
+L 3437 3398 
+L 3437 0 
+L 2426 0 
+L 2426 2694 
+L 1549 2694 
+L 1549 0 
+L 538 0 
+L 538 2694 
+L 19 2694 
+L 19 3398 
+L 538 3398 
+L 538 3693 
+Q 538 4218 883 4538 
+Q 1229 4858 1952 4858 
+z
+" transform="scale(0.015625)"/>
+      <path id="FiraSans-Bold-18e" d="M 3443 4749 
+L 3443 0 
+L 2547 0 
+L 2496 397 
+Q 2138 -109 1530 -109 
+Q 896 -109 566 377 
+Q 237 864 237 1709 
+Q 237 2227 409 2636 
+Q 582 3046 899 3276 
+Q 1216 3507 1626 3507 
+Q 2112 3507 2432 3187 
+L 2432 4858 
+L 3443 4749 
+z
+M 1843 634 
+Q 2195 634 2432 1018 
+L 2432 2483 
+Q 2310 2630 2185 2700 
+Q 2061 2771 1901 2771 
+Q 1619 2771 1452 2508 
+Q 1286 2246 1286 1702 
+Q 1286 1107 1430 870 
+Q 1574 634 1843 634 
+z
+" transform="scale(0.015625)"/>
+      <path id="FiraSans-Bold-86a" d="M 768 1050 
+Q 1005 1050 1174 880 
+Q 1344 710 1344 474 
+Q 1344 230 1174 60 
+Q 1005 -109 768 -109 
+Q 525 -109 355 60 
+Q 186 230 186 474 
+Q 186 710 355 880 
+Q 525 1050 768 1050 
+z
+M 768 3264 
+Q 1005 3264 1174 3094 
+Q 1344 2924 1344 2688 
+Q 1344 2444 1174 2274 
+Q 1005 2105 768 2105 
+Q 525 2105 355 2274 
+Q 186 2444 186 2688 
+Q 186 2924 355 3094 
+Q 525 3264 768 3264 
+z
+" transform="scale(0.015625)"/>
+      <path id="FiraSans-Bold-2bd" d="M 3322 3398 
+L 2253 0 
+L 1056 0 
+L -38 3398 
+L 1062 3398 
+L 1664 768 
+L 2291 3398 
+L 3322 3398 
+z
+" transform="scale(0.015625)"/>
+      <path id="FiraSans-Bold-86b" d="M 768 1050 
+Q 1011 1050 1177 883 
+Q 1344 717 1344 474 
+Q 1344 333 1299 192 
+Q 1254 51 1139 -205 
+L 736 -1133 
+L 166 -1133 
+L 442 -6 
+Q 320 77 253 201 
+Q 186 326 186 474 
+Q 186 717 352 883 
+Q 518 1050 768 1050 
+z
+" transform="scale(0.015625)"/>
+     </defs>
+     <use xlink:href="#FiraSans-Bold-28b"/>
+     <use xlink:href="#FiraSans-Bold-236" transform="translate(36.796875 0)"/>
+     <use xlink:href="#FiraSans-Bold-262" transform="translate(95.203125 0)"/>
+     <use xlink:href="#FiraSans-Bold-2" transform="translate(154.90625 0)"/>
+     <use xlink:href="#FiraSans-Bold-2ea" transform="translate(178.609375 0)"/>
+     <use xlink:href="#FiraSans-Bold-1a1" transform="translate(238.515625 0)"/>
+     <use xlink:href="#FiraSans-Bold-20d" transform="translate(293.71875 0)"/>
+     <use xlink:href="#FiraSans-Bold-18e" transform="translate(322.921875 0)"/>
+     <use xlink:href="#FiraSans-Bold-86a" transform="translate(382.921875 0)"/>
+     <use xlink:href="#FiraSans-Bold-2" transform="translate(406.921875 0)"/>
+     <use xlink:href="#FiraSans-Bold-1a1" transform="translate(430.625 0)"/>
+     <use xlink:href="#FiraSans-Bold-2bd" transform="translate(485.03125 0)"/>
+     <use xlink:href="#FiraSans-Bold-1a1" transform="translate(535.53125 0)"/>
+     <use xlink:href="#FiraSans-Bold-225" transform="translate(590.734375 0)"/>
+     <use xlink:href="#FiraSans-Bold-2" transform="translate(648.4375 0)"/>
+     <use xlink:href="#FiraSans-Bold-20d" transform="translate(672.140625 0)"/>
+     <use xlink:href="#FiraSans-Bold-1eb" transform="translate(701.84375 0)"/>
+     <use xlink:href="#FiraSans-Bold-225" transform="translate(730.046875 0)"/>
+     <use xlink:href="#FiraSans-Bold-1a1" transform="translate(787.75 0)"/>
+     <use xlink:href="#FiraSans-Bold-27d" transform="translate(842.953125 0)"/>
+     <use xlink:href="#FiraSans-Bold-86b" transform="translate(891.25 0)"/>
+     <use xlink:href="#FiraSans-Bold-2" transform="translate(915.25 0)"/>
+     <use xlink:href="#FiraSans-Bold-28b" transform="translate(938.953125 0)"/>
+     <use xlink:href="#FiraSans-Bold-1eb" transform="translate(977.546875 0)"/>
+     <use xlink:href="#FiraSans-Bold-21f" transform="translate(1005.75 0)"/>
+     <use xlink:href="#FiraSans-Bold-1a1" transform="translate(1090.25 0)"/>
+     <use xlink:href="#FiraSans-Bold-2" transform="translate(1145.453125 0)"/>
+     <use xlink:href="#FiraSans-Bold-28b" transform="translate(1169.15625 0)"/>
+    </g>
+   </g>
+  </g>
+  <g id="axes_3">
+   <g id="patch_26">
+    <path d="M 379.948235 48.936 
+L 535.86 48.936 
+L 535.86 37.9404 
+L 379.948235 37.9404 
+z
+" clip-path="url(#p42ea1b063b)" style="fill: #f3f4f6"/>
+   </g>
+   <g id="patch_27">
+    <path d="M 379.948235 61.872 
+L 535.86 61.872 
+L 535.86 50.8764 
+L 379.948235 50.8764 
+z
+" clip-path="url(#p42ea1b063b)" style="fill: #e07b16"/>
+   </g>
+   <g id="patch_28">
+    <path d="M 379.948235 74.808 
+L 535.86 74.808 
+L 535.86 63.8124 
+L 379.948235 63.8124 
+z
+" clip-path="url(#p42ea1b063b)" style="fill: #f3f4f6"/>
+   </g>
+   <g id="patch_29">
+    <path d="M 379.948235 87.744 
+L 535.86 87.744 
+L 535.86 76.7484 
+L 379.948235 76.7484 
+z
+" clip-path="url(#p42ea1b063b)" style="fill: #e07b16"/>
+   </g>
+   <g id="patch_30">
+    <path d="M 379.948235 100.68 
+L 535.86 100.68 
+L 535.86 89.6844 
+L 379.948235 89.6844 
+z
+" clip-path="url(#p42ea1b063b)" style="fill: #f3f4f6"/>
+   </g>
+   <g id="patch_31">
+    <path d="M 379.948235 113.616 
+L 535.86 113.616 
+L 535.86 102.6204 
+L 379.948235 102.6204 
+z
+" clip-path="url(#p42ea1b063b)" style="fill: #e07b16"/>
+   </g>
+   <g id="patch_32">
+    <path d="M 379.948235 126.552 
+L 535.86 126.552 
+L 535.86 115.5564 
+L 379.948235 115.5564 
+z
+" clip-path="url(#p42ea1b063b)" style="fill: #f3f4f6"/>
+   </g>
+   <g id="patch_33">
+    <path d="M 379.948235 139.488 
+L 535.86 139.488 
+L 535.86 128.4924 
+L 379.948235 128.4924 
+z
+" clip-path="url(#p42ea1b063b)" style="fill: #e07b16"/>
+   </g>
+   <g id="patch_34">
+    <path d="M 379.948235 152.424 
+L 535.86 152.424 
+L 535.86 141.4284 
+L 379.948235 141.4284 
+z
+" clip-path="url(#p42ea1b063b)" style="fill: #f3f4f6"/>
+   </g>
+   <g id="patch_35">
+    <path d="M 379.948235 165.36 
+L 535.86 165.36 
+L 535.86 154.3644 
+L 379.948235 154.3644 
+z
+" clip-path="url(#p42ea1b063b)" style="fill: #e07b16"/>
+   </g>
+   <g id="patch_36">
+    <path d="M 379.948235 178.296 
+L 535.86 178.296 
+L 535.86 167.3004 
+L 379.948235 167.3004 
+z
+" clip-path="url(#p42ea1b063b)" style="fill: #f3f4f6"/>
+   </g>
+   <g id="patch_37">
+    <path d="M 379.948235 191.232 
+L 535.86 191.232 
+L 535.86 180.2364 
+L 379.948235 180.2364 
+z
+" clip-path="url(#p42ea1b063b)" style="fill: #e07b16"/>
+   </g>
+   <g id="text_3">
+    <!-- bottom field: odd lines, time t + 1/50 s -->
+    <g transform="translate(375.68904 30) scale(0.095 -0.095)">
+     <defs>
+      <path id="FiraSans-Bold-179" d="M 2323 3507 
+Q 2931 3507 3257 3030 
+Q 3584 2554 3584 1696 
+Q 3584 1171 3421 761 
+Q 3258 352 2954 121 
+Q 2650 -109 2234 -109 
+Q 1958 -109 1731 6 
+Q 1504 122 1344 326 
+L 1293 0 
+L 397 0 
+L 397 4749 
+L 1408 4858 
+L 1408 3053 
+Q 1562 3264 1802 3385 
+Q 2042 3507 2323 3507 
+z
+M 1939 627 
+Q 2534 627 2534 1696 
+Q 2534 2304 2393 2534 
+Q 2253 2765 1984 2765 
+Q 1645 2765 1408 2368 
+L 1408 954 
+Q 1504 800 1641 713 
+Q 1779 627 1939 627 
+z
+" transform="scale(0.015625)"/>
+      <path id="FiraSans-Bold-90b" d="M 2118 3514 
+L 2118 2515 
+L 3085 2515 
+L 3085 1734 
+L 2118 1734 
+L 2118 736 
+L 1280 736 
+L 1280 1734 
+L 307 1734 
+L 307 2515 
+L 1280 2515 
+L 1280 3514 
+L 2118 3514 
+z
+" transform="scale(0.015625)"/>
+      <path id="FiraSans-Bold-800" d="M 2445 4326 
+L 2445 0 
+L 1453 0 
+L 1453 3341 
+L 525 2771 
+L 83 3443 
+L 1542 4326 
+L 2445 4326 
+z
+" transform="scale(0.015625)"/>
+      <path id="FiraSans-Bold-878" d="M 1978 5222 
+L 2861 5024 
+L 1357 -717 
+L 467 -512 
+L 1978 5222 
+z
+" transform="scale(0.015625)"/>
+      <path id="FiraSans-Bold-804" d="M 2906 3603 
+L 1338 3603 
+L 1338 2694 
+Q 1638 2835 1978 2835 
+Q 2336 2835 2617 2668 
+Q 2899 2502 3059 2182 
+Q 3219 1862 3219 1427 
+Q 3219 973 3011 624 
+Q 2803 275 2416 83 
+Q 2029 -109 1523 -109 
+Q 646 -109 83 544 
+L 646 1069 
+Q 998 653 1485 653 
+Q 1818 653 2000 851 
+Q 2182 1050 2182 1421 
+Q 2182 2144 1574 2144 
+Q 1446 2144 1324 2109 
+Q 1203 2074 1056 1990 
+L 371 1990 
+L 371 4326 
+L 3021 4326 
+L 2906 3603 
+z
+" transform="scale(0.015625)"/>
+      <path id="FiraSans-Bold-7ff" d="M 1875 4416 
+Q 2669 4416 3088 3833 
+Q 3507 3251 3507 2157 
+Q 3507 1069 3088 480 
+Q 2669 -109 1875 -109 
+Q 1082 -109 662 480 
+Q 243 1069 243 2157 
+Q 243 3251 662 3833 
+Q 1082 4416 1875 4416 
+z
+M 1875 3667 
+Q 1658 3667 1530 3526 
+Q 1402 3386 1341 3059 
+Q 1280 2733 1280 2157 
+Q 1280 1581 1341 1251 
+Q 1402 922 1530 781 
+Q 1658 640 1875 640 
+Q 2093 640 2221 777 
+Q 2349 915 2409 1244 
+Q 2470 1574 2470 2157 
+Q 2470 2739 2409 3068 
+Q 2349 3398 2221 3532 
+Q 2093 3667 1875 3667 
+z
+" transform="scale(0.015625)"/>
+     </defs>
+     <use xlink:href="#FiraSans-Bold-179"/>
+     <use xlink:href="#FiraSans-Bold-236" transform="translate(59.703125 0)"/>
+     <use xlink:href="#FiraSans-Bold-28b" transform="translate(118.109375 0)"/>
+     <use xlink:href="#FiraSans-Bold-28b" transform="translate(156.703125 0)"/>
+     <use xlink:href="#FiraSans-Bold-236" transform="translate(193.5 0)"/>
+     <use xlink:href="#FiraSans-Bold-21f" transform="translate(251.90625 0)"/>
+     <use xlink:href="#FiraSans-Bold-2" transform="translate(336.40625 0)"/>
+     <use xlink:href="#FiraSans-Bold-2ea" transform="translate(360.109375 0)"/>
+     <use xlink:href="#FiraSans-Bold-1a1" transform="translate(420.015625 0)"/>
+     <use xlink:href="#FiraSans-Bold-20d" transform="translate(475.21875 0)"/>
+     <use xlink:href="#FiraSans-Bold-18e" transform="translate(504.421875 0)"/>
+     <use xlink:href="#FiraSans-Bold-86a" transform="translate(564.421875 0)"/>
+     <use xlink:href="#FiraSans-Bold-2" transform="translate(588.421875 0)"/>
+     <use xlink:href="#FiraSans-Bold-236" transform="translate(612.125 0)"/>
+     <use xlink:href="#FiraSans-Bold-18e" transform="translate(670.53125 0)"/>
+     <use xlink:href="#FiraSans-Bold-18e" transform="translate(730.53125 0)"/>
+     <use xlink:href="#FiraSans-Bold-2" transform="translate(790.53125 0)"/>
+     <use xlink:href="#FiraSans-Bold-20d" transform="translate(814.234375 0)"/>
+     <use xlink:href="#FiraSans-Bold-1eb" transform="translate(843.9375 0)"/>
+     <use xlink:href="#FiraSans-Bold-225" transform="translate(872.140625 0)"/>
+     <use xlink:href="#FiraSans-Bold-1a1" transform="translate(929.84375 0)"/>
+     <use xlink:href="#FiraSans-Bold-27d" transform="translate(985.046875 0)"/>
+     <use xlink:href="#FiraSans-Bold-86b" transform="translate(1033.34375 0)"/>
+     <use xlink:href="#FiraSans-Bold-2" transform="translate(1057.34375 0)"/>
+     <use xlink:href="#FiraSans-Bold-28b" transform="translate(1081.046875 0)"/>
+     <use xlink:href="#FiraSans-Bold-1eb" transform="translate(1119.640625 0)"/>
+     <use xlink:href="#FiraSans-Bold-21f" transform="translate(1147.84375 0)"/>
+     <use xlink:href="#FiraSans-Bold-1a1" transform="translate(1232.34375 0)"/>
+     <use xlink:href="#FiraSans-Bold-2" transform="translate(1287.546875 0)"/>
+     <use xlink:href="#FiraSans-Bold-28b" transform="translate(1311.25 0)"/>
+     <use xlink:href="#FiraSans-Bold-2" transform="translate(1349.84375 0)"/>
+     <use xlink:href="#FiraSans-Bold-90b" transform="translate(1373.546875 0)"/>
+     <use xlink:href="#FiraSans-Bold-2" transform="translate(1426.640625 0)"/>
+     <use xlink:href="#FiraSans-Bold-800" transform="translate(1450.34375 0)"/>
+     <use xlink:href="#FiraSans-Bold-878" transform="translate(1496.75 0)"/>
+     <use xlink:href="#FiraSans-Bold-804" transform="translate(1546.75 0)"/>
+     <use xlink:href="#FiraSans-Bold-7ff" transform="translate(1600.34375 0)"/>
+     <use xlink:href="#FiraSans-Bold-2" transform="translate(1658.84375 0)"/>
+     <use xlink:href="#FiraSans-Bold-27d" transform="translate(1682.546875 0)"/>
+    </g>
+   </g>
+  </g>
+  <g id="text_4">
+   <!-- Interlaced scan (e.g. 1080i50): 50 half-height fields per second, captured at different instants -->
+   <g transform="translate(42.978164 15.5775) scale(0.105 -0.105)">
+    <defs>
+     <path id="FiraSans-Regular-7a" d="M 1248 4410 
+L 1248 0 
+L 640 0 
+L 640 4410 
+L 1248 4410 
+z
+" transform="scale(0.015625)"/>
+     <path id="FiraSans-Regular-225" d="M 2195 3450 
+Q 2656 3450 2915 3174 
+Q 3174 2899 3174 2419 
+L 3174 0 
+L 2586 0 
+L 2586 2336 
+Q 2586 2694 2451 2841 
+Q 2317 2989 2054 2989 
+Q 1786 2989 1581 2835 
+Q 1376 2682 1197 2394 
+L 1197 0 
+L 608 0 
+L 608 3373 
+L 1114 3373 
+L 1165 2874 
+Q 1344 3142 1609 3296 
+Q 1875 3450 2195 3450 
+z
+" transform="scale(0.015625)"/>
+     <path id="FiraSans-Regular-28b" d="M 2310 154 
+Q 1978 -77 1555 -77 
+Q 1126 -77 886 169 
+Q 646 416 646 883 
+L 646 2918 
+L 58 2918 
+L 58 3373 
+L 646 3373 
+L 646 4134 
+L 1235 4205 
+L 1235 3373 
+L 2035 3373 
+L 1971 2918 
+L 1235 2918 
+L 1235 909 
+Q 1235 646 1328 528 
+Q 1421 410 1638 410 
+Q 1837 410 2086 544 
+L 2310 154 
+z
+" transform="scale(0.015625)"/>
+     <path id="FiraSans-Regular-1a1" d="M 3155 1786 
+Q 3155 1638 3142 1485 
+L 992 1485 
+Q 1030 928 1273 665 
+Q 1517 403 1901 403 
+Q 2144 403 2349 473 
+Q 2554 544 2778 698 
+L 3034 346 
+Q 2496 -77 1856 -77 
+Q 1152 -77 758 384 
+Q 365 845 365 1651 
+Q 365 2176 534 2582 
+Q 704 2989 1021 3219 
+Q 1338 3450 1766 3450 
+Q 2438 3450 2796 3008 
+Q 3155 2566 3155 1786 
+z
+M 2573 1958 
+Q 2573 2458 2374 2720 
+Q 2176 2982 1779 2982 
+Q 1056 2982 992 1920 
+L 2573 1920 
+L 2573 1958 
+z
+" transform="scale(0.015625)"/>
+     <path id="FiraSans-Regular-26d" d="M 2074 3450 
+Q 2253 3450 2406 3411 
+L 2298 2835 
+Q 2144 2874 2003 2874 
+Q 1690 2874 1498 2643 
+Q 1306 2413 1197 1926 
+L 1197 0 
+L 608 0 
+L 608 3373 
+L 1114 3373 
+L 1171 2688 
+Q 1306 3066 1536 3258 
+Q 1766 3450 2074 3450 
+z
+" transform="scale(0.015625)"/>
+     <path id="FiraSans-Regular-20d" d="M 1280 -77 
+Q 954 -77 765 118 
+Q 576 314 576 666 
+L 576 4730 
+L 1165 4800 
+L 1165 678 
+Q 1165 538 1213 474 
+Q 1261 410 1376 410 
+Q 1498 410 1594 448 
+L 1747 38 
+Q 1536 -77 1280 -77 
+z
+" transform="scale(0.015625)"/>
+     <path id="FiraSans-Regular-154" d="M 2880 787 
+Q 2880 582 2950 483 
+Q 3021 384 3162 333 
+L 3027 -77 
+Q 2765 -45 2605 70 
+Q 2445 186 2368 429 
+Q 2029 -77 1363 -77 
+Q 864 -77 576 204 
+Q 288 486 288 941 
+Q 288 1478 675 1766 
+Q 1062 2054 1773 2054 
+L 2291 2054 
+L 2291 2304 
+Q 2291 2662 2118 2816 
+Q 1946 2970 1587 2970 
+Q 1216 2970 678 2790 
+L 531 3219 
+Q 1158 3450 1696 3450 
+Q 2291 3450 2585 3158 
+Q 2880 2867 2880 2330 
+L 2880 787 
+z
+M 1498 365 
+Q 2003 365 2291 890 
+L 2291 1664 
+L 1850 1664 
+Q 915 1664 915 973 
+Q 915 672 1062 518 
+Q 1210 365 1498 365 
+z
+" transform="scale(0.015625)"/>
+     <path id="FiraSans-Regular-183" d="M 1837 3450 
+Q 2138 3450 2387 3363 
+Q 2637 3277 2867 3085 
+L 2586 2714 
+Q 2406 2842 2236 2902 
+Q 2067 2963 1862 2963 
+Q 1453 2963 1225 2636 
+Q 998 2310 998 1670 
+Q 998 1030 1222 726 
+Q 1446 422 1862 422 
+Q 2061 422 2227 483 
+Q 2394 544 2598 678 
+L 2867 294 
+Q 2406 -77 1837 -77 
+Q 1152 -77 758 384 
+Q 365 845 365 1658 
+Q 365 2195 544 2598 
+Q 723 3002 1052 3226 
+Q 1382 3450 1837 3450 
+z
+" transform="scale(0.015625)"/>
+     <path id="FiraSans-Regular-18e" d="M 3219 4730 
+L 3219 0 
+L 2701 0 
+L 2643 467 
+Q 2477 211 2227 67 
+Q 1978 -77 1670 -77 
+Q 1069 -77 733 396 
+Q 397 870 397 1670 
+Q 397 2189 557 2592 
+Q 717 2995 1017 3222 
+Q 1318 3450 1722 3450 
+Q 2240 3450 2630 3034 
+L 2630 4800 
+L 3219 4730 
+z
+M 1798 390 
+Q 2067 390 2259 515 
+Q 2451 640 2630 890 
+L 2630 2541 
+Q 2464 2758 2275 2870 
+Q 2086 2982 1850 2982 
+Q 1459 2982 1244 2656 
+Q 1030 2330 1030 1683 
+Q 1030 1030 1228 710 
+Q 1427 390 1798 390 
+z
+" transform="scale(0.015625)"/>
+     <path id="FiraSans-Regular-2" transform="scale(0.015625)"/>
+     <path id="FiraSans-Regular-27d" d="M 1523 3450 
+Q 1869 3450 2144 3354 
+Q 2419 3258 2669 3066 
+L 2419 2694 
+Q 2189 2842 1981 2912 
+Q 1773 2982 1542 2982 
+Q 1254 2982 1088 2864 
+Q 922 2746 922 2541 
+Q 922 2336 1078 2221 
+Q 1235 2106 1645 1997 
+Q 2208 1856 2486 1613 
+Q 2765 1370 2765 947 
+Q 2765 448 2377 185 
+Q 1990 -77 1434 -77 
+Q 666 -77 160 365 
+L 474 723 
+Q 902 397 1421 397 
+Q 1754 397 1949 534 
+Q 2144 672 2144 909 
+Q 2144 1082 2073 1187 
+Q 2003 1293 1830 1373 
+Q 1658 1453 1325 1542 
+Q 787 1683 547 1920 
+Q 307 2157 307 2522 
+Q 307 2784 464 2998 
+Q 621 3213 899 3331 
+Q 1178 3450 1523 3450 
+z
+" transform="scale(0.015625)"/>
+     <path id="FiraSans-Regular-88e" d="M 1818 5152 
+Q 1485 4659 1289 4272 
+Q 1094 3885 982 3392 
+Q 870 2899 870 2240 
+Q 870 1587 982 1094 
+Q 1094 602 1289 208 
+Q 1485 -186 1818 -672 
+L 1446 -928 
+Q 1024 -326 797 61 
+Q 570 448 413 989 
+Q 256 1530 256 2240 
+Q 256 2950 413 3491 
+Q 570 4032 797 4419 
+Q 1024 4806 1446 5408 
+L 1818 5152 
+z
+" transform="scale(0.015625)"/>
+     <path id="FiraSans-Regular-872" d="M 762 813 
+Q 954 813 1082 685 
+Q 1210 557 1210 371 
+Q 1210 186 1082 54 
+Q 954 -77 762 -77 
+Q 576 -77 448 54 
+Q 320 186 320 371 
+Q 320 557 448 685 
+Q 576 813 762 813 
+z
+" transform="scale(0.015625)"/>
+     <path id="FiraSans-Regular-1cc" d="M 3328 3219 
+Q 3136 3155 2905 3136 
+Q 2675 3117 2342 3117 
+Q 2938 2848 2938 2266 
+Q 2938 1760 2592 1440 
+Q 2246 1120 1651 1120 
+Q 1421 1120 1222 1184 
+Q 1146 1133 1101 1046 
+Q 1056 960 1056 870 
+Q 1056 595 1498 595 
+L 2035 595 
+Q 2374 595 2636 473 
+Q 2899 352 3043 141 
+Q 3187 -70 3187 -339 
+Q 3187 -832 2784 -1097 
+Q 2381 -1363 1606 -1363 
+Q 1062 -1363 745 -1251 
+Q 429 -1139 294 -915 
+Q 160 -691 160 -339 
+L 691 -339 
+Q 691 -544 768 -662 
+Q 845 -781 1043 -841 
+Q 1242 -902 1606 -902 
+Q 2138 -902 2365 -771 
+Q 2592 -640 2592 -378 
+Q 2592 -141 2413 -19 
+Q 2234 102 1914 102 
+L 1382 102 
+Q 954 102 733 284 
+Q 512 467 512 742 
+Q 512 909 608 1062 
+Q 704 1216 883 1338 
+Q 589 1491 451 1718 
+Q 314 1946 314 2272 
+Q 314 2611 483 2880 
+Q 653 3149 950 3299 
+Q 1248 3450 1613 3450 
+Q 2010 3443 2278 3478 
+Q 2547 3514 2723 3574 
+Q 2899 3635 3155 3750 
+L 3328 3219 
+z
+M 1613 3027 
+Q 1280 3027 1097 2819 
+Q 915 2611 915 2272 
+Q 915 1926 1100 1718 
+Q 1286 1510 1626 1510 
+Q 1971 1510 2153 1712 
+Q 2336 1914 2336 2278 
+Q 2336 3027 1613 3027 
+z
+" transform="scale(0.015625)"/>
+     <path id="FiraSans-Regular-800" d="M 2067 4282 
+L 2067 0 
+L 1478 0 
+L 1478 3654 
+L 480 3046 
+L 224 3462 
+L 1549 4282 
+L 2067 4282 
+z
+" transform="scale(0.015625)"/>
+     <path id="FiraSans-Regular-7ff" d="M 1786 4346 
+Q 2496 4346 2857 3779 
+Q 3219 3213 3219 2138 
+Q 3219 1062 2857 492 
+Q 2496 -77 1786 -77 
+Q 1075 -77 713 492 
+Q 352 1062 352 2138 
+Q 352 3213 713 3779 
+Q 1075 4346 1786 4346 
+z
+M 1786 3878 
+Q 1370 3878 1168 3468 
+Q 966 3059 966 2138 
+Q 966 1216 1168 803 
+Q 1370 390 1786 390 
+Q 2195 390 2400 803 
+Q 2605 1216 2605 2138 
+Q 2605 3053 2400 3465 
+Q 2195 3878 1786 3878 
+z
+" transform="scale(0.015625)"/>
+     <path id="FiraSans-Regular-807" d="M 2336 2298 
+Q 3238 1933 3238 1146 
+Q 3238 794 3049 515 
+Q 2861 237 2521 80 
+Q 2182 -77 1754 -77 
+Q 1318 -77 985 76 
+Q 653 230 470 505 
+Q 288 781 288 1133 
+Q 288 1530 502 1798 
+Q 717 2067 1133 2246 
+Q 794 2419 630 2665 
+Q 467 2912 467 3245 
+Q 467 3590 649 3840 
+Q 832 4090 1129 4218 
+Q 1427 4346 1766 4346 
+Q 2099 4346 2396 4224 
+Q 2694 4102 2880 3856 
+Q 3066 3610 3066 3264 
+Q 3066 2944 2886 2713 
+Q 2707 2483 2336 2298 
+z
+M 1766 3904 
+Q 1434 3904 1238 3731 
+Q 1043 3558 1043 3238 
+Q 1043 2931 1232 2771 
+Q 1421 2611 1837 2477 
+L 1946 2438 
+Q 2234 2605 2362 2790 
+Q 2490 2976 2490 3245 
+Q 2490 3546 2301 3725 
+Q 2112 3904 1766 3904 
+z
+M 1760 390 
+Q 2157 390 2390 595 
+Q 2624 800 2624 1139 
+Q 2624 1370 2534 1526 
+Q 2445 1683 2246 1801 
+Q 2048 1920 1690 2042 
+L 1530 2099 
+Q 1210 1946 1056 1712 
+Q 902 1478 902 1133 
+Q 902 781 1132 585 
+Q 1363 390 1760 390 
+z
+" transform="scale(0.015625)"/>
+     <path id="FiraSans-Regular-1eb" d="M 1197 3373 
+L 1197 0 
+L 608 0 
+L 608 3373 
+L 1197 3373 
+z
+M 896 4992 
+Q 1082 4992 1197 4877 
+Q 1312 4762 1312 4589 
+Q 1312 4416 1197 4304 
+Q 1082 4192 896 4192 
+Q 717 4192 601 4304 
+Q 486 4416 486 4589 
+Q 486 4762 601 4877 
+Q 717 4992 896 4992 
+z
+" transform="scale(0.015625)"/>
+     <path id="FiraSans-Regular-804" d="M 2688 3821 
+L 1018 3821 
+L 1018 2560 
+Q 1344 2726 1702 2726 
+Q 2253 2726 2585 2364 
+Q 2918 2003 2918 1370 
+Q 2918 947 2732 617 
+Q 2547 288 2211 105 
+Q 1875 -77 1434 -77 
+Q 1043 -77 736 60 
+Q 429 198 166 467 
+L 512 806 
+Q 717 602 934 502 
+Q 1152 403 1427 403 
+Q 1837 403 2070 659 
+Q 2304 915 2304 1382 
+Q 2304 1850 2093 2061 
+Q 1882 2272 1523 2272 
+Q 1357 2272 1216 2237 
+Q 1075 2202 915 2125 
+L 454 2125 
+L 454 4282 
+L 2771 4282 
+L 2688 3821 
+z
+" transform="scale(0.015625)"/>
+     <path id="FiraSans-Regular-88f" d="M 627 5408 
+Q 1050 4806 1277 4419 
+Q 1504 4032 1661 3491 
+Q 1818 2950 1818 2240 
+Q 1818 1530 1661 989 
+Q 1504 448 1277 61 
+Q 1050 -326 627 -928 
+L 256 -672 
+Q 589 -186 784 208 
+Q 979 602 1091 1094 
+Q 1203 1587 1203 2240 
+Q 1203 2899 1091 3392 
+Q 979 3885 784 4272 
+Q 589 4659 256 5152 
+L 627 5408 
+z
+" transform="scale(0.015625)"/>
+     <path id="FiraSans-Regular-86a" d="M 762 813 
+Q 954 813 1082 685 
+Q 1210 557 1210 371 
+Q 1210 186 1082 54 
+Q 954 -77 762 -77 
+Q 576 -77 448 54 
+Q 320 186 320 371 
+Q 320 557 448 685 
+Q 576 813 762 813 
+z
+M 762 3168 
+Q 954 3168 1082 3040 
+Q 1210 2912 1210 2726 
+Q 1210 2541 1082 2409 
+Q 954 2278 762 2278 
+Q 576 2278 448 2409 
+Q 320 2541 320 2726 
+Q 320 2912 448 3040 
+Q 576 3168 762 3168 
+z
+" transform="scale(0.015625)"/>
+     <path id="FiraSans-Regular-1e0" d="M 2195 3450 
+Q 2656 3450 2915 3174 
+Q 3174 2899 3174 2419 
+L 3174 0 
+L 2586 0 
+L 2586 2336 
+Q 2586 2694 2448 2841 
+Q 2310 2989 2048 2989 
+Q 1786 2989 1581 2835 
+Q 1376 2682 1197 2400 
+L 1197 0 
+L 608 0 
+L 608 4723 
+L 1197 4787 
+L 1197 2906 
+Q 1594 3450 2195 3450 
+z
+" transform="scale(0.015625)"/>
+     <path id="FiraSans-Regular-1c9" d="M 1754 4326 
+Q 1485 4326 1369 4208 
+Q 1254 4090 1254 3840 
+L 1254 3373 
+L 2074 3373 
+L 2010 2918 
+L 1254 2918 
+L 1254 0 
+L 666 0 
+L 666 2918 
+L 64 2918 
+L 64 3373 
+L 666 3373 
+L 666 3834 
+Q 666 4269 944 4534 
+Q 1222 4800 1722 4800 
+Q 1952 4800 2134 4758 
+Q 2317 4717 2528 4627 
+L 2342 4198 
+Q 2054 4326 1754 4326 
+z
+" transform="scale(0.015625)"/>
+     <path id="FiraSans-Regular-89a" d="M 384 1754 
+L 384 2253 
+L 2195 2253 
+L 2195 1754 
+L 384 1754 
+z
+" transform="scale(0.015625)"/>
+     <path id="FiraSans-Regular-2ea" d="M 1766 4800 
+Q 2035 4800 2256 4742 
+Q 2477 4685 2701 4570 
+L 2496 4160 
+Q 2163 4320 1786 4320 
+Q 1446 4320 1318 4198 
+Q 1190 4077 1190 3821 
+L 1190 3373 
+L 3072 3373 
+L 3072 0 
+L 2483 0 
+L 2483 2918 
+L 1190 2918 
+L 1190 0 
+L 602 0 
+L 602 2918 
+L 64 2918 
+L 64 3373 
+L 602 3373 
+L 602 3814 
+Q 602 4262 890 4531 
+Q 1178 4800 1766 4800 
+z
+" transform="scale(0.015625)"/>
+     <path id="FiraSans-Regular-262" d="M 2157 3450 
+Q 2803 3450 3104 2989 
+Q 3405 2528 3405 1690 
+Q 3405 896 3059 409 
+Q 2714 -77 2080 -77 
+Q 1517 -77 1197 307 
+L 1197 -1293 
+L 608 -1363 
+L 608 3373 
+L 1114 3373 
+L 1158 2918 
+Q 1344 3174 1606 3312 
+Q 1869 3450 2157 3450 
+z
+M 1939 403 
+Q 2771 403 2771 1690 
+Q 2771 2982 2010 2982 
+Q 1760 2982 1555 2835 
+Q 1350 2688 1197 2458 
+L 1197 813 
+Q 1325 614 1517 508 
+Q 1709 403 1939 403 
+z
+" transform="scale(0.015625)"/>
+     <path id="FiraSans-Regular-236" d="M 1875 3450 
+Q 2586 3450 2979 2976 
+Q 3373 2502 3373 1690 
+Q 3373 1165 3193 765 
+Q 3014 365 2675 144 
+Q 2336 -77 1869 -77 
+Q 1158 -77 761 396 
+Q 365 870 365 1683 
+Q 365 2208 544 2608 
+Q 723 3008 1062 3229 
+Q 1402 3450 1875 3450 
+z
+M 1875 2976 
+Q 998 2976 998 1683 
+Q 998 397 1869 397 
+Q 2739 397 2739 1690 
+Q 2739 2976 1875 2976 
+z
+" transform="scale(0.015625)"/>
+     <path id="FiraSans-Regular-86b" d="M 762 813 
+Q 954 813 1082 685 
+Q 1210 557 1210 371 
+Q 1210 173 1094 -83 
+L 666 -1062 
+L 243 -1062 
+L 499 0 
+Q 416 64 368 160 
+Q 320 256 320 371 
+Q 320 557 448 685 
+Q 576 813 762 813 
+z
+" transform="scale(0.015625)"/>
+     <path id="FiraSans-Regular-2a0" d="M 3117 0 
+L 2611 0 
+L 2566 525 
+Q 2374 211 2124 67 
+Q 1875 -77 1517 -77 
+Q 1075 -77 825 192 
+Q 576 461 576 954 
+L 576 3373 
+L 1165 3373 
+L 1165 1018 
+Q 1165 672 1286 528 
+Q 1408 384 1683 384 
+Q 2176 384 2528 966 
+L 2528 3373 
+L 3117 3373 
+L 3117 0 
+z
+" transform="scale(0.015625)"/>
+    </defs>
+    <use xlink:href="#FiraSans-Regular-7a"/>
+    <use xlink:href="#FiraSans-Regular-225" transform="translate(29.5 0)"/>
+    <use xlink:href="#FiraSans-Regular-28b" transform="translate(88.09375 0)"/>
+    <use xlink:href="#FiraSans-Regular-1a1" transform="translate(122.6875 0)"/>
+    <use xlink:href="#FiraSans-Regular-26d" transform="translate(177.1875 0)"/>
+    <use xlink:href="#FiraSans-Regular-20d" transform="translate(215.78125 0)"/>
+    <use xlink:href="#FiraSans-Regular-154" transform="translate(244.578125 0)"/>
+    <use xlink:href="#FiraSans-Regular-183" transform="translate(298.984375 0)"/>
+    <use xlink:href="#FiraSans-Regular-1a1" transform="translate(344.78125 0)"/>
+    <use xlink:href="#FiraSans-Regular-18e" transform="translate(399.28125 0)"/>
+    <use xlink:href="#FiraSans-Regular-2" transform="translate(459.078125 0)"/>
+    <use xlink:href="#FiraSans-Regular-27d" transform="translate(485.578125 0)"/>
+    <use xlink:href="#FiraSans-Regular-183" transform="translate(532.28125 0)"/>
+    <use xlink:href="#FiraSans-Regular-154" transform="translate(579.078125 0)"/>
+    <use xlink:href="#FiraSans-Regular-225" transform="translate(633.484375 0)"/>
+    <use xlink:href="#FiraSans-Regular-2" transform="translate(692.078125 0)"/>
+    <use xlink:href="#FiraSans-Regular-88e" transform="translate(718.578125 0)"/>
+    <use xlink:href="#FiraSans-Regular-1a1" transform="translate(750.984375 0)"/>
+    <use xlink:href="#FiraSans-Regular-872" transform="translate(804.484375 0)"/>
+    <use xlink:href="#FiraSans-Regular-1cc" transform="translate(827.484375 0)"/>
+    <use xlink:href="#FiraSans-Regular-872" transform="translate(879.484375 0)"/>
+    <use xlink:href="#FiraSans-Regular-2" transform="translate(903.484375 0)"/>
+    <use xlink:href="#FiraSans-Regular-800" transform="translate(929.984375 0)"/>
+    <use xlink:href="#FiraSans-Regular-7ff" transform="translate(973.28125 0)"/>
+    <use xlink:href="#FiraSans-Regular-807" transform="translate(1029.078125 0)"/>
+    <use xlink:href="#FiraSans-Regular-7ff" transform="translate(1084.171875 0)"/>
+    <use xlink:href="#FiraSans-Regular-1eb" transform="translate(1139.96875 0)"/>
+    <use xlink:href="#FiraSans-Regular-804" transform="translate(1168.171875 0)"/>
+    <use xlink:href="#FiraSans-Regular-7ff" transform="translate(1218.265625 0)"/>
+    <use xlink:href="#FiraSans-Regular-88f" transform="translate(1274.0625 0)"/>
+    <use xlink:href="#FiraSans-Regular-86a" transform="translate(1306.46875 0)"/>
+    <use xlink:href="#FiraSans-Regular-2" transform="translate(1330.46875 0)"/>
+    <use xlink:href="#FiraSans-Regular-804" transform="translate(1356.96875 0)"/>
+    <use xlink:href="#FiraSans-Regular-7ff" transform="translate(1407.0625 0)"/>
+    <use xlink:href="#FiraSans-Regular-2" transform="translate(1462.859375 0)"/>
+    <use xlink:href="#FiraSans-Regular-1e0" transform="translate(1489.359375 0)"/>
+    <use xlink:href="#FiraSans-Regular-154" transform="translate(1547.953125 0)"/>
+    <use xlink:href="#FiraSans-Regular-20d" transform="translate(1601.359375 0)"/>
+    <use xlink:href="#FiraSans-Regular-1c9" transform="translate(1630.65625 0)"/>
+    <use xlink:href="#FiraSans-Regular-89a" transform="translate(1662.15625 0)"/>
+    <use xlink:href="#FiraSans-Regular-1e0" transform="translate(1702.453125 0)"/>
+    <use xlink:href="#FiraSans-Regular-1a1" transform="translate(1761.046875 0)"/>
+    <use xlink:href="#FiraSans-Regular-1eb" transform="translate(1815.546875 0)"/>
+    <use xlink:href="#FiraSans-Regular-1cc" transform="translate(1843.75 0)"/>
+    <use xlink:href="#FiraSans-Regular-1e0" transform="translate(1895.75 0)"/>
+    <use xlink:href="#FiraSans-Regular-28b" transform="translate(1954.34375 0)"/>
+    <use xlink:href="#FiraSans-Regular-2" transform="translate(1990.4375 0)"/>
+    <use xlink:href="#FiraSans-Regular-2ea" transform="translate(2016.9375 0)"/>
+    <use xlink:href="#FiraSans-Regular-1a1" transform="translate(2074.4375 0)"/>
+    <use xlink:href="#FiraSans-Regular-20d" transform="translate(2128.9375 0)"/>
+    <use xlink:href="#FiraSans-Regular-18e" transform="translate(2157.734375 0)"/>
+    <use xlink:href="#FiraSans-Regular-27d" transform="translate(2217.53125 0)"/>
+    <use xlink:href="#FiraSans-Regular-2" transform="translate(2264.234375 0)"/>
+    <use xlink:href="#FiraSans-Regular-262" transform="translate(2290.734375 0)"/>
+    <use xlink:href="#FiraSans-Regular-1a1" transform="translate(2350.140625 0)"/>
+    <use xlink:href="#FiraSans-Regular-26d" transform="translate(2404.640625 0)"/>
+    <use xlink:href="#FiraSans-Regular-2" transform="translate(2443.234375 0)"/>
+    <use xlink:href="#FiraSans-Regular-27d" transform="translate(2469.734375 0)"/>
+    <use xlink:href="#FiraSans-Regular-1a1" transform="translate(2516.4375 0)"/>
+    <use xlink:href="#FiraSans-Regular-183" transform="translate(2570.9375 0)"/>
+    <use xlink:href="#FiraSans-Regular-236" transform="translate(2616.734375 0)"/>
+    <use xlink:href="#FiraSans-Regular-225" transform="translate(2675.140625 0)"/>
+    <use xlink:href="#FiraSans-Regular-18e" transform="translate(2733.734375 0)"/>
+    <use xlink:href="#FiraSans-Regular-86b" transform="translate(2793.53125 0)"/>
+    <use xlink:href="#FiraSans-Regular-2" transform="translate(2817.53125 0)"/>
+    <use xlink:href="#FiraSans-Regular-183" transform="translate(2844.03125 0)"/>
+    <use xlink:href="#FiraSans-Regular-154" transform="translate(2890.828125 0)"/>
+    <use xlink:href="#FiraSans-Regular-262" transform="translate(2945.234375 0)"/>
+    <use xlink:href="#FiraSans-Regular-28b" transform="translate(3004.640625 0)"/>
+    <use xlink:href="#FiraSans-Regular-2a0" transform="translate(3040.734375 0)"/>
+    <use xlink:href="#FiraSans-Regular-26d" transform="translate(3098.9375 0)"/>
+    <use xlink:href="#FiraSans-Regular-1a1" transform="translate(3134.53125 0)"/>
+    <use xlink:href="#FiraSans-Regular-18e" transform="translate(3189.03125 0)"/>
+    <use xlink:href="#FiraSans-Regular-2" transform="translate(3248.828125 0)"/>
+    <use xlink:href="#FiraSans-Regular-154" transform="translate(3275.328125 0)"/>
+    <use xlink:href="#FiraSans-Regular-28b" transform="translate(3329.734375 0)"/>
+    <use xlink:href="#FiraSans-Regular-2" transform="translate(3365.828125 0)"/>
+    <use xlink:href="#FiraSans-Regular-18e" transform="translate(3392.328125 0)"/>
+    <use xlink:href="#FiraSans-Regular-1eb" transform="translate(3452.125 0)"/>
+    <use xlink:href="#FiraSans-Regular-1c9" transform="translate(3480.328125 0)"/>
+    <use xlink:href="#FiraSans-Regular-1c9" transform="translate(3513.828125 0)"/>
+    <use xlink:href="#FiraSans-Regular-1a1" transform="translate(3546.328125 0)"/>
+    <use xlink:href="#FiraSans-Regular-26d" transform="translate(3600.828125 0)"/>
+    <use xlink:href="#FiraSans-Regular-1a1" transform="translate(3636.421875 0)"/>
+    <use xlink:href="#FiraSans-Regular-225" transform="translate(3690.921875 0)"/>
+    <use xlink:href="#FiraSans-Regular-28b" transform="translate(3749.515625 0)"/>
+    <use xlink:href="#FiraSans-Regular-2" transform="translate(3785.609375 0)"/>
+    <use xlink:href="#FiraSans-Regular-1eb" transform="translate(3812.109375 0)"/>
+    <use xlink:href="#FiraSans-Regular-225" transform="translate(3840.3125 0)"/>
+    <use xlink:href="#FiraSans-Regular-27d" transform="translate(3898.90625 0)"/>
+    <use xlink:href="#FiraSans-Regular-28b" transform="translate(3945.609375 0)"/>
+    <use xlink:href="#FiraSans-Regular-154" transform="translate(3981 0)"/>
+    <use xlink:href="#FiraSans-Regular-225" transform="translate(4035.40625 0)"/>
+    <use xlink:href="#FiraSans-Regular-28b" transform="translate(4094 0)"/>
+    <use xlink:href="#FiraSans-Regular-27d" transform="translate(4130.09375 0)"/>
+   </g>
+  </g>
+ </g>
+ <defs>
+  <clipPath id="p72d4391cd6">
+   <rect x="5.76" y="36" width="155.911765" height="155.232"/>
+  </clipPath>
+  <clipPath id="pbfe813d0d7">
+   <rect x="192.854118" y="36" width="155.911765" height="155.232"/>
+  </clipPath>
+  <clipPath id="p42ea1b063b">
+   <rect x="379.948235" y="36" width="155.911765" height="155.232"/>
+  </clipPath>
+ </defs>
+</svg>

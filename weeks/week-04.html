@@ -1,0 +1,667 @@
+<!doctype html><html lang="en-IN"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Week 4: Compression Basics — Mobile Multimedia Study</title>
+<link rel="stylesheet" href="../assets/pygments.css"><link rel="stylesheet" href="../assets/content.css">
+<link rel="stylesheet" href="../assets/site.css">
+<script defer src="../assets/app.js"></script></head><body><div class="topbar"><div class="inner">
+<a class="brand" href="../index.html">Mobile Multimedia Study<small>52-week roadmap</small></a>
+<nav><a href="week-01.html">W1</a><a href="week-02.html">W2</a><a href="week-03.html">W3</a><a href="week-04.html">W4</a><a href="../index.html">Roadmap</a></nav></div><div class="readbar"></div></div>
+<section class="wk-hero"><div class="inner">
+  <div class="kicker">Week 4 of 52 · Phase 1 — Foundations (weeks 1–5)</div>
+  <h1>Compression Basics</h1>
+  <div class="meta"><span><span class="badge b-ready">READY · NEXT TO SEND</span></span><span>Tutorial § 1.4 Compression Basics</span>
+    <span>Sent: 2026-10-26 (scheduled)</span><span>Study time: 8–10 hours</span></div>
+  <p class="summary">Why and how media is compressed: redundancy and entropy, Huffman and arithmetic coding, lossless vs lossy, perceptual audio coding in brief, the hybrid block-based video codec (partitioning, intra/inter prediction, motion vectors, DCT, quantisation and QP, entropy coding, in-loop filters), frame types and GOP structure, and rate control (CBR, VBR, CRF, CQP, VBV) — measured with real x264/x265 encodes and mapped to MediaCodec and VideoToolbox settings.</p>
+  <div class="actions">
+    <a class="btn" href="../pdf/Week04_Compression_Basics.pdf" download>⬇ Download PDF · 19 pages</a>
+    <button class="btn secondary" id="mark-done" type="button">Mark week as completed</button>
+    <span id="items-progress" style="color:#4b5563;font-size:.92rem"></span>
+  </div>
+</div></section>
+<div class="layout">
+  <aside class="toc"><h4>On this page</h4><ol><li class="l2"><a href="#how-to-use-this-guide">How to use this guide</a></li><li class="l2"><a href="#1-why-compression-works-redundancy">1. Why compression works: redundancy</a></li><li class="l2"><a href="#2-lossless-compression-and-entropy">2. Lossless compression and entropy</a></li><li class="l3"><a href="#21-information-and-entropy">2.1 Information and entropy</a></li><li class="l3"><a href="#22-lossless-techniques">2.2 Lossless techniques</a></li><li class="l2"><a href="#3-lossy-compression">3. Lossy compression</a></li><li class="l3"><a href="#31-ratedistortion">3.1 Rate–distortion</a></li><li class="l3"><a href="#32-perceptual-audio-coding-in-brief">3.2 Perceptual audio coding (in brief)</a></li><li class="l2"><a href="#4-the-hybrid-block-based-video-codec">4. The hybrid block-based video codec</a></li><li class="l3"><a href="#41-partitioning">4.1 Partitioning</a></li><li class="l3"><a href="#42-prediction">4.2 Prediction</a></li><li class="l3"><a href="#43-residual-transform-and-quantisation">4.3 Residual, transform and quantisation</a></li><li class="l3"><a href="#44-entropy-coding-and-in-loop-filtering">4.4 Entropy coding and in-loop filtering</a></li><li class="l3"><a href="#45-why-the-encoder-contains-a-decoder">4.5 Why the encoder contains a decoder</a></li><li class="l3"><a href="#46-common-artefacts">4.6 Common artefacts</a></li><li class="l2"><a href="#5-frame-types-and-gop-structure">5. Frame types and GOP structure</a></li><li class="l3"><a href="#51-i-p-and-b-frames">5.1 I, P and B frames</a></li><li class="l3"><a href="#52-gop-structure">5.2 GOP structure</a></li><li class="l2"><a href="#6-rate-control">6. Rate control</a></li><li class="l3"><a href="#61-the-modes">6.1 The modes</a></li><li class="l3"><a href="#62-crf-and-the-rd-curve-measured">6.2 CRF and the RD curve, measured</a></li><li class="l3"><a href="#63-bits-per-pixel">6.3 Bits per pixel</a></li><li class="l3"><a href="#64-rate-control-on-android-and-ios">6.4 Rate control on Android and iOS</a></li><li class="l2"><a href="#7-hands-on-exercises">7. Hands-on exercises</a></li><li class="l3"><a href="#exercise-a-entropy-and-the-limits-of-lossless-compression">Exercise A — Entropy and the limits of lossless compression</a></li><li class="l3"><a href="#exercise-b-quantisation-by-hand">Exercise B — Quantisation by hand</a></li><li class="l3"><a href="#exercise-c-see-the-gop">Exercise C — See the GOP</a></li><li class="l3"><a href="#exercise-d-crf-sweep-and-your-first-rd-curve">Exercise D — CRF sweep and your first RD curve</a></li><li class="l3"><a href="#exercise-e-rate-control-modes">Exercise E — Rate-control modes</a></li><li class="l3"><a href="#exercise-f-your-phones-encoders">Exercise F — Your phone&#x27;s encoders</a></li><li class="l2"><a href="#8-common-pitfalls">8. Common pitfalls</a></li><li class="l2"><a href="#9-self-test">9. Self-test</a></li><li class="l2"><a href="#10-further-reading">10. Further reading</a></li><li class="l2"><a href="#answer-key">Answer key</a></li></ol></aside>
+  <article class="content" data-week="4"><h2 id="how-to-use-this-guide">How to use this guide</h2>
+<p>This guide expands section <strong>1.4 Compression Basics</strong> of the tutorial. Weeks 1–3 showed that raw media is enormous: 1.5 Mbit/s for stereo audio, 746 Mbit/s for 1080p30 video. This week explains how codecs shrink it 10× to 300× — and, just as importantly, which knobs you control and what they cost. Every number in the hands-on sections was measured with FFmpeg 7.1 (libx264/libx265) on a 10-second 1280 × 720, 30 fps test clip (5 s of FFmpeg's <code>testsrc2</code> pattern followed by 5 s of a <code>mandelbrot</code> zoom, so there is a scene cut at frame 150). The CRF sweep and rate-control measurements used a variant with synthetic film-grain-like noise added (<code>noise=alls=4:allf=t</code>), which makes the content harder, like real camera footage. Your numbers will differ, but the trends should not.</p>
+<table>
+<thead>
+<tr>
+<th>Session</th>
+<th>Suggested activity</th>
+<th>Time</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>1</td>
+<td>Sections 1–2: redundancy, entropy, lossless coding. Exercise A.</td>
+<td>1.5 h</td>
+</tr>
+<tr>
+<td>2</td>
+<td>Sections 3–4: lossy coding, the hybrid codec model, transform and quantisation. Exercise B.</td>
+<td>2.5 h</td>
+</tr>
+<tr>
+<td>3</td>
+<td>Section 5: frame types and GOPs. Exercise C.</td>
+<td>1.5 h</td>
+</tr>
+<tr>
+<td>4</td>
+<td>Section 6: rate control. Exercises D and E.</td>
+<td>2 h</td>
+</tr>
+<tr>
+<td>5</td>
+<td>Section 7 and Exercise F on your phone; self-test.</td>
+<td>1.5 h</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Learning objectives.</strong></p>
+<ol>
+<li>Name the four kinds of redundancy codecs exploit and compute the entropy of a simple source.</li>
+<li>Build a Huffman code by hand and explain why arithmetic coding (CABAC) does better.</li>
+<li>Explain the stages of a hybrid block-based video encoder and why it contains a decoder.</li>
+<li>Work through a DCT and quantisation example and explain why quantisation is the only lossy step.</li>
+<li>Relate QP to quantiser step size and bitrate.</li>
+<li>Explain I/P/B frames, IDR, open vs closed GOPs, and decode-order latency.</li>
+<li>Choose a rate-control mode for recording, streaming, real-time and offline use, and configure it in FFmpeg, <code>MediaCodec</code> and VideoToolbox.</li>
+</ol>
+<h2 id="1-why-compression-works-redundancy">1. Why compression works: redundancy</h2>
+<p>Compression is possible because real signals are <strong>not random</strong>. Codecs exploit four kinds of redundancy:</p>
+<table>
+<thead>
+<tr>
+<th>Kind</th>
+<th>What it means</th>
+<th>Example</th>
+<th>Technique</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Statistical</strong></td>
+<td>Some symbols are more likely than others</td>
+<td>Most transform coefficients are zero</td>
+<td>Entropy coding (Huffman, arithmetic)</td>
+</tr>
+<tr>
+<td><strong>Spatial</strong></td>
+<td>Neighbouring pixels/samples are similar</td>
+<td>A blue sky</td>
+<td>Intra prediction, transforms</td>
+</tr>
+<tr>
+<td><strong>Temporal</strong></td>
+<td>Consecutive frames are similar</td>
+<td>A presenter in front of a still background</td>
+<td>Inter prediction with motion compensation</td>
+</tr>
+<tr>
+<td><strong>Perceptual</strong></td>
+<td>Some detail cannot be seen or heard</td>
+<td>High-frequency texture, sounds masked by louder sounds, colour detail</td>
+<td>Quantisation, chroma subsampling, psychoacoustic models</td>
+</tr>
+</tbody>
+</table>
+<p>The first three can be exploited <strong>losslessly</strong>. The fourth is where <strong>lossy</strong> codecs get most of their gains — by throwing away what you will not miss.</p>
+<h2 id="2-lossless-compression-and-entropy">2. Lossless compression and entropy</h2>
+<h3 id="21-information-and-entropy">2.1 Information and entropy</h3>
+<p>Shannon defined the <strong>information</strong> of an event with probability <em>p</em> as −log<sub>2</sub><em>p</em> bits: rare events carry more information. The <strong>entropy</strong> of a source is the average information per symbol:</p>
+<p class="eq">H = − Σ p<sub>i</sub> · log<sub>2</sub> p<sub>i</sub> &nbsp; bits per symbol</p>
+
+<p>Entropy is the lower bound on the average number of bits per symbol for any lossless code (for symbols coded independently).</p>
+<div class="admonition example">
+<p class="admonition-title">Worked example — entropy and a Huffman code</p>
+<p>A source emits A, B, C, D with probabilities 0.5, 0.25, 0.125, 0.125.</p>
+<p>H = 0.5·1 + 0.25·2 + 0.125·3 + 0.125·3 = <strong>1.75 bits/symbol</strong>, versus 2 bits for a fixed-length code.</p>
+<p><strong>Huffman's algorithm:</strong> repeatedly merge the two least probable nodes. C+D → 0.25; (C+D)+B → 0.5; that + A → 1.0. Reading the branches gives codes <strong>A = 0, B = 10, C = 110, D = 111</strong>. Average length = 0.5·1 + 0.25·2 + 0.125·3 + 0.125·3 = 1.75 bits — exactly the entropy, because all probabilities are powers of ½. The code is <strong>prefix-free</strong>: no codeword is a prefix of another, so the bitstream can be decoded without separators.</p>
+</div>
+<p>Huffman codes must use a whole number of bits per symbol. When a symbol has probability 0.95 its ideal cost is −log<sub>2</sub>0.95 ≈ 0.074 bits, but Huffman spends at least 1 bit. <strong>Arithmetic coding</strong> codes a whole sequence as one number in an interval, effectively spending fractional bits per symbol, and gets much closer to the entropy. <strong>Context modelling</strong> — choosing probabilities based on what was coded nearby — lowers the entropy further. H.264's <strong>CABAC</strong> (context-adaptive binary arithmetic coding) combines both and typically saves around 10–15% bitrate over its simpler <strong>CAVLC</strong> (variable-length) mode; HEVC uses CABAC only; AV1 uses a multi-symbol adaptive arithmetic coder.</p>
+<h3 id="22-lossless-techniques">2.2 Lossless techniques</h3>
+<ul>
+<li><strong>Run-length coding</strong> — "17 zeros" instead of seventeen zeros.</li>
+<li><strong>Dictionary coding (LZ77/LZ78)</strong> — replace repeated strings with back-references. DEFLATE (zip, gzip, PNG) = LZ77 + Huffman.</li>
+<li><strong>Prediction + residual coding</strong> — predict each sample from previous ones and code the small error. <strong>FLAC</strong> uses linear prediction with Rice codes; <strong>PNG</strong> applies a per-row prediction filter (Sub, Up, Average, Paeth) before DEFLATE.</li>
+</ul>
+<p><strong>Limits.</strong> No lossless compressor can shrink every input — there are fewer short files than long ones (the pigeonhole principle). Random data does not compress; it grows slightly (Exercise A). Typical lossless ratios are modest: about 1.5–3× for music (FLAC/ALAC), 2–4× for photographic images (PNG, lossless WebP), more for synthetic content.</p>
+<h2 id="3-lossy-compression">3. Lossy compression</h2>
+<h3 id="31-ratedistortion">3.1 Rate–distortion</h3>
+<p>A lossy codec trades <strong>rate</strong> (bits) against <strong>distortion</strong> (difference from the original, measured objectively by e.g. PSNR, or perceptually). The best achievable trade-off is a <strong>rate–distortion (RD) curve</strong>: quality rises steeply with the first bits and then flattens. An encoder's job is to find, for every block, the coding choice that minimises <em>D</em> + λ·<em>R</em> — <strong>rate-distortion optimisation (RDO)</strong> — where λ sets the exchange rate between bits and quality (and is tied to the QP).</p>
+<p>PSNR, the simplest metric: PSNR = 10·log<sub>10</sub>(255² / MSE) dB for 8-bit content. Rules of thumb for video: below ~30 dB looks clearly degraded, 35–40 dB is good, above ~45 dB is nearly indistinguishable. PSNR correlates only loosely with perception; you will use SSIM and VMAF in Phase 7.</p>
+<h3 id="32-perceptual-audio-coding-in-brief">3.2 Perceptual audio coding (in brief)</h3>
+<p>Audio codecs such as <strong>MP3</strong>, <strong>AAC</strong> and <strong>Opus</strong> exploit the ear's limits:</p>
+<ul>
+<li><strong>Absolute threshold of hearing</strong> — very quiet sounds, especially at extreme frequencies, are inaudible.</li>
+<li><strong>Frequency (simultaneous) masking</strong> — a loud tone hides quieter sounds at nearby frequencies.</li>
+<li><strong>Temporal masking</strong> — a loud sound hides quieter sounds shortly before and after it.</li>
+</ul>
+<p>The encoder transforms audio into frequency bands with the <strong>MDCT</strong> (a lapped cosine transform; AAC-LC uses 1024-coefficient frames, matching the 1024-sample frames from Week 1; MP3 frames are 1152 samples), runs a <strong>psychoacoustic model</strong> to estimate the masking threshold in each band, and quantises each band just finely enough that the quantisation noise stays below that threshold. <strong>HE-AAC</strong> adds spectral band replication (SBR), reconstructing high frequencies from a few bits of side information; <strong>Opus</strong> combines SILK (speech, linear prediction) and CELT (MDCT) layers with frames down to 2.5 ms for low latency.</p>
+<h2 id="4-the-hybrid-block-based-video-codec">4. The hybrid block-based video codec</h2>
+<p>H.264/AVC, H.265/HEVC, VP9, AV1 and H.266/VVC differ in hundreds of details but share one architecture, called <strong>hybrid</strong> because it combines prediction (temporal and spatial) with transform coding.</p>
+<figure id="fig-4-1"><img src="../figures/w04_hybrid.svg" alt="The hybrid encoder. The green blocks form a decoder inside the encoder." loading="lazy"><figcaption><b>Figure 4.1</b> — The hybrid encoder. The green blocks form a decoder inside the encoder.</figcaption></figure>
+<h3 id="41-partitioning">4.1 Partitioning</h3>
+<p>Each frame is divided into blocks, which are recursively split where detail demands it:</p>
+<table>
+<thead>
+<tr>
+<th>Codec</th>
+<th>Largest block</th>
+<th>Smallest prediction blocks</th>
+<th>Transform sizes</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>H.264</td>
+<td>16×16 macroblock</td>
+<td>4×4</td>
+<td>4×4, 8×8 (High profile)</td>
+</tr>
+<tr>
+<td>HEVC</td>
+<td>64×64 coding tree unit (quad-tree of CUs)</td>
+<td>8×4 / 4×8</td>
+<td>4×4 to 32×32</td>
+</tr>
+<tr>
+<td>VP9</td>
+<td>64×64 superblock</td>
+<td>4×4</td>
+<td>4×4 to 32×32</td>
+</tr>
+<tr>
+<td>AV1</td>
+<td>128×128 superblock</td>
+<td>4×4, many rectangular shapes</td>
+<td>4×4 to 64×64, rectangular</td>
+</tr>
+<tr>
+<td>VVC</td>
+<td>128×128 CTU (quad-tree + multi-type tree)</td>
+<td>4×4</td>
+<td>up to 64×64</td>
+</tr>
+</tbody>
+</table>
+<p>Bigger blocks are efficient for flat areas and high resolutions (one set of side information covers more pixels); small blocks follow edges and motion boundaries. A large part of the gain from H.264 to HEVC to AV1/VVC comes from more flexible partitioning.</p>
+<h3 id="42-prediction">4.2 Prediction</h3>
+<p><strong>Intra prediction</strong> predicts a block from already-decoded pixels <em>of the same frame</em> — the row above and the column to the left — by extending them in a direction or averaging them. H.264 offers 9 modes for 4×4 luma blocks (8 directions + DC); HEVC offers 35 (planar, DC and 33 angles); VVC 67; AV1 has 56 directional modes plus DC, smooth, Paeth and chroma-from-luma.</p>
+<p><strong>Inter prediction</strong> predicts a block from <strong>reference frames</strong> using a <strong>motion vector (MV)</strong>: "this block looks like the block 2 pixels left and 1 up in the previous frame".</p>
+<figure id="fig-4-2"><img src="../figures/w04_motion.svg" alt="Motion estimation searches a window in the reference frame for the best match; only the vector and the residual are coded." loading="lazy"><figcaption><b>Figure 4.2</b> — Motion estimation searches a window in the reference frame for the best match; only the vector and the residual are coded.</figcaption></figure>
+<p>Finding motion vectors — <strong>motion estimation</strong> — is the most expensive part of encoding: the encoder compares candidate positions with a cost such as <strong>SAD</strong> (sum of absolute differences) plus an estimate of the bits for the vector. Motion vectors have sub-pixel precision (quarter-pixel in H.264/HEVC, finer in AV1/VVC), with interpolation filters generating the in-between pixels. MVs themselves are predicted from neighbouring blocks' vectors, so only the small difference is coded. Hardware encoders on phones use cheaper, fixed search strategies than slow software encoders — one reason a software encode at "slow" preset beats the phone's real-time encoder at the same bitrate.</p>
+<h3 id="43-residual-transform-and-quantisation">4.3 Residual, transform and quantisation</h3>
+<p>The <strong>residual</strong> is the difference between the block and its prediction — mostly small numbers when prediction is good. It is transformed with a <strong>DCT</strong>-like integer transform. The DCT expresses a block as a weighted sum of fixed cosine patterns:</p>
+<figure id="fig-4-3"><img src="../figures/w04_dct_basis.svg" alt="The 64 basis patterns of the 8×8 DCT. Every 8×8 block is a weighted sum of these." loading="lazy"><figcaption><b>Figure 4.3</b> — The 64 basis patterns of the 8×8 DCT. Every 8×8 block is a weighted sum of these.</figcaption></figure>
+<p>For natural images the energy concentrates in the few low-frequency coefficients (top-left). The transform is lossless (invertible) on its own; it just puts the information where quantisation can remove it cheaply.</p>
+<div class="admonition example">
+<p class="admonition-title">Worked example — DCT and quantisation of a real block</p>
+<p>An 8×8 luma block from the test clip (a smooth left-to-right gradient, values 102–164):</p>
+<div class="highlight"><pre><span></span><code>120 102 104 108 121 136 143 151
+105 105 108 114 128 143 151 157
+104 104 109 115 135 140 153 158
+102 105 113 120 134 140 157 164
+102 108 114 126 133 147 154 163
+102 108 112 118 132 144 153 157
+102 104 111 118 129 134 149 162
+104 104 108 111 119 132 142 154
+</code></pre></div>
+<p>After subtracting 128 and applying the orthonormal 2-D DCT, the first row of coefficients is −11, <strong>−154</strong>, 27, 1, 4, −2, 2, 4: the large −154 is the horizontal "half-cosine" pattern — i.e. the gradient. The top-left 2×2 coefficients hold <strong>92%</strong> of the block's energy.</p>
+<p>Dividing every coefficient by a step of 16 and rounding leaves only <strong>7 non-zero values out of 64</strong>:</p>
+<div class="highlight"><pre><span></span><code> -1 -10   2   0   0   0   0   0
+  0   0   0   1   0   0   0   0
+ -1   1   1   0   0   0   0   0
+  0   0   0   0   0   0   0   0     (remaining rows all zero)
+</code></pre></div>
+<p>In zig-zag order the sequence is −1, −10, 0, −1, 0, 2, 0, 0, 1, 0, 0, 0, 1, 1, then 50 zeros — which run-length plus entropy coding turns into a handful of bits plus an "end of block". Reconstructing (multiply by 16, inverse DCT) gives a block with an RMS error of <strong>3.1</strong> grey levels (maximum 8.8). That rounding is the <em>only</em> place information was lost.</p>
+</div>
+<figure id="fig-4-4"><img src="../figures/w04_energy.svg" alt="The same block: original, coefficient magnitudes, surviving coefficients after quantisation, reconstruction." loading="lazy"><figcaption><b>Figure 4.4</b> — The same block: original, coefficient magnitudes, surviving coefficients after quantisation, reconstruction.</figcaption></figure>
+<p><strong>Quantisation</strong> divides each coefficient by a step size and rounds; it is the main lossy step, and the <strong>QP (quantisation parameter)</strong> sets the step. In H.264 and HEVC (8-bit), QP runs 0–51 and the step size <strong>doubles every 6 QP</strong> (≈ 12% per step); QP 4 corresponds to a step of 1.0. AV1 uses a different scale (q-index 0–255). Encoders also use larger effective steps for high frequencies (via scaling matrices or psycho-visual tuning) and <strong>adaptive quantisation</strong>, spending more bits on flat areas where artefacts are most visible.</p>
+<figure id="fig-4-5"><img src="../figures/w04_qstep.svg" alt="Quantiser step size vs QP (log scale)." loading="lazy"><figcaption><b>Figure 4.5</b> — Quantiser step size vs QP (log scale).</figcaption></figure>
+<h3 id="44-entropy-coding-and-in-loop-filtering">4.4 Entropy coding and in-loop filtering</h3>
+<p>The quantised coefficients, prediction modes, block sizes and motion vectors are entropy coded (CAVLC/CABAC in H.264, CABAC in HEVC, adaptive multi-symbol arithmetic coding in AV1).</p>
+<p>Coarse quantisation of separate blocks causes <strong>blocking</strong> (visible block edges). <strong>In-loop filters</strong> run on the reconstructed frame <em>before</em> it is stored as a reference: the <strong>deblocking filter</strong> (H.264 onwards) smooths block edges where the discontinuity looks like an artefact rather than a real edge; HEVC adds <strong>SAO</strong> (sample adaptive offset); AV1 adds <strong>CDEF</strong> (constrained directional enhancement) and <strong>loop restoration</strong>; VVC adds <strong>ALF</strong> (adaptive loop filter). Because they are <em>in the loop</em>, the improved frames also improve future predictions.</p>
+<figure id="fig-4-6"><img src="../figures/w04_deblock.svg" alt="The same frame encoded at very low quality (x264 CRF 45) without and with the deblocking filter." loading="lazy"><figcaption><b>Figure 4.6</b> — The same frame encoded at very low quality (x264 CRF 45) without and with the deblocking filter.</figcaption></figure>
+<h3 id="45-why-the-encoder-contains-a-decoder">4.5 Why the encoder contains a decoder</h3>
+<p>The decoder never sees the original frames — only the reconstructed ones. If the encoder predicted from <em>originals</em>, the decoder would predict from slightly different pixels and the errors would accumulate frame after frame (<strong>drift</strong>). So the encoder reconstructs each frame exactly as the decoder will (inverse quantisation, inverse transform, adding the prediction, in-loop filters) and predicts only from those. This is also why the decoder's behaviour is precisely specified by the standards, while encoders are free to make any choices — the standard defines the bitstream and decoding, not the encoder.</p>
+<h3 id="46-common-artefacts">4.6 Common artefacts</h3>
+<table>
+<thead>
+<tr>
+<th>Artefact</th>
+<th>Looks like</th>
+<th>Main cause</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Blocking</td>
+<td>Visible grid of squares</td>
+<td>Coarse quantisation; weak/disabled deblocking</td>
+</tr>
+<tr>
+<td>Blurring</td>
+<td>Loss of fine texture</td>
+<td>Discarded high frequencies; strong filtering</td>
+</tr>
+<tr>
+<td>Ringing / mosquito noise</td>
+<td>Halos and shimmering around sharp edges and text</td>
+<td>Quantised high-frequency coefficients near edges</td>
+</tr>
+<tr>
+<td>Banding</td>
+<td>Steps in smooth gradients</td>
+<td>Coarse quantisation of flat areas; 8-bit precision</td>
+</tr>
+<tr>
+<td>Pumping / breathing</td>
+<td>Quality pulses at each I-frame</td>
+<td>Large quality difference between I-frames and the frames between them</td>
+</tr>
+<tr>
+<td>Smearing / "dirty window"</td>
+<td>Texture stuck while the scene moves</td>
+<td>Skipped blocks copying stale reference content at low bitrate</td>
+</tr>
+</tbody>
+</table>
+<h2 id="5-frame-types-and-gop-structure">5. Frame types and GOP structure</h2>
+<h3 id="51-i-p-and-b-frames">5.1 I, P and B frames</h3>
+<ul>
+<li><strong>I-frame (intra):</strong> uses only intra prediction. Self-contained, largest, and a possible random-access point.</li>
+<li><strong>IDR frame:</strong> an I-frame that also <strong>clears the reference buffer</strong>: no later frame may reference anything before it. A guaranteed clean start for decoding, seeking and stream switching.</li>
+<li><strong>P-frame (predicted):</strong> may use inter prediction from earlier (in decode order) frames.</li>
+<li><strong>B-frame (bi-predicted):</strong> may predict from two references, typically one earlier and one <em>later</em> in display order, and average them. B-frames compress best but force <strong>decode order ≠ display order</strong> (Week 3) and add latency. In H.264/HEVC, B-frames can themselves be references (<strong>hierarchical B / B-pyramid</strong>).</li>
+</ul>
+<p>Measured on the test clip (libx264, CRF 23, default settings), average coded sizes were <strong>I ≈ 39 kB, P ≈ 22 kB, B ≈ 14 kB</strong>. With synthetic "sensor noise" added to the same clip the B-frame advantage shrank (I 42, P 24, B 14.5 kB, and the file grew) — random noise cannot be predicted, so noisy low-light footage costs far more bits than clean footage.</p>
+<figure id="fig-4-7"><img src="../figures/w04_frame_sizes.svg" alt="Per-frame sizes in display order. x264 placed I-frames at frame 0 and at the scene cut at frame 150." loading="lazy"><figcaption><b>Figure 4.7</b> — Per-frame sizes in display order. x264 placed I-frames at frame 0 and at the scene cut at frame 150.</figcaption></figure>
+<h3 id="52-gop-structure">5.2 GOP structure</h3>
+<p>A <strong>GOP (group of pictures)</strong> is the run of frames from one I-frame to the next. It is described by <strong>N</strong> (GOP length: distance between I-frames) and <strong>M</strong> (distance between anchor I/P frames, i.e. number of consecutive B-frames + 1). "N = 60, M = 3" at 30 fps is an I-frame every 2 s in the pattern I B B P B B P …</p>
+<ul>
+<li><strong>Closed GOP:</strong> no frame references across the GOP boundary. Every GOP decodes independently — required for clean segment boundaries in HLS/DASH and convenient for editing.</li>
+<li><strong>Open GOP:</strong> B-frames just after an I-frame may also reference the previous GOP. Slightly more efficient, but those frames cannot be decoded when you start at that I-frame (HEVC formalises this with <strong>CRA</strong> pictures and skippable leading pictures).</li>
+</ul>
+<figure id="fig-4-8"><img src="../figures/w04_gop.svg" alt="Closed vs open GOP. Arrows point from a frame to the frames it references." loading="lazy"><figcaption><b>Figure 4.8</b> — Closed vs open GOP. Arrows point from a frame to the frames it references.</figcaption></figure>
+<p><strong>Choosing a GOP length</strong> is a trade-off: longer GOPs mean fewer expensive I-frames (better compression) but slower seeking, slower channel switching, and longer error propagation after packet loss. Typical choices:</p>
+<table>
+<thead>
+<tr>
+<th>Use</th>
+<th>Typical keyframe interval</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Phone camera recording</td>
+<td>about 1 s (often configured with <code>KEY_I_FRAME_INTERVAL</code> = 1)</td>
+</tr>
+<tr>
+<td>HLS/DASH streaming</td>
+<td>2 s, fixed and aligned across all renditions (Apple's HLS Authoring Specification recommends key frames every 2 s)</td>
+</tr>
+<tr>
+<td>Video calls (RTC)</td>
+<td>very long or "infinite"; new keyframes only on request after loss (PLI/FIR)</td>
+</tr>
+<tr>
+<td>Offline/archival</td>
+<td>up to ~10 s (x264 default <code>keyint</code> = 250 frames) with scene-cut detection</td>
+</tr>
+</tbody>
+</table>
+<p>Encoders also insert I-frames at <strong>scene cuts</strong>, where prediction from the previous frame is useless. For streaming you usually disable that (<code>-sc_threshold 0</code>) or force fixed positions so segments stay aligned. On the test clip, <code>-g 60 -keyint_min 60 -sc_threshold 0</code> produced I-frames exactly at frames 0, 60, 120, 180 and 240 and a file about <strong>2% larger</strong> than x264's default (I-frames only at 0 and the scene cut at 150). Encoding every frame as intra (<code>-g 1</code>) at the same CRF made it <strong>2.4× larger</strong> — the value of temporal prediction, measured.</p>
+<h2 id="6-rate-control">6. Rate control</h2>
+<h3 id="61-the-modes">6.1 The modes</h3>
+<p>Rate control decides the QP of every frame (and block) to meet a goal:</p>
+<table>
+<thead>
+<tr>
+<th>Mode</th>
+<th>Goal</th>
+<th>Behaviour</th>
+<th>Typical use</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>CBR</strong></td>
+<td>Constant bitrate</td>
+<td>Bits per second held nearly flat (padding if needed); quality varies with content</td>
+<td>Live broadcast, fixed-capacity links, video calls</td>
+</tr>
+<tr>
+<td><strong>VBR</strong></td>
+<td>Average bitrate, with a peak cap</td>
+<td>Spends more bits on complex scenes, fewer on simple ones</td>
+<td>Phone camera recording, VOD streaming renditions</td>
+</tr>
+<tr>
+<td><strong>CRF / CQ</strong></td>
+<td>Constant (perceptual) quality</td>
+<td>Bitrate varies freely with content; no size guarantee</td>
+<td>Offline encoding, archives, x264/x265 <code>-crf</code></td>
+</tr>
+<tr>
+<td><strong>CQP</strong></td>
+<td>Fixed QP per frame type</td>
+<td>Simplest; no adaptation</td>
+<td>Testing, research, codec comparisons at "equal QP"</td>
+</tr>
+<tr>
+<td><strong>2-pass ABR</strong></td>
+<td>Exact average size, best distribution</td>
+<td>First pass analyses, second pass allocates</td>
+<td>VOD where file size must be hit exactly</td>
+</tr>
+</tbody>
+</table>
+<p><strong>VBV / HRD.</strong> Streaming adds a decoder-buffer model — the <strong>video buffering verifier</strong> (H.264's <strong>HRD</strong>). <code>-maxrate</code> and <code>-bufsize</code> in FFmpeg say: "the bitstream must be playable by a decoder receiving at most <em>maxrate</em> bits/s with a buffer of <em>bufsize</em> bits". A small buffer (e.g. 1 s or less) forces near-constant bits; a large one allows bigger swings. Apple's HLS spec and every CDN/ABR player care about the peak, not just the average.</p>
+<figure id="fig-4-9"><img src="../figures/w04_ratecontrol.svg" alt="Three rate-control modes on the same clip (measured). CBR is flat; VBR and CRF spend more on the complex second half." loading="lazy"><figcaption><b>Figure 4.9</b> — Three rate-control modes on the same clip (measured). CBR is flat; VBR and CRF spend more on the complex second half.</figcaption></figure>
+<h3 id="62-crf-and-the-rd-curve-measured">6.2 CRF and the RD curve, measured</h3>
+<p>x264 and x265 use <strong>CRF</strong> (constant rate factor, 0–51, defaults 23 for x264 and 28 for x265; lower = higher quality). The FFmpeg H.264 guide's rule of thumb is that ±6 CRF roughly halves or doubles the bitrate. On the test clip (grain variant):</p>
+<table>
+<thead>
+<tr>
+<th>CRF</th>
+<th>x264 bitrate</th>
+<th>x264 PSNR</th>
+<th>x265 bitrate</th>
+<th>x265 PSNR</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>18</td>
+<td>10.34 Mbit/s</td>
+<td>40.84 dB</td>
+<td>8.11 Mbit/s</td>
+<td>40.73 dB</td>
+</tr>
+<tr>
+<td>23</td>
+<td>4.14 Mbit/s</td>
+<td>39.04 dB</td>
+<td>4.16 Mbit/s</td>
+<td>38.92 dB</td>
+</tr>
+<tr>
+<td>28</td>
+<td>1.94 Mbit/s</td>
+<td>36.15 dB</td>
+<td>1.90 Mbit/s</td>
+<td>36.10 dB</td>
+</tr>
+<tr>
+<td>33</td>
+<td>0.83 Mbit/s</td>
+<td>33.59 dB</td>
+<td>0.63 Mbit/s</td>
+<td>33.65 dB</td>
+</tr>
+<tr>
+<td>38</td>
+<td>0.49 Mbit/s</td>
+<td>31.91 dB</td>
+<td>0.22 Mbit/s</td>
+<td>31.82 dB</td>
+</tr>
+</tbody>
+</table>
+<figure id="fig-4-10"><img src="../figures/w04_rd.svg" alt="The same data as RD curves. At low bitrates x265 reaches the same PSNR with far fewer bits." loading="lazy"><figcaption><b>Figure 4.10</b> — The same data as RD curves. At low bitrates x265 reaches the same PSNR with far fewer bits.</figcaption></figure>
+<p>Two lessons. First, on this clip each +5 CRF cut the bitrate by roughly 2–2.5× — the rule of thumb is approximate and content-dependent. Second, <strong>equal CRF does not mean equal quality across encoders</strong>: x264 and x265 CRF scales are different, so compare codecs on RD curves (bitrate vs quality), never at "the same setting". This is the tutorial's pitfall "comparing codecs at different settings", made concrete.</p>
+<h3 id="63-bits-per-pixel">6.3 Bits per pixel</h3>
+<p><strong>Bits per pixel (bpp)</strong> = bitrate ÷ (width × height × fps) normalises bitrate across formats:</p>
+<table>
+<thead>
+<tr>
+<th>Encode</th>
+<th>bpp</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>1080p30 H.264 at 8 Mbit/s</td>
+<td>8 × 10⁶ / (1920 × 1080 × 30) = <strong>0.129</strong></td>
+</tr>
+<tr>
+<td>720p30 H.264 at 3 Mbit/s</td>
+<td>3 × 10⁶ / (1280 × 720 × 30) = <strong>0.109</strong></td>
+</tr>
+<tr>
+<td>4K60 HEVC at 50 Mbit/s</td>
+<td>50 × 10⁶ / (3840 × 2160 × 60) = <strong>0.100</strong></td>
+</tr>
+<tr>
+<td>1080p30 phone recording at 16 Mbit/s</td>
+<td><strong>0.257</strong></td>
+</tr>
+</tbody>
+</table>
+<p>The tutorial's guide of roughly 0.05–0.1 bpp for good-quality H.264 streaming applies to typical content; complex or noisy content needs more, and higher resolutions usually need <em>fewer</em> bpp because detail is spread over more pixels. HEVC and AV1 reach similar quality at lower bpp.</p>
+<h3 id="64-rate-control-on-android-and-ios">6.4 Rate control on Android and iOS</h3>
+<p><strong>Android <code>MediaCodec</code></strong> (hardware encoders) exposes rate control through <code>MediaFormat</code>:</p>
+<div class="highlight"><pre><span></span><code><span class="kd">val</span><span class="w"> </span><span class="nv">format</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">MediaFormat</span><span class="p">.</span><span class="na">createVideoFormat</span><span class="p">(</span><span class="n">MediaFormat</span><span class="p">.</span><span class="na">MIMETYPE_VIDEO_AVC</span><span class="p">,</span><span class="w"> </span><span class="m">1280</span><span class="p">,</span><span class="w"> </span><span class="m">720</span><span class="p">).</span><span class="na">apply</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="n">setInteger</span><span class="p">(</span><span class="n">MediaFormat</span><span class="p">.</span><span class="na">KEY_COLOR_FORMAT</span><span class="p">,</span><span class="w"> </span><span class="n">MediaCodecInfo</span><span class="p">.</span><span class="na">CodecCapabilities</span><span class="p">.</span><span class="na">COLOR_FormatSurface</span><span class="p">)</span>
+<span class="w">    </span><span class="n">setInteger</span><span class="p">(</span><span class="n">MediaFormat</span><span class="p">.</span><span class="na">KEY_BIT_RATE</span><span class="p">,</span><span class="w"> </span><span class="m">4</span><span class="n">_000_000</span><span class="p">)</span><span class="w">            </span><span class="c1">// bits per second</span>
+<span class="w">    </span><span class="n">setInteger</span><span class="p">(</span><span class="n">MediaFormat</span><span class="p">.</span><span class="na">KEY_FRAME_RATE</span><span class="p">,</span><span class="w"> </span><span class="m">30</span><span class="p">)</span>
+<span class="w">    </span><span class="n">setInteger</span><span class="p">(</span><span class="n">MediaFormat</span><span class="p">.</span><span class="na">KEY_I_FRAME_INTERVAL</span><span class="p">,</span><span class="w"> </span><span class="m">2</span><span class="p">)</span><span class="w">            </span><span class="c1">// seconds between sync frames</span>
+<span class="w">    </span><span class="n">setInteger</span><span class="p">(</span><span class="n">MediaFormat</span><span class="p">.</span><span class="na">KEY_BITRATE_MODE</span><span class="p">,</span>
+<span class="w">        </span><span class="n">MediaCodecInfo</span><span class="p">.</span><span class="na">EncoderCapabilities</span><span class="p">.</span><span class="na">BITRATE_MODE_VBR</span><span class="p">)</span><span class="w">   </span><span class="c1">// or _CBR, _CQ, _CBR_FD (API 31+)</span>
+<span class="w">    </span><span class="n">setInteger</span><span class="p">(</span><span class="n">MediaFormat</span><span class="p">.</span><span class="na">KEY_PROFILE</span><span class="p">,</span><span class="w"> </span><span class="n">MediaCodecInfo</span><span class="p">.</span><span class="na">CodecProfileLevel</span><span class="p">.</span><span class="na">AVCProfileHigh</span><span class="p">)</span>
+<span class="w">    </span><span class="n">setInteger</span><span class="p">(</span><span class="n">MediaFormat</span><span class="p">.</span><span class="na">KEY_LEVEL</span><span class="p">,</span><span class="w"> </span><span class="n">MediaCodecInfo</span><span class="p">.</span><span class="na">CodecProfileLevel</span><span class="p">.</span><span class="na">AVCLevel31</span><span class="p">)</span>
+<span class="p">}</span>
+<span class="kd">val</span><span class="w"> </span><span class="nv">encoder</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">MediaCodec</span><span class="p">.</span><span class="na">createEncoderByType</span><span class="p">(</span><span class="n">MediaFormat</span><span class="p">.</span><span class="na">MIMETYPE_VIDEO_AVC</span><span class="p">)</span>
+<span class="n">encoder</span><span class="p">.</span><span class="na">configure</span><span class="p">(</span><span class="n">format</span><span class="p">,</span><span class="w"> </span><span class="kc">null</span><span class="p">,</span><span class="w"> </span><span class="kc">null</span><span class="p">,</span><span class="w"> </span><span class="n">MediaCodec</span><span class="p">.</span><span class="na">CONFIGURE_FLAG_ENCODE</span><span class="p">)</span>
+</code></pre></div>
+<p>Support varies per device and codec: check <code>EncoderCapabilities.isBitrateModeSupported()</code> before relying on CQ or CBR, and <code>VideoCapabilities.getBitrateRange()</code> for limits. Other useful keys: <code>KEY_MAX_B_FRAMES</code> (API 29), <code>KEY_QUALITY</code> for CQ mode, <code>KEY_PREPEND_HEADER_TO_SYNC_FRAMES</code>, and <code>MediaCodec.PARAMETER_KEY_REQUEST_SYNC_FRAME</code> / <code>PARAMETER_KEY_VIDEO_BITRATE</code> via <code>setParameters()</code> to request a keyframe or change bitrate on the fly (essential for RTC). Media3 <strong>Transformer</strong> wraps all this for file-to-file transcoding.</p>
+<p><strong>Apple VideoToolbox</strong> (<code>VTCompressionSession</code>) uses properties such as <code>kVTCompressionPropertyKey_AverageBitRate</code>, <code>kVTCompressionPropertyKey_DataRateLimits</code> (peak bytes per period), <code>kVTCompressionPropertyKey_MaxKeyFrameInterval</code> / <code>MaxKeyFrameIntervalDuration</code>, <code>kVTCompressionPropertyKey_AllowFrameReordering</code> (B-frames on/off), <code>kVTCompressionPropertyKey_Quality</code> and <code>kVTCompressionPropertyKey_RealTime</code>. With <code>AVAssetWriter</code>, the equivalent dictionary keys are <code>AVVideoAverageBitRateKey</code>, <code>AVVideoMaxKeyFrameIntervalKey</code> and <code>AVVideoAllowFrameReorderingKey</code> inside <code>AVVideoCompressionPropertiesKey</code>.</p>
+<table>
+<thead>
+<tr>
+<th>Use case</th>
+<th>Mode</th>
+<th>GOP</th>
+<th>B-frames</th>
+<th>Notes</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Camera recording</td>
+<td>VBR</td>
+<td>~1 s</td>
+<td>often none in hardware</td>
+<td>Bitrate scaled with resolution and fps</td>
+</tr>
+<tr>
+<td>Live streaming upload</td>
+<td>CBR or capped VBR</td>
+<td>2 s, fixed</td>
+<td>optional</td>
+<td>Small VBV buffer; aligned keyframes</td>
+</tr>
+<tr>
+<td>Video call</td>
+<td>CBR (often <code>CBR_FD</code>)</td>
+<td>long; keyframes on request</td>
+<td>none</td>
+<td>Bitrate changed live from congestion control</td>
+</tr>
+<tr>
+<td>Offline transcode / archive</td>
+<td>CRF (software)</td>
+<td>long + scene cuts</td>
+<td>yes</td>
+<td>Slow presets give the best RD</td>
+</tr>
+</tbody>
+</table>
+<h2 id="7-hands-on-exercises">7. Hands-on exercises</h2>
+<h3 id="exercise-a-entropy-and-the-limits-of-lossless-compression">Exercise A — Entropy and the limits of lossless compression</h3>
+<div class="highlight"><pre><span></span><code>head<span class="w"> </span>-c<span class="w"> </span><span class="m">1000000</span><span class="w"> </span>/dev/urandom<span class="w"> </span>&gt;<span class="w"> </span>rand.bin
+head<span class="w"> </span>-c<span class="w"> </span><span class="m">1000000</span><span class="w"> </span>/dev/zero<span class="w">    </span>&gt;<span class="w"> </span>zero.bin
+gzip<span class="w"> </span>-9<span class="w"> </span>-k<span class="w"> </span>rand.bin<span class="w"> </span>zero.bin
+ls<span class="w"> </span>-l<span class="w"> </span>rand.bin.gz<span class="w"> </span>zero.bin.gz
+
+<span class="c1"># Lossless audio on a pure tone vs. noise (re-use tone.wav from Week 1)</span>
+ffmpeg<span class="w"> </span>-f<span class="w"> </span>lavfi<span class="w"> </span>-i<span class="w"> </span><span class="s2">"aevalsrc=0.5*sin(2*PI*1000*t):c=stereo:s=48000:d=10"</span><span class="w"> </span>-c:a<span class="w"> </span>pcm_s16le<span class="w"> </span>tone.wav
+ffmpeg<span class="w"> </span>-f<span class="w"> </span>lavfi<span class="w"> </span>-i<span class="w"> </span><span class="s2">"anoisesrc=d=10:c=white:r=48000:a=0.5"</span><span class="w"> </span>-ac<span class="w"> </span><span class="m">2</span><span class="w"> </span>-c:a<span class="w"> </span>pcm_s16le<span class="w"> </span>noise.wav
+ffmpeg<span class="w"> </span>-i<span class="w"> </span>tone.wav<span class="w"> </span>tone.flac<span class="p">;</span><span class="w"> </span>ffmpeg<span class="w"> </span>-i<span class="w"> </span>noise.wav<span class="w"> </span>noise.flac
+ls<span class="w"> </span>-l<span class="w"> </span>tone.wav<span class="w"> </span>tone.flac<span class="w"> </span>noise.wav<span class="w"> </span>noise.flac
+</code></pre></div>
+<p><strong>Expected (measured):</strong> <code>rand.bin.gz</code> is <strong>1 000 182</strong> bytes — <em>larger</em> than the input, because random data has 8 bits of entropy per byte and gzip adds headers. <code>zero.bin.gz</code> is about <strong>1 kB</strong> (1012 bytes). The 1.92 MB tone compresses with FLAC to about <strong>218 kB</strong> (8.8:1, because a sine is perfectly predictable); white noise barely compresses (real music typically lands at 1.5–2:1). Then compute the byte entropy of a few files:</p>
+<div class="highlight"><pre><span></span><code><span class="kn">import</span><span class="w"> </span><span class="nn">collections</span><span class="o">,</span><span class="w"> </span><span class="nn">math</span><span class="o">,</span><span class="w"> </span><span class="nn">sys</span>
+<span class="n">data</span> <span class="o">=</span> <span class="nb">open</span><span class="p">(</span><span class="n">sys</span><span class="o">.</span><span class="n">argv</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="s2">"rb"</span><span class="p">)</span><span class="o">.</span><span class="n">read</span><span class="p">()</span>
+<span class="n">counts</span> <span class="o">=</span> <span class="n">collections</span><span class="o">.</span><span class="n">Counter</span><span class="p">(</span><span class="n">data</span><span class="p">)</span>
+<span class="n">H</span> <span class="o">=</span> <span class="o">-</span><span class="nb">sum</span><span class="p">(</span><span class="n">c</span> <span class="o">/</span> <span class="nb">len</span><span class="p">(</span><span class="n">data</span><span class="p">)</span> <span class="o">*</span> <span class="n">math</span><span class="o">.</span><span class="n">log2</span><span class="p">(</span><span class="n">c</span> <span class="o">/</span> <span class="nb">len</span><span class="p">(</span><span class="n">data</span><span class="p">))</span> <span class="k">for</span> <span class="n">c</span> <span class="ow">in</span> <span class="n">counts</span><span class="o">.</span><span class="n">values</span><span class="p">())</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"</span><span class="si">{</span><span class="n">sys</span><span class="o">.</span><span class="n">argv</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="si">}</span><span class="s2">: </span><span class="si">{</span><span class="n">H</span><span class="si">:</span><span class="s2">.3f</span><span class="si">}</span><span class="s2"> bits/byte -&gt; order-0 bound </span><span class="si">{</span><span class="n">H</span><span class="w"> </span><span class="o">/</span><span class="w"> </span><span class="mi">8</span><span class="si">:</span><span class="s2">.1%</span><span class="si">}</span><span class="s2"> of original size"</span><span class="p">)</span>
+</code></pre></div>
+<p>Run it on <code>rand.bin</code> (≈ 8.000), <code>zero.bin</code> (0.000), a WAV, a JPEG and an MP4. Compressed files (JPEG, MP4) are already near 8 bits/byte — which is why zipping them gains nothing.</p>
+<h3 id="exercise-b-quantisation-by-hand">Exercise B — Quantisation by hand</h3>
+<p>Using the 8×8 block and the coefficient row in section 4.3:</p>
+<ol>
+<li>Quantise the first row of coefficients (−11, −154, 27, 1, 4, −2, 2, 4) with step 16, then with step 40. How many non-zero values remain in each case?</li>
+<li>A QP of 28 corresponds to a step of about 16 in H.264 (0.625 × 2<sup>28/6</sup> ≈ 15.9). What step does QP 34 correspond to? QP 22?</li>
+<li>If raising QP by 6 roughly halves the bitrate, estimate the bitrate at QP 34 of an encode that is 4 Mbit/s at QP 28.</li>
+</ol>
+<p>(Answers: self-test questions 15–17.)</p>
+<h3 id="exercise-c-see-the-gop">Exercise C — See the GOP</h3>
+<p>Create a clip with a scene cut (or use any phone recording):</p>
+<div class="highlight"><pre><span></span><code>ffmpeg<span class="w"> </span>-f<span class="w"> </span>lavfi<span class="w"> </span>-i<span class="w"> </span><span class="s2">"testsrc2=size=1280x720:rate=30:duration=5"</span><span class="w"> </span>-f<span class="w"> </span>lavfi<span class="w"> </span>-i<span class="w"> </span><span class="s2">"mandelbrot=size=1280x720:rate=30"</span><span class="w"> </span><span class="se">\</span>
+<span class="w">  </span>-filter_complex<span class="w"> </span><span class="s2">"[0:v]format=yuv420p[a];[1:v]trim=duration=5,setpts=PTS-STARTPTS,format=yuv420p[b];[a][b]concat=n=2:v=1:a=0,fps=30[v]"</span><span class="w"> </span><span class="se">\</span>
+<span class="w">  </span>-map<span class="w"> </span><span class="s2">"[v]"</span><span class="w"> </span>-c:v<span class="w"> </span>libx264<span class="w"> </span>-qp<span class="w"> </span><span class="m">0</span><span class="w"> </span>-preset<span class="w"> </span>ultrafast<span class="w"> </span>src.mp4
+
+ffmpeg<span class="w"> </span>-i<span class="w"> </span>src.mp4<span class="w"> </span>-c:v<span class="w"> </span>libx264<span class="w"> </span>-preset<span class="w"> </span>medium<span class="w"> </span>-crf<span class="w"> </span><span class="m">23</span><span class="w"> </span>default.mp4
+ffmpeg<span class="w"> </span>-i<span class="w"> </span>src.mp4<span class="w"> </span>-c:v<span class="w"> </span>libx264<span class="w"> </span>-preset<span class="w"> </span>medium<span class="w"> </span>-crf<span class="w"> </span><span class="m">23</span><span class="w"> </span>-g<span class="w"> </span><span class="m">60</span><span class="w"> </span>-keyint_min<span class="w"> </span><span class="m">60</span><span class="w"> </span>-sc_threshold<span class="w"> </span><span class="m">0</span><span class="w"> </span>gop60.mp4
+ffmpeg<span class="w"> </span>-i<span class="w"> </span>src.mp4<span class="w"> </span>-c:v<span class="w"> </span>libx264<span class="w"> </span>-preset<span class="w"> </span>medium<span class="w"> </span>-crf<span class="w"> </span><span class="m">23</span><span class="w"> </span>-g<span class="w"> </span><span class="m">1</span><span class="w"> </span>intra.mp4
+
+<span class="k">for</span><span class="w"> </span>f<span class="w"> </span><span class="k">in</span><span class="w"> </span>default<span class="w"> </span>gop60<span class="w"> </span>intra<span class="p">;</span><span class="w"> </span><span class="k">do</span>
+<span class="w">  </span><span class="nb">echo</span><span class="w"> </span><span class="s2">"</span><span class="nv">$f</span><span class="s2">: </span><span class="k">$(</span>stat<span class="w"> </span>-c<span class="w"> </span>%s<span class="w"> </span><span class="nv">$f</span>.mp4<span class="k">)</span><span class="s2"> bytes, I-frames at:"</span><span class="w"> </span><span class="se">\</span>
+<span class="w">       </span><span class="k">$(</span>ffprobe<span class="w"> </span>-v<span class="w"> </span>error<span class="w"> </span>-select_streams<span class="w"> </span>v:0<span class="w"> </span>-show_entries<span class="w"> </span><span class="nv">frame</span><span class="o">=</span>key_frame<span class="w"> </span>-of<span class="w"> </span><span class="nv">csv</span><span class="o">=</span><span class="nv">p</span><span class="o">=</span><span class="m">0</span><span class="w"> </span><span class="nv">$f</span>.mp4<span class="w"> </span><span class="p">|</span><span class="w"> </span>awk<span class="w"> </span>-F,<span class="w"> </span><span class="s1">'$1==1{printf "%d ", NR-1}'</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>cut<span class="w"> </span>-c1-60<span class="k">)</span>
+<span class="k">done</span>
+ffprobe<span class="w"> </span>-v<span class="w"> </span>error<span class="w"> </span>-select_streams<span class="w"> </span>v:0<span class="w"> </span>-show_entries<span class="w"> </span><span class="nv">frame</span><span class="o">=</span>pict_type,pkt_size<span class="w"> </span>-of<span class="w"> </span><span class="nv">csv</span><span class="o">=</span><span class="nv">p</span><span class="o">=</span><span class="m">0</span><span class="w"> </span>default.mp4<span class="w"> </span><span class="se">\</span>
+<span class="w">  </span><span class="p">|</span><span class="w"> </span>awk<span class="w"> </span>-F,<span class="w"> </span><span class="s1">'{s[$2]+=$1; n[$2]++} END {for (t in s) printf "%s: %d frames, avg %.0f bytes\n", t, n[t], s[t]/n[t]}'</span>
+</code></pre></div>
+<p>(macOS: replace <code>stat -c %s</code> with <code>stat -f %z</code>.)</p>
+<p><strong>Expected pattern:</strong> <code>default.mp4</code> has I-frames at 0 and at the scene cut (150); <code>gop60.mp4</code> at 0, 60, 120, 180, 240 and is a few per cent larger; <code>intra.mp4</code> has every frame as I and is more than twice as large. The per-type averages show I &gt; P &gt; B. (<code>-qp 0</code> makes <code>src.mp4</code> a lossless intermediate — it is large, about 50 MB.) Measured: <code>default.mp4</code> 5 015 403 bytes with I-frames at 0 150; <code>gop60.mp4</code> 5 131 729 bytes; <code>intra.mp4</code> 12 100 611 bytes; per-type averages I 39 012, P 21 751, B 14 046 bytes.</p>
+<h3 id="exercise-d-crf-sweep-and-your-first-rd-curve">Exercise D — CRF sweep and your first RD curve</h3>
+<div class="highlight"><pre><span></span><code><span class="k">for</span><span class="w"> </span>crf<span class="w"> </span><span class="k">in</span><span class="w"> </span><span class="m">18</span><span class="w"> </span><span class="m">23</span><span class="w"> </span><span class="m">28</span><span class="w"> </span><span class="m">33</span><span class="w"> </span><span class="m">38</span><span class="p">;</span><span class="w"> </span><span class="k">do</span>
+<span class="w">  </span>ffmpeg<span class="w"> </span>-loglevel<span class="w"> </span>error<span class="w"> </span>-y<span class="w"> </span>-i<span class="w"> </span>src.mp4<span class="w"> </span>-c:v<span class="w"> </span>libx264<span class="w"> </span>-preset<span class="w"> </span>medium<span class="w"> </span>-crf<span class="w"> </span><span class="nv">$crf</span><span class="w"> </span>x264_<span class="nv">$crf</span>.mp4
+<span class="w">  </span><span class="nv">br</span><span class="o">=</span><span class="k">$(</span>ffprobe<span class="w"> </span>-v<span class="w"> </span>error<span class="w"> </span>-select_streams<span class="w"> </span>v:0<span class="w"> </span>-show_entries<span class="w"> </span><span class="nv">stream</span><span class="o">=</span>bit_rate<span class="w"> </span>-of<span class="w"> </span><span class="nv">csv</span><span class="o">=</span><span class="nv">p</span><span class="o">=</span><span class="m">0</span><span class="w"> </span>x264_<span class="nv">$crf</span>.mp4<span class="k">)</span>
+<span class="w">  </span><span class="nv">psnr</span><span class="o">=</span><span class="k">$(</span>ffmpeg<span class="w"> </span>-i<span class="w"> </span>x264_<span class="nv">$crf</span>.mp4<span class="w"> </span>-i<span class="w"> </span>src.mp4<span class="w"> </span>-lavfi<span class="w"> </span>psnr<span class="w"> </span>-f<span class="w"> </span>null<span class="w"> </span>-<span class="w"> </span><span class="m">2</span>&gt;<span class="p">&amp;</span><span class="m">1</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-o<span class="w"> </span><span class="s2">"average:[0-9.]*"</span><span class="k">)</span>
+<span class="w">  </span><span class="nb">echo</span><span class="w"> </span><span class="s2">"crf=</span><span class="nv">$crf</span><span class="s2"> bitrate=</span><span class="nv">$br</span><span class="s2"> </span><span class="nv">$psnr</span><span class="s2">"</span>
+<span class="k">done</span>
+</code></pre></div>
+<p>Repeat with <code>-c:v libx265 -x265-params log-level=error</code> and plot bitrate (log x-axis) against PSNR for both. <strong>Expected:</strong> a monotonic curve per encoder; roughly a 2× bitrate change per 5–6 CRF; x265 below/left of x264 at low bitrates. Then try <code>-preset ultrafast</code> vs <code>-preset slow</code> at the same CRF and record size, PSNR and encode time — presets trade CPU for compression, which is exactly the trade-off a phone's real-time hardware encoder makes.</p>
+<h3 id="exercise-e-rate-control-modes">Exercise E — Rate-control modes</h3>
+<div class="highlight"><pre><span></span><code><span class="c1"># CBR with HRD signalling (TS output keeps filler data)</span>
+ffmpeg<span class="w"> </span>-i<span class="w"> </span>src.mp4<span class="w"> </span>-c:v<span class="w"> </span>libx264<span class="w"> </span>-b:v<span class="w"> </span>2M<span class="w"> </span>-minrate<span class="w"> </span>2M<span class="w"> </span>-maxrate<span class="w"> </span>2M<span class="w"> </span>-bufsize<span class="w"> </span>1M<span class="w"> </span>-x264-params<span class="w"> </span>nal-hrd<span class="o">=</span>cbr<span class="w"> </span>-f<span class="w"> </span>mpegts<span class="w"> </span>cbr.ts
+<span class="c1"># Capped VBR</span>
+ffmpeg<span class="w"> </span>-i<span class="w"> </span>src.mp4<span class="w"> </span>-c:v<span class="w"> </span>libx264<span class="w"> </span>-b:v<span class="w"> </span>2M<span class="w"> </span>-maxrate<span class="w"> </span>4M<span class="w"> </span>-bufsize<span class="w"> </span>4M<span class="w"> </span>vbr.mp4
+<span class="c1"># Bitrate per second for each file</span>
+<span class="k">for</span><span class="w"> </span>f<span class="w"> </span><span class="k">in</span><span class="w"> </span>cbr.ts<span class="w"> </span>vbr.mp4<span class="w"> </span>x264_28.mp4<span class="p">;</span><span class="w"> </span><span class="k">do</span>
+<span class="w">  </span><span class="nb">echo</span><span class="w"> </span><span class="s2">"</span><span class="nv">$f</span><span class="s2">:"</span><span class="p">;</span><span class="w"> </span>ffprobe<span class="w"> </span>-v<span class="w"> </span>error<span class="w"> </span>-select_streams<span class="w"> </span>v:0<span class="w"> </span>-show_entries<span class="w"> </span><span class="nv">packet</span><span class="o">=</span>pts_time,size<span class="w"> </span>-of<span class="w"> </span><span class="nv">csv</span><span class="o">=</span><span class="nv">p</span><span class="o">=</span><span class="m">0</span><span class="w"> </span><span class="nv">$f</span><span class="w"> </span><span class="se">\</span>
+<span class="w">   </span><span class="p">|</span><span class="w"> </span>sort<span class="w"> </span>-t,<span class="w"> </span>-k1<span class="w"> </span>-g<span class="w"> </span><span class="p">|</span><span class="w"> </span>awk<span class="w"> </span>-F,<span class="w"> </span><span class="s1">'NR==1{t0=$1} {b[int($1-t0)]+=$2*8} END{for(i=0;i&lt;10;i++) printf "%.2f ", b[i]/1e6; print "Mbit/s"}'</span>
+<span class="k">done</span>
+</code></pre></div>
+<p><strong>Expected (measured):</strong> CBR stays at about 2.0 Mbit/s every second; VBR averages about 2.2 Mbit/s but rises to about 2.6–2.9 Mbit/s in the complex second half; CRF 28 ranges from about 1.4 to 3.1 Mbit/s. Same encoder, same clip, three very different bitrate shapes.</p>
+<h3 id="exercise-f-your-phones-encoders">Exercise F — Your phone's encoders</h3>
+<p>List the encoders on your phone and what rate-control modes they support:</p>
+<div class="highlight"><pre><span></span><code><span class="kd">val</span><span class="w"> </span><span class="nv">codecs</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">MediaCodecList</span><span class="p">(</span><span class="n">MediaCodecList</span><span class="p">.</span><span class="na">REGULAR_CODECS</span><span class="p">).</span><span class="na">codecInfos</span>
+<span class="k">for</span><span class="w"> </span><span class="p">(</span><span class="n">info</span><span class="w"> </span><span class="k">in</span><span class="w"> </span><span class="n">codecs</span><span class="p">.</span><span class="na">filter</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nb">it</span><span class="p">.</span><span class="na">isEncoder</span><span class="w"> </span><span class="p">})</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="k">for</span><span class="w"> </span><span class="p">(</span><span class="n">type</span><span class="w"> </span><span class="k">in</span><span class="w"> </span><span class="n">info</span><span class="p">.</span><span class="na">supportedTypes</span><span class="p">.</span><span class="na">filter</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nb">it</span><span class="p">.</span><span class="na">startsWith</span><span class="p">(</span><span class="s">"video/"</span><span class="p">)</span><span class="w"> </span><span class="p">})</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="kd">val</span><span class="w"> </span><span class="nv">caps</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">info</span><span class="p">.</span><span class="na">getCapabilitiesForType</span><span class="p">(</span><span class="n">type</span><span class="p">)</span>
+<span class="w">        </span><span class="kd">val</span><span class="w"> </span><span class="nv">enc</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">caps</span><span class="p">.</span><span class="na">encoderCapabilities</span>
+<span class="w">        </span><span class="kd">val</span><span class="w"> </span><span class="nv">modes</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">mapOf</span><span class="p">(</span>
+<span class="w">            </span><span class="s">"CQ"</span><span class="w"> </span><span class="n">to</span><span class="w"> </span><span class="n">MediaCodecInfo</span><span class="p">.</span><span class="na">EncoderCapabilities</span><span class="p">.</span><span class="na">BITRATE_MODE_CQ</span><span class="p">,</span>
+<span class="w">            </span><span class="s">"VBR"</span><span class="w"> </span><span class="n">to</span><span class="w"> </span><span class="n">MediaCodecInfo</span><span class="p">.</span><span class="na">EncoderCapabilities</span><span class="p">.</span><span class="na">BITRATE_MODE_VBR</span><span class="p">,</span>
+<span class="w">            </span><span class="s">"CBR"</span><span class="w"> </span><span class="n">to</span><span class="w"> </span><span class="n">MediaCodecInfo</span><span class="p">.</span><span class="na">EncoderCapabilities</span><span class="p">.</span><span class="na">BITRATE_MODE_CBR</span><span class="p">,</span>
+<span class="w">        </span><span class="p">).</span><span class="na">filterValues</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="n">enc</span><span class="p">.</span><span class="na">isBitrateModeSupported</span><span class="p">(</span><span class="nb">it</span><span class="p">)</span><span class="w"> </span><span class="p">}.</span><span class="na">keys</span>
+<span class="w">        </span><span class="kd">val</span><span class="w"> </span><span class="nv">hw</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">Build</span><span class="p">.</span><span class="na">VERSION</span><span class="p">.</span><span class="na">SDK_INT</span><span class="w"> </span><span class="o">&gt;=</span><span class="w"> </span><span class="m">29</span><span class="p">)</span><span class="w"> </span><span class="n">info</span><span class="p">.</span><span class="na">isHardwareAccelerated</span><span class="w"> </span><span class="k">else</span><span class="w"> </span><span class="kc">null</span>
+<span class="w">        </span><span class="n">Log</span><span class="p">.</span><span class="na">i</span><span class="p">(</span><span class="s">"Encoders"</span><span class="p">,</span><span class="w"> </span><span class="s">"</span><span class="si">${</span><span class="n">info</span><span class="p">.</span><span class="na">name</span><span class="si">}</span><span class="s"> </span><span class="si">$</span><span class="n">type</span><span class="s"> hw=</span><span class="si">$</span><span class="n">hw</span><span class="s"> modes=</span><span class="si">$</span><span class="n">modes</span><span class="s"> "</span><span class="w"> </span><span class="o">+</span>
+<span class="w">              </span><span class="s">"bitrates=</span><span class="si">${</span><span class="n">caps</span><span class="p">.</span><span class="na">videoCapabilities</span><span class="p">.</span><span class="na">bitrateRange</span><span class="si">}</span><span class="s">"</span><span class="p">)</span>
+<span class="w">    </span><span class="p">}</span>
+<span class="p">}</span>
+</code></pre></div>
+<p><strong>Expected:</strong> hardware encoders with vendor names (e.g. <code>c2.qti.avc.encoder</code>, <code>c2.exynos.h264.encoder</code>, <code>c2.mtk.avc.encoder</code> — names depend on the SoC) alongside Google's software encoders (<code>c2.android.avc.encoder</code>, <code>c2.android.hevc.encoder</code>, …). VBR is almost always supported; CBR usually; CQ less often. Then pull a camera recording and run the <code>pict_type</code> command from Exercise C on it: note the keyframe interval and whether there are any B-frames.</p>
+<h2 id="8-common-pitfalls">8. Common pitfalls</h2>
+<ul>
+<li><strong>Comparing codecs or encoders at "the same CRF/QP"</strong> — scales differ; compare RD curves at matched quality.</li>
+<li><strong>Comparing at different presets, resolutions or source clips</strong> — invalid conclusions.</li>
+<li><strong>Re-encoding repeatedly</strong> — every lossy generation adds artefacts; remux when you only need a new container.</li>
+<li><strong>Using CRF for live streaming</strong> — unbounded peaks break players and networks; use CBR or capped VBR with a VBV buffer.</li>
+<li><strong>Unaligned or scene-cut keyframes in ABR ladders</strong> — segments cannot start cleanly and renditions cannot switch.</li>
+<li><strong>Too-long GOPs for seeking/scrubbing UIs</strong> — seeking has to decode from the previous keyframe; use shorter GOPs or an intra-only proxy.</li>
+<li><strong>Enabling B-frames for real-time video</strong> — adds reorder latency.</li>
+<li><strong>Starving noisy (low-light) content</strong> of bits — noise is incompressible and turns into smeared blocks; denoise before encoding, or budget more bits.</li>
+<li><strong>Assuming a requested bitrate mode is honoured</strong> on Android — check <code>isBitrateModeSupported()</code>; some encoders silently fall back.</li>
+<li><strong>Forgetting that bitrate is the main quality knob</strong> — resolution and frame rate only matter relative to it (bpp).</li>
+</ul>
+<h2 id="9-self-test">9. Self-test</h2>
+<ol>
+<li>Name the four kinds of redundancy that codecs exploit. Which ones can lossless codecs use?</li>
+<li>What is the entropy of a source with symbol probabilities 0.5, 0.25, 0.25? Give a Huffman code for it.</li>
+<li>Why can't any lossless compressor shrink every file? What happens when you gzip random data?</li>
+<li>Why does arithmetic coding (CABAC) beat Huffman coding on highly skewed probabilities?</li>
+<li>List the main stages of a hybrid video encoder in order.</li>
+<li>Why does an encoder contain a decoder?</li>
+<li>What is the difference between intra and inter prediction? What is a motion vector?</li>
+<li>Why is the DCT useful if it is lossless on its own?</li>
+<li>Which step is the main source of loss? What does QP control, and how does step size change per +6 QP?</li>
+<li>What do in-loop filters do, and why are they "in the loop"?</li>
+<li>What is the difference between an I-frame and an IDR frame? Between open and closed GOPs?</li>
+<li>Why do B-frames add latency? Why do video-call encoders avoid them?</li>
+<li>A 2-second GOP at 30 fps: how many frames between I-frames? At 25 fps?</li>
+<li>Match each use case to a rate-control mode: live streaming, offline archive, video call, camera recording.</li>
+<li>Quantise (−11, −154, 27, 1, 4, −2, 2, 4) with step 16 and with step 40. How many non-zero values remain?</li>
+<li>What quantiser step do QP 22 and QP 34 correspond to in H.264?</li>
+<li>An encode is 4 Mbit/s at QP 28. Estimate the bitrate at QP 34.</li>
+<li>Compute the bits per pixel of 1080p60 at 12 Mbit/s and of 720p30 at 1.5 Mbit/s.</li>
+<li>Two encoders at CRF 28 produce 1.9 Mbit/s and 1.94 Mbit/s with nearly equal PSNR; at CRF 38 one produces 0.22 Mbit/s and the other 0.49 Mbit/s at similar PSNR. What can you conclude, and what can't you?</li>
+<li>Why does noisy low-light video need more bits than clean video for the same quality?</li>
+</ol>
+<h2 id="10-further-reading">10. Further reading</h2>
+<ul>
+<li><strong>Iain E. Richardson, <em>The H.264 Advanced Video Compression Standard</em></strong> (2nd ed., Wiley) — the clearest book-length explanation of the hybrid model, prediction, transforms and rate control.</li>
+<li><strong>Vivienne Sze, Madhukar Budagavi, Gary J. Sullivan (eds.), <em>High Efficiency Video Coding (HEVC): Algorithms and Architectures</em></strong> (Springer) — written by the standard's designers.</li>
+<li><strong>T. Wiegand, G. J. Sullivan, G. Bjøntegaard, A. Luthra, "Overview of the H.264/AVC video coding standard"</strong>, <em>IEEE Transactions on Circuits and Systems for Video Technology</em>, 2003.</li>
+<li><strong>G. J. Sullivan, J.-R. Ohm, W.-J. Han, T. Wiegand, "Overview of the High Efficiency Video Coding (HEVC) Standard"</strong>, <em>IEEE TCSVT</em>, 2012.</li>
+<li><strong>J. Han et al., "A Technical Overview of AV1"</strong>, <em>Proceedings of the IEEE</em>, 2021.</li>
+<li><strong>G. K. Wallace, "The JPEG still picture compression standard"</strong>, <em>IEEE Transactions on Consumer Electronics</em>, 1992 — the classic, readable introduction to DCT image coding.</li>
+<li><strong>C. E. Shannon, "A Mathematical Theory of Communication"</strong>, <em>Bell System Technical Journal</em>, 1948 — where entropy comes from.</li>
+<li><strong>FFmpeg wiki: "H.264 Video Encoding Guide"</strong> and <strong>"H.265/HEVC Video Encoding Guide"</strong> (trac.ffmpeg.org/wiki) — CRF, presets, two-pass, VBV.</li>
+<li><strong>Apple, "HLS Authoring Specification for Apple Devices"</strong> (developer.apple.com/streaming) — keyframe, bitrate and ladder recommendations.</li>
+<li><strong>Android Developers:</strong> <code>MediaCodec</code>, <code>MediaFormat</code> and <code>MediaCodecInfo.EncoderCapabilities</code> reference pages; Media3 Transformer guide.</li>
+<li><strong>Leandro Moreira, <em>digital_video_introduction</em></strong> (github.com/leandromoreira/digital_video_introduction) — a hands-on walk through exactly these concepts with FFmpeg.</li>
+</ul>
+<section class="answer-key" id="answers"><h2 id="answer-key">Answer key</h2>
+<ol>
+<li><strong>Statistical, spatial, temporal, perceptual.</strong> Lossless codecs can exploit statistical, spatial and temporal redundancy (through prediction and entropy coding); only lossy codecs discard perceptually irrelevant information.</li>
+<li>H = 0.5·1 + 0.25·2 + 0.25·2 = <strong>1.5 bits/symbol</strong>. Huffman: <strong>A = 0, B = 10, C = 11</strong> (average 1.5 bits).</li>
+<li>There are 2<sup>n</sup> files of <em>n</em> bits but fewer than 2<sup>n</sup> shorter files, so some inputs must map to equal or longer outputs (pigeonhole principle). Random data has no redundancy: gzip output is slightly <strong>larger</strong> (1 000 182 bytes for 1 000 000 random bytes).</li>
+<li>Huffman spends at least one whole bit per symbol even when a symbol's information content is far less (e.g. 0.07 bits at p = 0.95). Arithmetic coding spends fractional bits, and context adaptation keeps probabilities accurate.</li>
+<li>Partition into blocks → predict (intra or inter) → compute residual → transform → quantise → entropy code; in the loop: inverse quantise/transform, add prediction, in-loop filters, store as reference.</li>
+<li>So it predicts from exactly the reconstructed pixels the decoder will have; predicting from originals would make encoder and decoder diverge (drift).</li>
+<li>Intra predicts from neighbouring decoded pixels in the same frame; inter predicts from other (reference) frames. A motion vector is the displacement (with sub-pixel precision) from the current block to its matching block in a reference frame.</li>
+<li>It compacts the energy of natural image blocks into a few low-frequency coefficients, so quantisation can zero most coefficients with little visible loss and entropy coding can then code the zeros cheaply.</li>
+<li><strong>Quantisation.</strong> QP sets the quantiser step size (coarseness); in H.264/HEVC the step <strong>doubles every +6 QP</strong>.</li>
+<li>They reduce artefacts (blocking, ringing) in reconstructed frames. Being in the loop, the filtered frames are what get stored as references, so the improvement also benefits every frame predicted from them (and encoder and decoder stay in sync).</li>
+<li>An I-frame uses only intra prediction; an IDR also clears the reference buffers so nothing after it can reference anything before it. In a closed GOP no frame references across the GOP boundary; an open GOP allows frames after an I-frame (in decode order) to reference the previous GOP.</li>
+<li>A B-frame needs a <em>later</em> frame decoded first, so the encoder must wait for future frames and the decoder must reorder — adding at least one frame of delay per level of reordering. Calls need minimum latency.</li>
+<li><strong>60</strong> frames at 30 fps; <strong>50</strong> frames at 25 fps.</li>
+<li>Live streaming → <strong>CBR or capped VBR</strong> (with VBV); offline archive → <strong>CRF</strong> (or 2-pass); video call → <strong>CBR</strong> with on-demand keyframes and live bitrate changes; camera recording → <strong>VBR</strong>.</li>
+<li>Step 16: −0.69, −9.6, 1.7, 0.06, 0.25, −0.13, 0.13, 0.25 → −1, −10, 2, 0, 0, 0, 0, 0 → <strong>3</strong> non-zero. Step 40: −0.28, −3.85, 0.68, … → 0, −4, 1, 0, 0, 0, 0, 0 → <strong>2</strong> non-zero.</li>
+<li>QP 22: 0.625 × 2<sup>22/6</sup> ≈ <strong>8.0</strong>. QP 34: 0.625 × 2<sup>34/6</sup> ≈ <strong>32.0</strong>.</li>
+<li>Roughly <strong>2 Mbit/s</strong> (half), with the caveat that the exact factor is content-dependent.</li>
+<li>12 × 10⁶ / (1920 × 1080 × 60) = <strong>0.096 bpp</strong>; 1.5 × 10⁶ / (1280 × 720 × 30) = <strong>0.054 bpp</strong>.</li>
+<li>At CRF 28 the two give nearly equal size and quality on this clip; at CRF 38 x265 matched x264's PSNR with less than half the bits, suggesting x265 is more efficient at low bitrates <strong>on this clip, by PSNR</strong>. You cannot conclude anything general from one clip, one metric and one preset, and you cannot compare by CRF value — compare RD curves (ideally with BD-rate, Phase 7) over many clips.</li>
+<li>Noise is random, so it is neither spatially nor temporally predictable: residuals stay large, many high-frequency coefficients survive quantisation, and B/P frames lose most of their advantage. Either the bitrate rises or the encoder smears the noise (and the detail under it) away.</li>
+</ol></section>
+    <div class="pager"><a href="week-03.html">← Week 3: Digital Video Basics</a><span></span></div>
+  </article>
+</div>
+<footer class="site">Prepared for Arunkumar Maniam Rajan · Built 2026-10-19 ·
+Progress checkmarks are stored only in this browser (localStorage).</footer></body></html>

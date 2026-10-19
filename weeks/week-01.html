@@ -1,0 +1,835 @@
+<!doctype html><html lang="en-IN"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Week 1: Digital Audio Basics — Mobile Multimedia Study</title>
+<link rel="stylesheet" href="../assets/pygments.css"><link rel="stylesheet" href="../assets/content.css">
+<link rel="stylesheet" href="../assets/site.css">
+<script defer src="../assets/app.js"></script></head><body><div class="topbar"><div class="inner">
+<a class="brand" href="../index.html">Mobile Multimedia Study<small>52-week roadmap</small></a>
+<nav><a href="week-01.html">W1</a><a href="week-02.html">W2</a><a href="week-03.html">W3</a><a href="week-04.html">W4</a><a href="../index.html">Roadmap</a></nav></div><div class="readbar"></div></div>
+<section class="wk-hero"><div class="inner">
+  <div class="kicker">Week 1 of 52 · Phase 1 — Foundations (weeks 1–5)</div>
+  <h1>Digital Audio Basics</h1>
+  <div class="meta"><span><span class="badge b-sent">SENT</span></span><span>Tutorial § 1.1 Digital Audio Basics</span>
+    <span>Sent: 2026-10-09</span><span>Study time: 8–10 hours</span></div>
+  <p class="summary">How sound becomes numbers: sampling and the Nyquist limit, aliasing, quantisation and bit depth, dither, channel layouts and PCM memory formats, raw data rates, buffers and latency, and loudness (LUFS) — with Android and iOS specifics.</p>
+  <div class="actions">
+    <a class="btn" href="../pdf/Week01_Digital_Audio_Basics.pdf" download>⬇ Download PDF · 19 pages</a>
+    <button class="btn secondary" id="mark-done" type="button">Mark week as completed</button>
+    <span id="items-progress" style="color:#4b5563;font-size:.92rem"></span>
+  </div>
+</div></section>
+<div class="layout">
+  <aside class="toc"><h4>On this page</h4><ol><li class="l2"><a href="#how-to-use-this-guide">How to use this guide</a></li><li class="l2"><a href="#1-from-pressure-wave-to-numbers-the-audio-signal-chain">1. From pressure wave to numbers: the audio signal chain</a></li><li class="l2"><a href="#2-sampling-and-the-nyquistshannon-theorem">2. Sampling and the Nyquist–Shannon theorem</a></li><li class="l3"><a href="#21-what-sampling-does">2.1 What sampling does</a></li><li class="l3"><a href="#22-the-theorem">2.2 The theorem</a></li><li class="l3"><a href="#23-why-441-khz-and-48-khz">2.3 Why 44.1 kHz and 48 kHz?</a></li><li class="l3"><a href="#24-resampling-on-mobile">2.4 Resampling on mobile</a></li><li class="l2"><a href="#3-aliasing-what-happens-above-nyquist">3. Aliasing: what happens above Nyquist</a></li><li class="l3"><a href="#31-the-folding-rule">3.1 The folding rule</a></li><li class="l3"><a href="#32-why-this-matters-in-practice">3.2 Why this matters in practice</a></li><li class="l2"><a href="#4-quantisation-bit-depth-and-dynamic-range">4. Quantisation, bit depth and dynamic range</a></li><li class="l3"><a href="#41-levels-and-step-size">4.1 Levels and step size</a></li><li class="l3"><a href="#42-deriving-6-db-per-bit">4.2 Deriving &quot;6 dB per bit&quot;</a></li><li class="l3"><a href="#43-integer-vs-floating-point-samples">4.3 Integer vs floating-point samples</a></li><li class="l3"><a href="#44-dither">4.4 Dither</a></li><li class="l2"><a href="#5-channels-and-pcm-memory-layout">5. Channels and PCM memory layout</a></li><li class="l3"><a href="#51-channel-counts-and-layouts">5.1 Channel counts and layouts</a></li><li class="l3"><a href="#52-samples-frames-and-buffers">5.2 Samples, frames and buffers</a></li><li class="l3"><a href="#53-interleaved-vs-planar">5.3 Interleaved vs planar</a></li><li class="l3"><a href="#54-byte-order-and-the-wav-header">5.4 Byte order and the WAV header</a></li><li class="l2"><a href="#6-data-rates-storage-buffers-and-latency">6. Data rates, storage, buffers and latency</a></li><li class="l3"><a href="#61-raw-pcm-data-rate">6.1 Raw PCM data rate</a></li><li class="l3"><a href="#62-buffers-and-latency">6.2 Buffers and latency</a></li><li class="l2"><a href="#7-loudness">7. Loudness</a></li><li class="l3"><a href="#71-peak-rms-and-perceived-loudness">7.1 Peak, RMS and perceived loudness</a></li><li class="l3"><a href="#72-targets-you-will-meet">7.2 Targets you will meet</a></li><li class="l2"><a href="#8-mobile-platform-notes">8. Mobile platform notes</a></li><li class="l2"><a href="#9-hands-on-exercises">9. Hands-on exercises</a></li><li class="l3"><a href="#exercise-a-make-aliasing-happen-then-prevent-it">Exercise A — Make aliasing happen, then prevent it</a></li><li class="l3"><a href="#exercise-b-inspect-pcm-with-ffprobe-and-astats">Exercise B — Inspect PCM with ffprobe and astats</a></li><li class="l3"><a href="#exercise-c-read-a-wav-header-by-hand">Exercise C — Read a WAV header by hand</a></li><li class="l3"><a href="#exercise-d-measure-and-normalise-loudness">Exercise D — Measure and normalise loudness</a></li><li class="l3"><a href="#exercise-e-discover-your-phones-native-audio-configuration">Exercise E — Discover your phone&#x27;s native audio configuration</a></li><li class="l3"><a href="#exercise-f-play-and-capture-pcm-on-the-device">Exercise F — Play and capture PCM on the device</a></li><li class="l3"><a href="#exercise-g-calculate-by-hand-your-media-facts-notebook">Exercise G — Calculate by hand (your &quot;media facts&quot; notebook)</a></li><li class="l2"><a href="#10-common-pitfalls">10. Common pitfalls</a></li><li class="l2"><a href="#11-self-test">11. Self-test</a></li><li class="l2"><a href="#12-further-reading">12. Further reading</a></li><li class="l2"><a href="#answer-key">Answer key</a></li></ol></aside>
+  <article class="content" data-week="1"><h2 id="how-to-use-this-guide">How to use this guide</h2>
+<p>This is the in-depth companion to section <strong>1.1 Digital Audio Basics</strong> of the tutorial. The tutorial gives you the headline facts; this guide derives them, shows the numbers, and gives you experiments that prove each idea on your own machine and phone.</p>
+<table>
+<thead>
+<tr>
+<th>Session</th>
+<th>Suggested activity</th>
+<th>Time</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>1</td>
+<td>Read sections 1–3 (signal chain, sampling, aliasing). Do Exercise A.</td>
+<td>2 h</td>
+</tr>
+<tr>
+<td>2</td>
+<td>Read sections 4–5 (quantisation, dither, PCM layout). Do Exercises B and C.</td>
+<td>2 h</td>
+</tr>
+<tr>
+<td>3</td>
+<td>Read sections 6–7 (data rates, buffers, loudness). Do Exercise D.</td>
+<td>2 h</td>
+</tr>
+<tr>
+<td>4</td>
+<td>Device lab: Exercises E and F on your Android phone (and an iPhone if you have one).</td>
+<td>2 h</td>
+</tr>
+<tr>
+<td>5</td>
+<td>Self-test without notes, then check the answer key. Write up your "media facts" notebook page.</td>
+<td>1–2 h</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Learning objectives.</strong> By the end of the week you should be able to:</p>
+<ol>
+<li>Explain what sampling does to a signal and why the Nyquist frequency is a hard limit.</li>
+<li>Predict the alias frequency of any tone sampled at any rate.</li>
+<li>Derive the "6 dB per bit" rule and the dynamic range of 16- and 24-bit PCM.</li>
+<li>Explain why dither is added and why audio engines work in 32-bit float.</li>
+<li>Lay out PCM in memory (interleaved vs planar, frames vs samples, byte order) and read a WAV header by hand.</li>
+<li>Compute raw data rates, buffer sizes and buffer latencies.</li>
+<li>Explain LUFS/LKFS, true peak and why loudness normalisation matters to an app.</li>
+</ol>
+<p><strong>Tools you need.</strong> FFmpeg 6 or later (<code>ffmpeg</code>, <code>ffprobe</code>; the expected outputs below were produced with FFmpeg 7.1), Python 3 with NumPy (optional, for analysis), Android Studio with a physical phone and <code>adb</code>, and optionally Audacity for listening and viewing spectra.</p>
+<h2 id="1-from-pressure-wave-to-numbers-the-audio-signal-chain">1. From pressure wave to numbers: the audio signal chain</h2>
+<p>Sound is a longitudinal pressure wave: tiny fluctuations of air pressure around atmospheric pressure. A microphone turns those fluctuations into a small voltage that follows the pressure over time — an <strong>analogue</strong> signal, continuous in both time and amplitude.</p>
+<p>To store or process it in a computer we must make it discrete in <strong>two</strong> dimensions:</p>
+<ul>
+<li><strong>Time</strong> — we measure the voltage at regular instants. This is <strong>sampling</strong>, and the number of measurements per second is the <strong>sample rate</strong> <em>f</em><sub>s</sub>.</li>
+<li><strong>Amplitude</strong> — each measurement is rounded to one of a finite set of integer levels. This is <strong>quantisation</strong>, and the number of bits per measurement is the <strong>bit depth</strong>.</li>
+</ul>
+<p>The result is <strong>PCM</strong> (pulse-code modulation): a plain sequence of integers (or floats), one per channel per sampling instant. Every other audio format you will meet — WAV, AAC, Opus, FLAC — is either PCM in a container or a compressed representation that decodes back to PCM.</p>
+<figure id="fig-1-1"><img src="../figures/w01_signal_chain.svg" alt="The capture and playback signal chain. Everything to the right of the ADC and left of the DAC is digital PCM." loading="lazy"><figcaption><b>Figure 1.1</b> — The capture and playback signal chain. Everything to the right of the ADC and left of the DAC is digital PCM.</figcaption></figure>
+<p>On a phone, the analogue parts (microphone, preamp, ADC, DAC, amplifier) live in the <strong>audio codec chip</strong> or the SoC's audio subsystem. The digital part is shared between a DSP (for voice processing, effects, offload playback), the kernel driver (ALSA/ASoC on Android) and user-space services (AudioFlinger on Android, Core Audio on iOS). You will study that path in Phase 5; this week is about the numbers that flow through it.</p>
+<div class="admonition note">
+<p class="admonition-title">Two meanings of <em>codec</em></p>
+<p>In hardware, an <em>audio codec</em> is the chip containing the ADC and DAC (coder/decoder of analogue signals). In software, a <em>codec</em> compresses PCM (AAC, Opus). Context tells you which one is meant.</p>
+</div>
+<h2 id="2-sampling-and-the-nyquistshannon-theorem">2. Sampling and the Nyquist–Shannon theorem</h2>
+<h3 id="21-what-sampling-does">2.1 What sampling does</h3>
+<p>If the sample rate is <em>f</em><sub>s</sub>, the <strong>sample period</strong> is <em>T</em> = 1/<em>f</em><sub>s</sub>. At 48 kHz, <em>T</em> = 1/48 000 s ≈ 20.83 µs. Sample number <em>n</em> is the signal's value at time <em>t</em> = <em>n</em>·<em>T</em>.</p>
+<figure id="fig-1-2"><img src="../figures/w01_sampling.svg" alt="Sampling a 1 kHz sine at 8 kHz: eight samples per cycle." loading="lazy"><figcaption><b>Figure 1.2</b> — Sampling a 1 kHz sine at 8 kHz: eight samples per cycle.</figcaption></figure>
+<h3 id="22-the-theorem">2.2 The theorem</h3>
+<p>The <strong>Nyquist–Shannon sampling theorem</strong> says: a signal containing no frequencies at or above <em>f</em><sub>s</sub>/2 is completely determined by its samples, and can be reconstructed exactly by an ideal low-pass filter. The frequency <em>f</em><sub>s</sub>/2 is the <strong>Nyquist frequency</strong>.</p>
+<p>Two consequences are worth internalising:</p>
+<ol>
+<li><strong>"Exactly" really means exactly.</strong> The samples do not describe a staircase. Between samples, the reconstruction filter produces the one and only band-limited waveform that passes through those points. Staircase pictures are a drawing convenience, not what a DAC outputs.</li>
+<li><strong>More samples do not make a band-limited signal "smoother".</strong> Sampling a 1 kHz tone at 192 kHz instead of 48 kHz does not improve the tone; it only raises the ceiling on which frequencies can be represented.</li>
+</ol>
+<h3 id="23-why-441-khz-and-48-khz">2.3 Why 44.1 kHz and 48 kHz?</h3>
+<p>Human hearing extends to roughly 20 kHz (less with age). A sample rate a little above 40 kHz therefore suffices, with the extra margin used for the anti-aliasing filter's <strong>transition band</strong> — the range in which the filter goes from "pass everything" to "block everything".</p>
+<ul>
+<li><strong>44.1 kHz</strong> leaves a transition band from 20 kHz to 22.05 kHz, only 2.05 kHz wide. The number has a historical origin: early digital audio was recorded on video tape using PCM adaptors that stored 3 samples per video line. With 245 usable lines × 60 fields/s (NTSC-style) or 294 lines × 50 fields/s (PAL-style), both give 3 × 245 × 60 = 3 × 294 × 50 = <strong>44 100</strong> samples/s, and the CD inherited it.</li>
+<li><strong>48 kHz</strong> gives a roomier 4 kHz transition band, and it divides neatly into video frame rates: 48 000 / 25 = 1920 samples per frame at 25 fps, 48 000 / 50 = 960, 48 000 / 30 = 1600. (At 30000/1001 fps it is 1601.6 samples per frame, so 5 frames hold exactly 8008 samples.) It is the standard for video, broadcast and — importantly for you — the native rate of most phone audio hardware.</li>
+</ul>
+<table>
+<thead>
+<tr>
+<th>Sample rate</th>
+<th>Nyquist</th>
+<th>Typical use</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>8 kHz</td>
+<td>4 kHz</td>
+<td>Narrowband telephony (G.711, AMR-NB): speech band ≈ 300–3400 Hz</td>
+</tr>
+<tr>
+<td>16 kHz</td>
+<td>8 kHz</td>
+<td>Wideband voice (AMR-WB, VoIP), speech recognition</td>
+</tr>
+<tr>
+<td>32 kHz</td>
+<td>16 kHz</td>
+<td>Super-wideband voice (e.g. EVS SWB), some broadcast</td>
+</tr>
+<tr>
+<td>44.1 kHz</td>
+<td>22.05 kHz</td>
+<td>CD, most music catalogues</td>
+</tr>
+<tr>
+<td>48 kHz</td>
+<td>24 kHz</td>
+<td>Video, broadcast, native rate of most Android and iOS audio paths</td>
+</tr>
+<tr>
+<td>96 / 192 kHz</td>
+<td>48 / 96 kHz</td>
+<td>Production headroom for processing; rarely audible benefit for playback</td>
+</tr>
+</tbody>
+</table>
+<h3 id="24-resampling-on-mobile">2.4 Resampling on mobile</h3>
+<p>When an app plays 44.1 kHz content on a device whose hardware runs at 48 kHz, something must <strong>resample</strong> (sample-rate convert) it. On Android, AudioFlinger's mixer does this in software (unless the stream is offloaded to a DSP or played through a path that runs at the content rate). Resampling costs CPU and power, adds a little latency, and the quality depends on the resampler. More importantly for low-latency apps, Android's fast mixer path requires the track to use the device's native sample rate and buffer size, so mismatched rates can push you onto a slower path.</p>
+<p>On iOS the hardware rate is exposed through <code>AVAudioSession.sharedInstance().sampleRate</code>; you can request a rate with <code>setPreferredSampleRate(_:)</code>, and Core Audio converts as needed.</p>
+<div class="admonition tip">
+<p class="admonition-title">Rule of thumb</p>
+<p>For anything real-time (games, instruments, calls), generate and process audio at the device's native rate — query it, don't assume it. For music playback, letting the platform resample is fine.</p>
+</div>
+<h2 id="3-aliasing-what-happens-above-nyquist">3. Aliasing: what happens above Nyquist</h2>
+<h3 id="31-the-folding-rule">3.1 The folding rule</h3>
+<p>Suppose a 7 kHz tone is sampled at 8 kHz. The samples it produces are <em>identical</em> to the samples of a 1 kHz tone (with inverted sign). Once the samples are taken, nothing can tell the two apart; the 7 kHz tone has been <strong>aliased</strong> to 1 kHz.</p>
+<figure id="fig-1-3"><img src="../figures/w01_aliasing_time.svg" alt="A 7 kHz tone sampled at 8 kHz produces exactly the same sample values as an (inverted) 1 kHz tone." loading="lazy"><figcaption><b>Figure 1.3</b> — A 7 kHz tone sampled at 8 kHz produces exactly the same sample values as an (inverted) 1 kHz tone.</figcaption></figure>
+<p>Why? A sampled sinusoid is sin(2π·<em>f</em>·<em>n</em>/<em>f</em><sub>s</sub>). Adding any integer multiple of <em>f</em><sub>s</sub> to <em>f</em> adds a multiple of 2π·<em>n</em> to the phase, which changes nothing. So frequencies <em>f</em>, <em>f</em> ± <em>f</em><sub>s</sub>, <em>f</em> ± 2<em>f</em><sub>s</sub>, … are indistinguishable, and negative frequencies mirror positive ones. That gives the <strong>folding rule</strong>:</p>
+<p class="eq">f<sub>alias</sub> = | f − k·f<sub>s</sub> |, &nbsp; choosing the integer k that makes the result lie in [0, f<sub>s</sub>/2]</p>
+
+<figure id="fig-1-4"><img src="../figures/w01_folding.svg" alt="The input-to-output frequency map at 48 kHz is a zig-zag: the spectrum folds back and forth at multiples of 24 kHz." loading="lazy"><figcaption><b>Figure 1.4</b> — The input-to-output frequency map at 48 kHz is a zig-zag: the spectrum folds back and forth at multiples of 24 kHz.</figcaption></figure>
+<div class="admonition example">
+<p class="admonition-title">Worked example — predicting aliases</p>
+<ul>
+<li>30 kHz sampled at 48 kHz: k = 1 → |30 − 48| = <strong>18 kHz</strong>.</li>
+<li>25 kHz sampled at 44.1 kHz: k = 1 → |25 − 44.1| = <strong>19.1 kHz</strong> — right in the audible band.</li>
+<li>50 kHz at 48 kHz: k = 1 → |50 − 48| = <strong>2 kHz</strong>.</li>
+<li>70 kHz at 48 kHz: k = 1 → |70 − 48| = <strong>22 kHz</strong> (k = 2 would give 26, which is above Nyquist, so k = 1 is right).</li>
+<li>5 kHz at 8 kHz (a telephone codec): |5 − 8| = <strong>3 kHz</strong> — a whistle that was never in the speech band.</li>
+</ul>
+</div>
+<h3 id="32-why-this-matters-in-practice">3.2 Why this matters in practice</h3>
+<p>Aliases are not harmonically related to the original sound, so they sound harsh and "inharmonic". Real systems prevent them in three places:</p>
+<ol>
+<li><strong>Before the ADC:</strong> an analogue anti-aliasing low-pass filter. Modern converters are <em>oversampling</em> sigma-delta designs: they sample at many MHz with a gentle analogue filter, then use a steep digital filter before decimating to 48 kHz.</li>
+<li><strong>Inside resamplers:</strong> a proper sample-rate converter low-pass filters before it decimates. A naive one that just drops samples aliases badly.</li>
+<li><strong>Inside synthesis and effects:</strong> generating a sawtooth or square wave naively, or applying distortion, creates harmonics above Nyquist that fold down. Audio engines use band-limited oscillators and oversampling for non-linear effects.</li>
+</ol>
+<p>You will hear and measure this in Exercise A.</p>
+<h2 id="4-quantisation-bit-depth-and-dynamic-range">4. Quantisation, bit depth and dynamic range</h2>
+<h3 id="41-levels-and-step-size">4.1 Levels and step size</h3>
+<p>With <em>N</em> bits there are 2<sup><em>N</em></sup> levels. Signed 16-bit PCM uses integers from −32 768 to +32 767. If full scale is ±1.0, the step size (one <strong>LSB</strong>, least significant bit) is Δ = 2/2<sup><em>N</em></sup>. Rounding each sample to the nearest level makes an error between −Δ/2 and +Δ/2.</p>
+<figure id="fig-1-5"><img src="../figures/w01_quantisation.svg" alt="A 3-bit quantiser (8 levels) and the resulting error signal, bounded by ±Δ/2." loading="lazy"><figcaption><b>Figure 1.5</b> — A 3-bit quantiser (8 levels) and the resulting error signal, bounded by ±Δ/2.</figcaption></figure>
+<h3 id="42-deriving-6-db-per-bit">4.2 Deriving "6 dB per bit"</h3>
+<p>For a busy signal the error behaves like random noise uniformly distributed over [−Δ/2, +Δ/2]. Its mean-square value is Δ²/12. A full-scale sine wave of amplitude <em>A</em> = 2<sup><em>N</em>−1</sup>·Δ has mean-square value <em>A</em>²/2. The signal-to-quantisation-noise ratio is therefore:</p>
+<p class="eq">SQNR = 10·log<sub>10</sub>( (A²/2) / (Δ²/12) ) = 10·log<sub>10</sub>(1.5 · 2<sup>2N</sup>) ≈ <b>6.02·N + 1.76 dB</b></p>
+
+<p>Each extra bit doubles the number of levels, halves Δ, and improves the ratio by 20·log<sub>10</sub>(2) ≈ 6.02 dB. The 1.76 dB term is specific to a sine-wave signal; many texts drop it and quote 6.02·<em>N</em>, which is why you will see 16-bit quoted as both "96 dB" and "98 dB".</p>
+<table>
+<thead>
+<tr>
+<th>Bit depth</th>
+<th>Levels</th>
+<th>6.02·N (dB)</th>
+<th>6.02·N + 1.76 (dB)</th>
+<th>Where you meet it</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>8</td>
+<td>256</td>
+<td>48.2</td>
+<td>49.9</td>
+<td>Legacy/low-end, <code>ENCODING_PCM_8BIT</code>, G.711 is 8-bit <em>companded</em></td>
+</tr>
+<tr>
+<td>12</td>
+<td>4096</td>
+<td>72.2</td>
+<td>74.0</td>
+<td>Some voice paths</td>
+</tr>
+<tr>
+<td>16</td>
+<td>65 536</td>
+<td>96.3</td>
+<td>98.1</td>
+<td>CD, most app audio, <code>ENCODING_PCM_16BIT</code></td>
+</tr>
+<tr>
+<td>20</td>
+<td>1 048 576</td>
+<td>120.4</td>
+<td>122.2</td>
+<td>Approximately the real-world limit of excellent converters</td>
+</tr>
+<tr>
+<td>24</td>
+<td>16 777 216</td>
+<td>144.5</td>
+<td>146.2</td>
+<td>Studio and capture formats; real ADCs reach roughly 110–120 dB</td>
+</tr>
+</tbody>
+</table>
+<p>I simulated a full-scale 997 Hz sine quantised to 16 bits in NumPy and measured an SQNR of <strong>98.07 dB</strong>, and 49.95 dB for 8 bits — matching the formula.</p>
+<div class="admonition note">
+<p class="admonition-title">dBFS</p>
+<p>Digital levels are given in <strong>dBFS</strong> (decibels relative to full scale). 0 dBFS is the largest possible sample magnitude; everything else is negative. A sine with peak amplitude 0.5 has a peak of −6.02 dBFS and an RMS level of −9.03 dBFS (RMS of a sine is peak/√2, i.e. 3.01 dB lower). FFmpeg's <code>astats</code> filter reports exactly these numbers — see Exercise B.</p>
+</div>
+<h3 id="43-integer-vs-floating-point-samples">4.3 Integer vs floating-point samples</h3>
+<p>Audio engines (AAudio/Oboe callbacks, AudioFlinger's mixer, AVAudioEngine, FFmpeg filters) commonly use <strong>32-bit float</strong> samples, nominally in [−1.0, +1.0]. Float has a 24-bit mantissa, so precision near full scale is similar to 24-bit integer, but it also has an exponent: a float sample can go to +4.0 or −12.0 in the middle of a processing chain without being destroyed. Mixing two full-scale tracks in 16-bit integer <strong>clips</strong> (values wrap or saturate); in float they simply sum to 2.0, and a later gain stage or limiter can bring them back. Clipping only happens when you finally convert to an integer format for the DAC.</p>
+<p>Common conversions:</p>
+<ul>
+<li>s16 → float: <code>f = s / 32768.0f</code></li>
+<li>float → s16: <code>s = clamp(round(f * 32767), −32768, 32767)</code> (conventions differ slightly between libraries; the ±1 LSB asymmetry rarely matters)</li>
+<li>s24 in 32-bit containers: often left-justified ("MSB-aligned"), so a full-scale value looks like a 32-bit full-scale value; check the format definition.</li>
+</ul>
+<table>
+<thead>
+<tr>
+<th>Format</th>
+<th>Android <code>AudioFormat</code> encoding</th>
+<th>FFmpeg <code>sample_fmt</code></th>
+<th>Notes</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>unsigned 8-bit</td>
+<td><code>ENCODING_PCM_8BIT</code></td>
+<td><code>u8</code></td>
+<td>Silence is 128, not 0</td>
+</tr>
+<tr>
+<td>signed 16-bit</td>
+<td><code>ENCODING_PCM_16BIT</code></td>
+<td><code>s16</code> / <code>s16p</code></td>
+<td>The default for app audio</td>
+</tr>
+<tr>
+<td>packed 24-bit (3 bytes)</td>
+<td><code>ENCODING_PCM_24BIT_PACKED</code> (API 31+)</td>
+<td>(via <code>s32</code> in FFmpeg)</td>
+<td>Used by some USB devices and files</td>
+</tr>
+<tr>
+<td>signed 32-bit</td>
+<td><code>ENCODING_PCM_32BIT</code> (API 31+)</td>
+<td><code>s32</code> / <code>s32p</code></td>
+<td></td>
+</tr>
+<tr>
+<td>32-bit float</td>
+<td><code>ENCODING_PCM_FLOAT</code> (API 21+)</td>
+<td><code>flt</code> / <code>fltp</code></td>
+<td>Engine-internal format; AAudio supports it</td>
+</tr>
+</tbody>
+</table>
+<h3 id="44-dither">4.4 Dither</h3>
+<p>Quantisation error is only noise-like when the signal is busy. For a very quiet or slowly changing signal, the error becomes <strong>correlated with the signal</strong> — it repeats every cycle and produces harmonic distortion, and fades to digital silence can "pump" or crackle.</p>
+<p><strong>Dither</strong> adds a tiny amount of random noise <em>before</em> rounding. With <strong>TPDF</strong> (triangular probability density) dither of ±1 LSB peak, the error becomes statistically independent of the signal: you trade distortion for a slightly higher, constant, benign noise floor. Some dither implementations also apply <strong>noise shaping</strong>, pushing the noise toward frequencies where the ear is less sensitive.</p>
+<figure id="fig-1-6"><img src="../figures/w01_dither.svg" alt="A 1 kHz tone only about 1.3 LSB in amplitude quantised to 16 bits: without dither the error is a set of distortion spikes; with TPDF dither it is a flat noise floor." loading="lazy"><figcaption><b>Figure 1.6</b> — A 1 kHz tone only about 1.3 LSB in amplitude quantised to 16 bits: without dither the error is a set of distortion spikes; with TPDF dither it is a flat noise floor.</figcaption></figure>
+<p><strong>When to dither:</strong> every time you reduce bit depth (e.g. a float mix to a 16-bit file). <strong>When not to:</strong> never dither twice in a chain unnecessarily, and do not dither when converting a format losslessly (s16 → float → s16 with no processing is bit-exact without dither).</p>
+<h2 id="5-channels-and-pcm-memory-layout">5. Channels and PCM memory layout</h2>
+<h3 id="51-channel-counts-and-layouts">5.1 Channel counts and layouts</h3>
+<p>Mono (1), stereo (2), 5.1 (6: front left, front right, centre, LFE, and two surround), 7.1 (8) and immersive layouts such as 7.1.4 (12, with four height channels). The <strong>order</strong> of channels inside a frame is defined by the API or format, and different systems use different orders — a common source of "the dialogue comes out of the rear speaker" bugs.</p>
+<ul>
+<li><strong>Android</strong> describes layouts with channel masks: <code>AudioFormat.CHANNEL_OUT_MONO</code>, <code>CHANNEL_OUT_STEREO</code>, <code>CHANNEL_OUT_5POINT1</code>, <code>CHANNEL_OUT_7POINT1_SURROUND</code>, and (API 32+) <code>CHANNEL_OUT_7POINT1POINT4</code>. Input masks are separate (<code>CHANNEL_IN_MONO</code>, <code>CHANNEL_IN_STEREO</code>).</li>
+<li><strong>FFmpeg</strong> uses named layouts (<code>mono</code>, <code>stereo</code>, <code>5.1</code>, <code>7.1</code>, …) — run <code>ffmpeg -layouts</code> to list them with their channel order.</li>
+<li><strong>WAV</strong> files with more than two channels use <code>WAVE_FORMAT_EXTENSIBLE</code>, which carries a speaker mask; plain PCM WAV (format tag 1) has no mask, which is why <code>ffprobe</code> reports <code>channel_layout=unknown</code> for some WAV files.</li>
+</ul>
+<h3 id="52-samples-frames-and-buffers">5.2 Samples, frames and buffers</h3>
+<p>Terminology varies, so be precise:</p>
+<ul>
+<li>A <strong>sample</strong> is one value for one channel at one instant.</li>
+<li>An <strong>audio frame</strong> (in PCM APIs such as AAudio, AudioTrack, ALSA and Core Audio) is one sample <em>for every channel</em> at one instant. Stereo 16-bit: 1 frame = 2 samples = 4 bytes.</li>
+<li>A <strong>codec frame</strong> is a unit of compressed audio. AAC-LC frames carry 1024 samples per channel (21.33 ms at 48 kHz); MP3 frames 1152; Opus frames 2.5–60 ms (20 ms is typical). Different concept, same word.</li>
+</ul>
+<p class="eq">bytes per frame = channels × bytes per sample &nbsp;&nbsp;|&nbsp;&nbsp; duration = frames ÷ f<sub>s</sub></p>
+
+<h3 id="53-interleaved-vs-planar">5.3 Interleaved vs planar</h3>
+<figure id="fig-1-7"><img src="../figures/w01_layout.svg" alt="Interleaved buffers store L R L R…; planar buffers store each channel contiguously." loading="lazy"><figcaption><b>Figure 1.7</b> — Interleaved buffers store L R L R…; planar buffers store each channel contiguously.</figcaption></figure>
+<ul>
+<li><strong>Interleaved (packed):</strong> one buffer, channels alternating. Used by <code>AudioTrack</code>, <code>AudioRecord</code>, AAudio/Oboe, WAV files, and FFmpeg's <code>s16</code>/<code>flt</code> formats.</li>
+<li><strong>Planar:</strong> one buffer per channel. FFmpeg's decoders often output planar formats (<code>fltp</code> for AAC and Opus), and <code>AVAudioEngine</code>'s standard format (<code>AVAudioFormat(standardFormatWithSampleRate:channels:)</code>) is deinterleaved 32-bit float.</li>
+</ul>
+<p>Converting between them is a simple loop, but feeding planar data to an API that expects interleaved data gives a recognisable symptom: audio that plays at the right speed but sounds garbled, or plays the first half of the buffer in one ear.</p>
+<h3 id="54-byte-order-and-the-wav-header">5.4 Byte order and the WAV header</h3>
+<p>PCM in WAV is <strong>little-endian</strong>: the 16-bit value 0x1234 is stored as bytes <code>34 12</code>. A canonical PCM WAV file is a RIFF container with a 44-byte header followed by raw interleaved samples:</p>
+<table>
+<thead>
+<tr>
+<th>Offset</th>
+<th>Size</th>
+<th>Field</th>
+<th>Value for 48 kHz / 16-bit / stereo</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>0</td>
+<td>4</td>
+<td>"RIFF"</td>
+<td><code>52 49 46 46</code></td>
+</tr>
+<tr>
+<td>4</td>
+<td>4</td>
+<td>file size − 8</td>
+<td>little-endian</td>
+</tr>
+<tr>
+<td>8</td>
+<td>4</td>
+<td>"WAVE"</td>
+<td><code>57 41 56 45</code></td>
+</tr>
+<tr>
+<td>12</td>
+<td>4</td>
+<td>"fmt "</td>
+<td><code>66 6d 74 20</code></td>
+</tr>
+<tr>
+<td>16</td>
+<td>4</td>
+<td>fmt chunk size</td>
+<td>16</td>
+</tr>
+<tr>
+<td>20</td>
+<td>2</td>
+<td>audio format</td>
+<td>1 = PCM (3 = IEEE float, 0xFFFE = extensible)</td>
+</tr>
+<tr>
+<td>22</td>
+<td>2</td>
+<td>channels</td>
+<td>2</td>
+</tr>
+<tr>
+<td>24</td>
+<td>4</td>
+<td>sample rate</td>
+<td>48 000 = <code>80 bb 00 00</code></td>
+</tr>
+<tr>
+<td>28</td>
+<td>4</td>
+<td>byte rate = f<sub>s</sub> × channels × bytes/sample</td>
+<td>192 000 = <code>00 ee 02 00</code></td>
+</tr>
+<tr>
+<td>32</td>
+<td>2</td>
+<td>block align = channels × bytes/sample</td>
+<td>4</td>
+</tr>
+<tr>
+<td>34</td>
+<td>2</td>
+<td>bits per sample</td>
+<td>16</td>
+</tr>
+<tr>
+<td>36</td>
+<td>4</td>
+<td>"data"</td>
+<td><code>64 61 74 61</code></td>
+</tr>
+<tr>
+<td>40</td>
+<td>4</td>
+<td>data size in bytes</td>
+<td></td>
+</tr>
+</tbody>
+</table>
+<p>You will decode a real header byte-by-byte in Exercise C.</p>
+<h2 id="6-data-rates-storage-buffers-and-latency">6. Data rates, storage, buffers and latency</h2>
+<h3 id="61-raw-pcm-data-rate">6.1 Raw PCM data rate</h3>
+<p class="eq">bit rate = f<sub>s</sub> × bits per sample × channels</p>
+
+<table>
+<thead>
+<tr>
+<th>Format</th>
+<th>Calculation</th>
+<th>Bit rate</th>
+<th>Per minute</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Telephone 8 kHz / 8-bit / mono</td>
+<td>8 000 × 8 × 1</td>
+<td>64 kbit/s</td>
+<td>480 kB</td>
+</tr>
+<tr>
+<td>Wideband 16 kHz / 16-bit / mono</td>
+<td>16 000 × 16 × 1</td>
+<td>256 kbit/s</td>
+<td>1.92 MB</td>
+</tr>
+<tr>
+<td>CD 44.1 kHz / 16-bit / stereo</td>
+<td>44 100 × 16 × 2</td>
+<td>1 411.2 kbit/s</td>
+<td>10.58 MB</td>
+</tr>
+<tr>
+<td>Mobile 48 kHz / 16-bit / stereo</td>
+<td>48 000 × 16 × 2</td>
+<td>1 536 kbit/s</td>
+<td>11.52 MB</td>
+</tr>
+<tr>
+<td>48 kHz / 32-bit float / stereo</td>
+<td>48 000 × 32 × 2</td>
+<td>3 072 kbit/s</td>
+<td>23.04 MB</td>
+</tr>
+<tr>
+<td>48 kHz / 24-bit / 5.1</td>
+<td>48 000 × 24 × 6</td>
+<td>6 912 kbit/s</td>
+<td>51.84 MB</td>
+</tr>
+</tbody>
+</table>
+<p>(1 MB = 10<sup>6</sup> bytes here. G.711 telephony is exactly the first row: 64 kbit/s is the classic "DS0" telephone channel.)</p>
+<div class="admonition example">
+<p class="admonition-title">Worked example — compression ratio</p>
+<p>48 kHz / 16-bit stereo is 1 536 kbit/s. AAC-LC at 128 kbit/s is 1536 / 128 = <strong>12×</strong> smaller. Opus at 64 kbit/s is <strong>24×</strong> smaller. A 10-second stereo WAV at this format is 48 000 × 4 × 10 = 1 920 000 bytes of samples plus a 44-byte header = <strong>1 920 044 bytes</strong> — exactly the size you will see in Exercise B.</p>
+</div>
+<h3 id="62-buffers-and-latency">6.2 Buffers and latency</h3>
+<p>Audio is moved in <strong>buffers</strong> (also called periods or bursts). A buffer of <em>F</em> frames at rate <em>f</em><sub>s</sub> lasts <em>F</em>/<em>f</em><sub>s</sub> seconds, and the system must refill it in less time than that, every time, forever — a missed deadline is an audible <strong>glitch</strong> (underrun).</p>
+<table>
+<thead>
+<tr>
+<th>Buffer (frames)</th>
+<th>Duration at 48 kHz</th>
+<th>Typical context</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>48</td>
+<td>1 ms</td>
+<td>Very aggressive low-latency (MMAP paths)</td>
+</tr>
+<tr>
+<td>96</td>
+<td>2 ms</td>
+<td>Low-latency burst on some Android devices</td>
+</tr>
+<tr>
+<td>192</td>
+<td>4 ms</td>
+<td>Common Android burst size</td>
+</tr>
+<tr>
+<td>240</td>
+<td>5 ms</td>
+<td>Common burst size</td>
+</tr>
+<tr>
+<td>1024</td>
+<td>21.3 ms</td>
+<td>Typical "normal" mixer buffer / one AAC frame</td>
+</tr>
+<tr>
+<td>4096</td>
+<td>85.3 ms</td>
+<td>Power-efficient or offload playback</td>
+</tr>
+</tbody>
+</table>
+<p>Total output latency is the sum of all buffering stages (app buffer + mixer + HAL/DSP + DAC filters), so it is usually several bursts. Small buffers mean low latency but more wake-ups and more risk of glitches; large buffers save power. Phase 4 (Oboe, <code>AVAudioEngine</code>) returns to this trade-off.</p>
+<p><strong>On Android</strong>, ask the platform for the native values:</p>
+<div class="highlight"><pre><span></span><code><span class="kd">val</span><span class="w"> </span><span class="nv">am</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">context</span><span class="p">.</span><span class="na">getSystemService</span><span class="p">(</span><span class="n">Context</span><span class="p">.</span><span class="na">AUDIO_SERVICE</span><span class="p">)</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="n">AudioManager</span>
+<span class="kd">val</span><span class="w"> </span><span class="nv">nativeRate</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">am</span><span class="p">.</span><span class="na">getProperty</span><span class="p">(</span><span class="n">AudioManager</span><span class="p">.</span><span class="na">PROPERTY_OUTPUT_SAMPLE_RATE</span><span class="p">)</span><span class="o">?.</span><span class="na">toIntOrNull</span><span class="p">()</span><span class="w"> </span><span class="o">?:</span><span class="w"> </span><span class="m">48</span><span class="n">_000</span>
+<span class="kd">val</span><span class="w"> </span><span class="nv">framesPerBurst</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">am</span><span class="p">.</span><span class="na">getProperty</span><span class="p">(</span><span class="n">AudioManager</span><span class="p">.</span><span class="na">PROPERTY_OUTPUT_FRAMES_PER_BUFFER</span><span class="p">)</span><span class="o">?.</span><span class="na">toIntOrNull</span><span class="p">()</span><span class="w"> </span><span class="o">?:</span><span class="w"> </span><span class="m">256</span>
+<span class="kd">val</span><span class="w"> </span><span class="nv">burstMs</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="m">1000.0</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="n">framesPerBurst</span><span class="w"> </span><span class="o">/</span><span class="w"> </span><span class="n">nativeRate</span>
+<span class="n">Log</span><span class="p">.</span><span class="na">i</span><span class="p">(</span><span class="s">"AudioFacts"</span><span class="p">,</span><span class="w"> </span><span class="s">"native rate=</span><span class="si">$</span><span class="n">nativeRate</span><span class="s"> Hz, burst=</span><span class="si">$</span><span class="n">framesPerBurst</span><span class="s"> frames (</span><span class="si">${</span><span class="s">"</span><span class="o">%</span><span class="p">.</span><span class="m">2f</span><span class="s">"</span><span class="p">.</span><span class="na">format</span><span class="p">(</span><span class="n">burstMs</span><span class="p">)</span><span class="si">}</span><span class="s"> ms)"</span><span class="p">)</span>
+</code></pre></div>
+<p><strong>On iOS:</strong></p>
+<div class="highlight"><pre><span></span><code><span class="kd">let</span><span class="w"> </span><span class="nv">session</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="bp">AVAudioSession</span><span class="p">.</span><span class="n">sharedInstance</span><span class="p">()</span>
+<span class="k">try</span><span class="w"> </span><span class="n">session</span><span class="p">.</span><span class="n">setCategory</span><span class="p">(.</span><span class="n">playback</span><span class="p">)</span>
+<span class="k">try</span><span class="w"> </span><span class="n">session</span><span class="p">.</span><span class="n">setPreferredIOBufferDuration</span><span class="p">(</span><span class="mf">0.005</span><span class="p">)</span><span class="w">   </span><span class="c1">// a request, not a guarantee</span>
+<span class="k">try</span><span class="w"> </span><span class="n">session</span><span class="p">.</span><span class="n">setActive</span><span class="p">(</span><span class="kc">true</span><span class="p">)</span>
+<span class="bp">print</span><span class="p">(</span><span class="s">"rate=</span><span class="si">\(</span><span class="n">session</span><span class="p">.</span><span class="n">sampleRate</span><span class="si">)</span><span class="s"> Hz, IO buffer=</span><span class="si">\(</span><span class="n">session</span><span class="p">.</span><span class="n">ioBufferDuration</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="mi">1000</span><span class="si">)</span><span class="s"> ms"</span><span class="p">)</span>
+</code></pre></div>
+<h2 id="7-loudness">7. Loudness</h2>
+<h3 id="71-peak-rms-and-perceived-loudness">7.1 Peak, RMS and perceived loudness</h3>
+<ul>
+<li><strong>Peak level</strong> (dBFS) is the largest sample magnitude. It tells you about clipping, not about loudness.</li>
+<li><strong>RMS level</strong> is the root-mean-square power. Closer to loudness, but the ear is not equally sensitive at all frequencies: a bass-heavy and a treble-heavy track with equal RMS do not sound equally loud.</li>
+<li><strong>Loudness</strong> per <strong>ITU-R BS.1770</strong> (units <strong>LUFS</strong>, Loudness Units relative to Full Scale; <strong>LKFS</strong> is the same unit under another name) first applies a <strong>K-weighting</strong> filter — a high-pass that de-emphasises deep bass plus a high-frequency shelf that models the head's acoustic effect — then measures power, then applies gating.</li>
+</ul>
+<figure id="fig-1-8"><img src="../figures/w01_kweighting.svg" alt="The BS.1770 K-weighting response at 48 kHz. The −0.691 dB constant in the loudness formula cancels the +0.691 dB gain at 997 Hz." loading="lazy"><figcaption><b>Figure 1.8</b> — The BS.1770 K-weighting response at 48 kHz. The −0.691 dB constant in the loudness formula cancels the +0.691 dB gain at 997 Hz.</figcaption></figure>
+<p class="eq">L<sub>K</sub> = −0.691 + 10·log<sub>10</sub>( Σ<sub>i</sub> G<sub>i</sub> · z<sub>i</sub> ) &nbsp; LUFS</p>
+
+<p>where <em>z</em><sub>i</sub> is the mean square of the K-weighted signal in channel <em>i</em> and <em>G</em><sub>i</sub> is a channel weight (1.0 for left, right and centre; about 1.41, i.e. +1.5 dB, for surround channels; the LFE channel is excluded).</p>
+<p><strong>Integrated loudness</strong> uses 400 ms blocks with 75% overlap and two gates: blocks quieter than −70 LUFS are ignored (absolute gate), then blocks more than 10 LU below the resulting average are ignored (relative gate), so silence and quiet passages do not drag the figure down. <strong>Momentary</strong> (400 ms) and <strong>short-term</strong> (3 s) loudness are the live-meter versions. <strong>Loudness range (LRA)</strong> describes how much the loudness varies. <strong>True peak</strong> (dBTP) estimates the peak of the reconstructed analogue waveform by oversampling, because the waveform between samples can exceed the largest sample — which can clip a DAC or a later lossy encoder.</p>
+<div class="admonition example">
+<p class="admonition-title">Worked example — a sine wave's loudness</p>
+<p>A 997 Hz sine at −20 dBFS peak in both channels: each channel has mean square (0.1)²/2 = 0.005; K-weighting adds +0.691 dB at 997 Hz, which the −0.691 constant cancels. L = 10·log<sub>10</sub>(0.005 + 0.005) = <strong>−20.0 LUFS</strong>. FFmpeg's <code>ebur128</code> filter reports exactly −20.0 LUFS for this signal (see Exercise D).</p>
+</div>
+<h3 id="72-targets-you-will-meet">7.2 Targets you will meet</h3>
+<table>
+<thead>
+<tr>
+<th>Context</th>
+<th>Typical target</th>
+<th>Source</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>European broadcast</td>
+<td>−23 LUFS integrated, ≤ −1 dBTP</td>
+<td>EBU R 128</td>
+</tr>
+<tr>
+<td>US broadcast</td>
+<td>−24 LKFS</td>
+<td>ATSC A/85</td>
+</tr>
+<tr>
+<td>Music streaming</td>
+<td>commonly about −14 LUFS (Spotify, YouTube) to −16 LUFS (Apple Music)</td>
+<td>Service documentation; values change over time</td>
+</tr>
+<tr>
+<td>Podcasts</td>
+<td>commonly −16 LUFS (stereo)</td>
+<td>Common industry recommendation</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Why an app developer cares:</strong> if your app plays user-generated or downloaded content without normalisation, levels will vary wildly between items and relative to other apps. Options include normalising at encode time (FFmpeg <code>loudnorm</code>), storing loudness metadata and applying gain at playback, or relying on codec metadata. Android 15 added <code>LoudnessCodecController</code>, which applies loudness metadata from AAC/MPEG-D DRC streams via the decoder (CTA-2075). Android also offers <code>DynamicsProcessing</code> (API 28) and <code>LoudnessEnhancer</code> audio effects.</p>
+<h2 id="8-mobile-platform-notes">8. Mobile platform notes</h2>
+<table>
+<thead>
+<tr>
+<th>Concern</th>
+<th>Android</th>
+<th>iOS</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Simple PCM playback</td>
+<td><code>AudioTrack</code> (interleaved; 16-bit or float)</td>
+<td><code>AVAudioPlayerNode</code> in <code>AVAudioEngine</code>, or <code>AVAudioPlayer</code> for files</td>
+</tr>
+<tr>
+<td>Simple capture</td>
+<td><code>AudioRecord</code></td>
+<td><code>AVAudioEngine</code> input node, <code>AVAudioRecorder</code></td>
+</tr>
+<tr>
+<td>Low latency</td>
+<td>AAudio (C, API 26+) and Oboe (C++ wrapper)</td>
+<td>Audio Units / <code>AVAudioEngine</code> with small IO buffer</td>
+</tr>
+<tr>
+<td>Native rate / buffer</td>
+<td><code>AudioManager.getProperty(PROPERTY_OUTPUT_SAMPLE_RATE / _FRAMES_PER_BUFFER)</code></td>
+<td><code>AVAudioSession.sampleRate</code>, <code>ioBufferDuration</code></td>
+</tr>
+<tr>
+<td>Engine sample format</td>
+<td>float in AAudio callbacks (or int16)</td>
+<td>deinterleaved Float32 standard format</td>
+</tr>
+<tr>
+<td>System mixer</td>
+<td>AudioFlinger (in <code>audioserver</code>)</td>
+<td>Core Audio / audio server</td>
+</tr>
+<tr>
+<td>Inspect at runtime</td>
+<td><code>adb shell dumpsys media.audio_flinger</code></td>
+<td>Xcode / Instruments; <code>AVAudioSession</code> properties</td>
+</tr>
+</tbody>
+</table>
+<p>A minimal, correct <code>AudioTrack</code> set-up for interleaved 16-bit stereo at 48 kHz:</p>
+<div class="highlight"><pre><span></span><code><span class="kd">val</span><span class="w"> </span><span class="nv">sampleRate</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="m">48</span><span class="n">_000</span>
+<span class="kd">val</span><span class="w"> </span><span class="nv">channelMask</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">AudioFormat</span><span class="p">.</span><span class="na">CHANNEL_OUT_STEREO</span>
+<span class="kd">val</span><span class="w"> </span><span class="nv">encoding</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">AudioFormat</span><span class="p">.</span><span class="na">ENCODING_PCM_16BIT</span>
+<span class="kd">val</span><span class="w"> </span><span class="nv">minBuf</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">AudioTrack</span><span class="p">.</span><span class="na">getMinBufferSize</span><span class="p">(</span><span class="n">sampleRate</span><span class="p">,</span><span class="w"> </span><span class="n">channelMask</span><span class="p">,</span><span class="w"> </span><span class="n">encoding</span><span class="p">)</span>
+
+<span class="kd">val</span><span class="w"> </span><span class="nv">track</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">AudioTrack</span><span class="p">.</span><span class="na">Builder</span><span class="p">()</span>
+<span class="w">    </span><span class="p">.</span><span class="na">setAudioAttributes</span><span class="p">(</span>
+<span class="w">        </span><span class="n">AudioAttributes</span><span class="p">.</span><span class="na">Builder</span><span class="p">()</span>
+<span class="w">            </span><span class="p">.</span><span class="na">setUsage</span><span class="p">(</span><span class="n">AudioAttributes</span><span class="p">.</span><span class="na">USAGE_MEDIA</span><span class="p">)</span>
+<span class="w">            </span><span class="p">.</span><span class="na">setContentType</span><span class="p">(</span><span class="n">AudioAttributes</span><span class="p">.</span><span class="na">CONTENT_TYPE_MUSIC</span><span class="p">)</span>
+<span class="w">            </span><span class="p">.</span><span class="na">build</span><span class="p">()</span>
+<span class="w">    </span><span class="p">)</span>
+<span class="w">    </span><span class="p">.</span><span class="na">setAudioFormat</span><span class="p">(</span>
+<span class="w">        </span><span class="n">AudioFormat</span><span class="p">.</span><span class="na">Builder</span><span class="p">()</span>
+<span class="w">            </span><span class="p">.</span><span class="na">setSampleRate</span><span class="p">(</span><span class="n">sampleRate</span><span class="p">)</span>
+<span class="w">            </span><span class="p">.</span><span class="na">setChannelMask</span><span class="p">(</span><span class="n">channelMask</span><span class="p">)</span>
+<span class="w">            </span><span class="p">.</span><span class="na">setEncoding</span><span class="p">(</span><span class="n">encoding</span><span class="p">)</span>
+<span class="w">            </span><span class="p">.</span><span class="na">build</span><span class="p">()</span>
+<span class="w">    </span><span class="p">)</span>
+<span class="w">    </span><span class="p">.</span><span class="na">setBufferSizeInBytes</span><span class="p">(</span><span class="n">minBuf</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="m">2</span><span class="p">)</span>
+<span class="w">    </span><span class="p">.</span><span class="na">setTransferMode</span><span class="p">(</span><span class="n">AudioTrack</span><span class="p">.</span><span class="na">MODE_STREAM</span><span class="p">)</span>
+<span class="w">    </span><span class="p">.</span><span class="na">build</span><span class="p">()</span>
+
+<span class="cm">/** One second of a stereo sine, interleaved L R L R …, amplitude 0.5 (−6 dBFS peak). */</span>
+<span class="kd">fun</span><span class="w"> </span><span class="nf">stereoSine</span><span class="p">(</span><span class="n">freqHz</span><span class="p">:</span><span class="w"> </span><span class="kt">Double</span><span class="p">,</span><span class="w"> </span><span class="n">seconds</span><span class="p">:</span><span class="w"> </span><span class="kt">Double</span><span class="p">,</span><span class="w"> </span><span class="n">amp</span><span class="p">:</span><span class="w"> </span><span class="kt">Double</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="m">0.5</span><span class="p">):</span><span class="w"> </span><span class="n">ShortArray</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="kd">val</span><span class="w"> </span><span class="nv">frames</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">(</span><span class="n">sampleRate</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="n">seconds</span><span class="p">).</span><span class="na">toInt</span><span class="p">()</span>
+<span class="w">    </span><span class="kd">val</span><span class="w"> </span><span class="nv">out</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">ShortArray</span><span class="p">(</span><span class="n">frames</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="m">2</span><span class="p">)</span>
+<span class="w">    </span><span class="k">for</span><span class="w"> </span><span class="p">(</span><span class="n">n</span><span class="w"> </span><span class="k">in</span><span class="w"> </span><span class="m">0</span><span class="w"> </span><span class="n">until</span><span class="w"> </span><span class="n">frames</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="kd">val</span><span class="w"> </span><span class="nv">v</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">(</span><span class="n">amp</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="n">sin</span><span class="p">(</span><span class="m">2</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="n">PI</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="n">freqHz</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="n">n</span><span class="w"> </span><span class="o">/</span><span class="w"> </span><span class="n">sampleRate</span><span class="p">)</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="m">32767</span><span class="p">).</span><span class="na">roundToInt</span><span class="p">().</span><span class="na">toShort</span><span class="p">()</span>
+<span class="w">        </span><span class="k">out</span><span class="o">[</span><span class="m">2</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="n">n</span><span class="o">]</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">v</span><span class="w">        </span><span class="c1">// left</span>
+<span class="w">        </span><span class="k">out</span><span class="o">[</span><span class="m">2</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="n">n</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="m">1</span><span class="o">]</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">v</span><span class="w">    </span><span class="c1">// right</span>
+<span class="w">    </span><span class="p">}</span>
+<span class="w">    </span><span class="k">return</span><span class="w"> </span><span class="k">out</span>
+<span class="p">}</span>
+
+<span class="c1">// Call from a background thread: write() blocks in MODE_STREAM.</span>
+<span class="n">track</span><span class="p">.</span><span class="na">play</span><span class="p">()</span>
+<span class="kd">val</span><span class="w"> </span><span class="nv">pcm</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">stereoSine</span><span class="p">(</span><span class="m">1000.0</span><span class="p">,</span><span class="w"> </span><span class="m">1.0</span><span class="p">)</span>
+<span class="n">track</span><span class="p">.</span><span class="na">write</span><span class="p">(</span><span class="n">pcm</span><span class="p">,</span><span class="w"> </span><span class="m">0</span><span class="p">,</span><span class="w"> </span><span class="n">pcm</span><span class="p">.</span><span class="na">size</span><span class="p">)</span><span class="w">   </span><span class="c1">// size is in shorts (samples), not frames or bytes</span>
+<span class="n">track</span><span class="p">.</span><span class="na">stop</span><span class="p">();</span><span class="w"> </span><span class="n">track</span><span class="p">.</span><span class="na">release</span><span class="p">()</span>
+</code></pre></div>
+<p>(Imports: <code>android.media.*</code>, <code>kotlin.math.PI</code>, <code>kotlin.math.sin</code>, <code>kotlin.math.roundToInt</code>.)</p>
+<div class="admonition warning">
+<p class="admonition-title">Units in audio APIs</p>
+<p><code>AudioTrack.write(ShortArray, …)</code> counts <strong>shorts</strong>, the <code>ByteArray</code> overload counts <strong>bytes</strong>, <code>getMinBufferSize()</code> returns <strong>bytes</strong>, AAudio and Oboe count <strong>frames</strong>, and <code>AudioTrack.getPlaybackHeadPosition()</code> returns <strong>frames</strong>. Mixing these units up is the most common audio bug in code review.</p>
+</div>
+<h2 id="9-hands-on-exercises">9. Hands-on exercises</h2>
+<p>Create a working folder (for example <code>~/media-lab/week01</code>) and run everything from there. The "expected output" blocks were produced with FFmpeg 7.1 on Linux; minor formatting may differ on your version.</p>
+<h3 id="exercise-a-make-aliasing-happen-then-prevent-it">Exercise A — Make aliasing happen, then prevent it</h3>
+<p>Generate a 30 kHz tone directly at 48 kHz (the expression is evaluated at each sample instant, exactly like an ADC without an anti-alias filter), and a correctly band-limited version made by generating at 96 kHz and resampling properly:</p>
+<div class="highlight"><pre><span></span><code><span class="c1"># Naive: 30 kHz evaluated at 48 kHz -&gt; aliases to |30 - 48| = 18 kHz</span>
+ffmpeg<span class="w"> </span>-f<span class="w"> </span>lavfi<span class="w"> </span>-i<span class="w"> </span><span class="s2">"aevalsrc=0.5*sin(2*PI*30000*t):s=48000:d=2"</span><span class="w"> </span>-c:a<span class="w"> </span>pcm_s16le<span class="w"> </span>alias30k.wav
+
+<span class="c1"># Proper: generate at 96 kHz (Nyquist 48 kHz, so 30 kHz is legal), then resample to 48 kHz</span>
+ffmpeg<span class="w"> </span>-f<span class="w"> </span>lavfi<span class="w"> </span>-i<span class="w"> </span><span class="s2">"aevalsrc=0.5*sin(2*PI*30000*t):s=96000:d=2"</span><span class="w"> </span>-c:a<span class="w"> </span>pcm_s16le<span class="w"> </span>tone30k_96k.wav
+ffmpeg<span class="w"> </span>-i<span class="w"> </span>tone30k_96k.wav<span class="w"> </span>-ar<span class="w"> </span><span class="m">48000</span><span class="w"> </span>resampled.wav
+
+<span class="c1"># Look at the spectra</span>
+ffmpeg<span class="w"> </span>-i<span class="w"> </span>alias30k.wav<span class="w"> </span>-lavfi<span class="w"> </span><span class="nv">showspectrumpic</span><span class="o">=</span><span class="nv">s</span><span class="o">=</span>1024x512:legend<span class="o">=</span><span class="m">1</span><span class="w"> </span>alias30k.png
+ffmpeg<span class="w"> </span>-i<span class="w"> </span>resampled.wav<span class="w"> </span>-lavfi<span class="w"> </span><span class="nv">showspectrumpic</span><span class="o">=</span><span class="nv">s</span><span class="o">=</span>1024x512:legend<span class="o">=</span><span class="m">1</span><span class="w"> </span>resampled.png
+</code></pre></div>
+<p><strong>Expected result.</strong> <code>alias30k.png</code> shows a strong line at 18 kHz. <code>resampled.png</code> shows essentially nothing: the resampler's low-pass filter removed the 30 kHz tone, because it cannot be represented at 48 kHz. Measured with an FFT (NumPy): the peak of <code>alias30k.wav</code> is at <strong>18 000 Hz</strong> with an RMS level of −9.03 dBFS — the full level of the original tone — whereas <code>resampled.wav</code> has an RMS level of about −62 dBFS (only filter leakage near Nyquist remains). If you can hear up to 18 kHz, <code>ffplay alias30k.wav</code> produces a high whistle from an "ultrasonic" input.</p>
+<p><strong>Extension.</strong> Repeat with 25 kHz at 44.1 kHz and predict the alias (19.1 kHz) before you look.</p>
+<h3 id="exercise-b-inspect-pcm-with-ffprobe-and-astats">Exercise B — Inspect PCM with ffprobe and astats</h3>
+<div class="highlight"><pre><span></span><code><span class="c1"># 10 s, 1 kHz, stereo, amplitude 0.5. -bitexact stops FFmpeg writing an extra LIST/INFO chunk.</span>
+ffmpeg<span class="w"> </span>-f<span class="w"> </span>lavfi<span class="w"> </span>-i<span class="w"> </span><span class="s2">"aevalsrc=0.5*sin(2*PI*1000*t):c=stereo:s=48000:d=10"</span><span class="w"> </span><span class="se">\</span>
+<span class="w">       </span>-c:a<span class="w"> </span>pcm_s16le<span class="w"> </span>-fflags<span class="w"> </span>+bitexact<span class="w"> </span>-flags:a<span class="w"> </span>+bitexact<span class="w"> </span>tone.wav
+ls<span class="w"> </span>-l<span class="w"> </span>tone.wav
+ffprobe<span class="w"> </span>-hide_banner<span class="w"> </span>tone.wav
+ffprobe<span class="w"> </span>-v<span class="w"> </span>error<span class="w"> </span>-show_entries<span class="w"> </span><span class="nv">stream</span><span class="o">=</span>codec_name,sample_fmt,sample_rate,channels,bits_per_sample,bit_rate<span class="w"> </span><span class="se">\</span>
+<span class="w">        </span>-of<span class="w"> </span><span class="nv">default</span><span class="o">=</span><span class="nv">noprint_wrappers</span><span class="o">=</span><span class="m">1</span><span class="w"> </span>tone.wav
+ffmpeg<span class="w"> </span>-i<span class="w"> </span>tone.wav<span class="w"> </span>-af<span class="w"> </span><span class="nv">astats</span><span class="o">=</span><span class="nv">measure_overall</span><span class="o">=</span>Peak_level+RMS_level:measure_perchannel<span class="o">=</span>none<span class="w"> </span>-f<span class="w"> </span>null<span class="w"> </span>-
+</code></pre></div>
+<p><strong>Expected output (abridged):</strong></p>
+<div class="highlight"><pre><span></span><code>-rw-r--r-- 1 you you 1920044 ... tone.wav
+Input #0, wav, from 'tone.wav':
+  Duration: 00:00:10.00, bitrate: 1536 kb/s
+  Stream #0:0: Audio: pcm_s16le ([1][0][0][0] / 0x0001), 48000 Hz, 2 channels, s16, 1536 kb/s
+codec_name=pcm_s16le
+sample_fmt=s16
+sample_rate=48000
+channels=2
+bits_per_sample=16
+bit_rate=1536000
+[Parsed_astats_0 @ ...] Peak level dB: -6.020335
+[Parsed_astats_0 @ ...] RMS level dB: -9.030616
+</code></pre></div>
+<p>Check each number against theory: 1 920 044 = 44 + 48 000 × 4 × 10; 1536 kb/s = 48 000 × 16 × 2; peak 20·log<sub>10</sub>(0.5) = −6.02 dB; RMS 3.01 dB lower.</p>
+<p>Now encode to AAC and compare:</p>
+<div class="highlight"><pre><span></span><code>ffmpeg<span class="w"> </span>-i<span class="w"> </span>tone.wav<span class="w"> </span>-c:a<span class="w"> </span>aac<span class="w"> </span>-b:a<span class="w"> </span>128k<span class="w"> </span>tone_aac.m4a
+ffprobe<span class="w"> </span>-v<span class="w"> </span>error<span class="w"> </span>-show_entries<span class="w"> </span><span class="nv">stream</span><span class="o">=</span>codec_name,sample_fmt,channel_layout,bit_rate<span class="w"> </span>-of<span class="w"> </span><span class="nv">default</span><span class="o">=</span><span class="nv">nw</span><span class="o">=</span><span class="m">1</span><span class="w"> </span>tone_aac.m4a
+ffprobe<span class="w"> </span>-v<span class="w"> </span>error<span class="w"> </span>-select_streams<span class="w"> </span>a<span class="w"> </span>-show_entries<span class="w"> </span><span class="nv">packet</span><span class="o">=</span>pts,duration<span class="w"> </span>-of<span class="w"> </span><span class="nv">csv</span><span class="o">=</span><span class="nv">p</span><span class="o">=</span><span class="m">0</span><span class="w"> </span>-read_intervals<span class="w"> </span><span class="s2">"%+#3"</span><span class="w"> </span>tone_aac.m4a
+</code></pre></div>
+<p>Expected: <code>codec_name=aac</code>, <code>sample_fmt=fltp</code> (the decoder outputs <strong>planar float</strong>), <code>channel_layout=stereo</code>, a bit rate close to 128 000, and packets of duration <strong>1024</strong> (one AAC frame) whose first PTS is <strong>−1024</strong>: FFmpeg's AAC encoder adds 1024 samples of encoder delay ("priming"), which the MP4 edit list hides on playback. The file is about 163 kB, versus 1.92 MB for the WAV.</p>
+<h3 id="exercise-c-read-a-wav-header-by-hand">Exercise C — Read a WAV header by hand</h3>
+<div class="highlight"><pre><span></span><code>od<span class="w"> </span>-A<span class="w"> </span>d<span class="w"> </span>-t<span class="w"> </span>x1<span class="w"> </span>-N<span class="w"> </span><span class="m">44</span><span class="w"> </span>tone.wav<span class="w">      </span><span class="c1"># or: xxd -l 44 tone.wav</span>
+</code></pre></div>
+<p>Expected:</p>
+<div class="highlight"><pre><span></span><code>0000000 52 49 46 46 24 4c 1d 00 57 41 56 45 66 6d 74 20
+0000016 10 00 00 00 01 00 02 00 80 bb 00 00 00 ee 02 00
+0000032 04 00 10 00 64 61 74 61 00 4c 1d 00
+</code></pre></div>
+<p>Decode it using the table in section 5.4: <code>24 4c 1d 00</code> little-endian is 0x001D4C24 = 1 920 036 = file size − 8. <code>80 bb 00 00</code> is 0xBB80 = 48 000. <code>00 ee 02 00</code> is 0x02EE00 = 192 000 bytes/s. <code>04 00</code> is block align 4; <code>10 00</code> is 16 bits. <code>00 4c 1d 00</code> is 0x1D4C00 = 1 920 000 bytes of samples.</p>
+<p>Repeat <strong>without</strong> <code>-bitexact</code> and run <code>ls -l</code>: the file is 34 bytes larger because FFmpeg writes a <code>LIST</code>/<code>INFO</code> chunk naming the encoder. Never assume a WAV header is exactly 44 bytes — parse the chunks.</p>
+<h3 id="exercise-d-measure-and-normalise-loudness">Exercise D — Measure and normalise loudness</h3>
+<div class="highlight"><pre><span></span><code><span class="c1"># 997 Hz at -20 dBFS peak in both channels, 20 s</span>
+ffmpeg<span class="w"> </span>-f<span class="w"> </span>lavfi<span class="w"> </span>-i<span class="w"> </span><span class="s2">"aevalsrc=0.1*sin(2*PI*997*t)|0.1*sin(2*PI*997*t):s=48000:d=20"</span><span class="w"> </span>-c:a<span class="w"> </span>pcm_s16le<span class="w"> </span>tone_m20.wav
+ffmpeg<span class="w"> </span>-i<span class="w"> </span>tone_m20.wav<span class="w"> </span>-af<span class="w"> </span><span class="nv">ebur128</span><span class="o">=</span><span class="nv">peak</span><span class="o">=</span><span class="nb">true</span><span class="w"> </span>-f<span class="w"> </span>null<span class="w"> </span>-
+
+<span class="c1"># Normalise tone.wav to -16 LUFS integrated, -1.5 dBTP. Note -ar: loudnorm works at 192 kHz internally.</span>
+ffmpeg<span class="w"> </span>-i<span class="w"> </span>tone.wav<span class="w"> </span>-af<span class="w"> </span><span class="nv">loudnorm</span><span class="o">=</span><span class="nv">I</span><span class="o">=</span>-16:TP<span class="o">=</span>-1.5:LRA<span class="o">=</span><span class="m">11</span><span class="w"> </span>-ar<span class="w"> </span><span class="m">48000</span><span class="w"> </span>tone_norm.wav
+ffmpeg<span class="w"> </span>-i<span class="w"> </span>tone_norm.wav<span class="w"> </span>-af<span class="w"> </span>ebur128<span class="w"> </span>-f<span class="w"> </span>null<span class="w"> </span>-<span class="w"> </span><span class="m">2</span>&gt;<span class="p">&amp;</span><span class="m">1</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-A1<span class="w"> </span><span class="s2">"Integrated loudness"</span>
+</code></pre></div>
+<p><strong>Expected:</strong> the summary for <code>tone_m20.wav</code> shows <code>I: -20.0 LUFS</code>, <code>LRA: 0.0 LU</code> (a steady tone has no loudness range) and a true peak of about −20 dBFS, matching the worked example. <code>tone.wav</code> itself measures −6.0 LUFS; after <code>loudnorm</code> it measures <strong>−16.0 LUFS</strong>. If you forget <code>-ar 48000</code>, <code>ffprobe</code> will show the output at 192 000 Hz — a classic surprise.</p>
+<p>Then run <code>ebur128</code> on a song and on a speech recording from your phone and note the difference in integrated loudness and LRA.</p>
+<h3 id="exercise-e-discover-your-phones-native-audio-configuration">Exercise E — Discover your phone's native audio configuration</h3>
+<p>Build a tiny app (or a unit in your existing project) with the <code>AudioManager.getProperty</code> snippet from section 6.2 and log the result. Then, from your computer:</p>
+<div class="highlight"><pre><span></span><code>adb<span class="w"> </span>shell<span class="w"> </span>dumpsys<span class="w"> </span>media.audio_flinger<span class="w"> </span>&gt;<span class="w"> </span>af.txt
+grep<span class="w"> </span>-inE<span class="w"> </span><span class="s2">"sample rate|frame count|format"</span><span class="w"> </span>af.txt<span class="w"> </span><span class="p">|</span><span class="w"> </span>head<span class="w"> </span>-40
+</code></pre></div>
+<p><strong>Expected:</strong> most devices report a native rate of <strong>48 000 Hz</strong> and a burst of a few hundred frames or less (values such as 96, 192, 240 or 256 are common; yours may differ). In <code>af.txt</code>, find the output threads (mixer, fast mixer, offload, MMAP) and note each thread's sample rate and frame count. Write down: native rate, burst frames, burst duration in ms. Repeat on a second phone if you have one — device differences are the point of the device lab.</p>
+<h3 id="exercise-f-play-and-capture-pcm-on-the-device">Exercise F — Play and capture PCM on the device</h3>
+<ol>
+<li>Use the <code>AudioTrack</code> code in section 8 to play a 1 kHz tone. Then deliberately pass <code>CHANNEL_OUT_MONO</code> while still writing interleaved stereo data. Predict the result before listening (it plays for twice as long and an octave lower, because each stereo frame — two identical samples — is now interpreted as two consecutive mono frames).</li>
+<li>Record 5 s with <code>AudioRecord</code> at 48 kHz mono 16-bit, write the raw bytes to a file in the app's external files directory, and pull it:</li>
+</ol>
+<div class="highlight"><pre><span></span><code>adb<span class="w"> </span>pull<span class="w"> </span>/sdcard/Android/data/&lt;your.package&gt;/files/rec.pcm<span class="w"> </span>.
+ffmpeg<span class="w"> </span>-f<span class="w"> </span>s16le<span class="w"> </span>-ar<span class="w"> </span><span class="m">48000</span><span class="w"> </span>-ac<span class="w"> </span><span class="m">1</span><span class="w"> </span>-i<span class="w"> </span>rec.pcm<span class="w"> </span>rec.wav<span class="w">      </span><span class="c1"># raw PCM has no header: you must state the format</span>
+ffprobe<span class="w"> </span>-hide_banner<span class="w"> </span>rec.wav
+</code></pre></div>
+<p>Expected: a 5 s recording is 48 000 × 2 × 5 = <strong>480 000 bytes</strong>. Try opening <code>rec.pcm</code> with the wrong parameters (<code>-ar 44100</code> or <code>-ac 2</code>) and describe what you hear — this is exactly what happens when metadata and data disagree.</p>
+<h3 id="exercise-g-calculate-by-hand-your-media-facts-notebook">Exercise G — Calculate by hand (your "media facts" notebook)</h3>
+<ol>
+<li>Raw bit rate and per-hour storage of 48 kHz / 24-bit / 7.1.4.</li>
+<li>Duration of a 240-frame burst at 48 kHz and at 44.1 kHz.</li>
+<li>How many AAC frames per second at 44.1 kHz? At 48 kHz?</li>
+<li>The dynamic range of a 12-bit ADC, with and without the 1.76 dB term.</li>
+</ol>
+<p>(Answers are in the answer key, questions 13–16.)</p>
+<h2 id="10-common-pitfalls">10. Common pitfalls</h2>
+<ul>
+<li><strong>Assuming 44.1 kHz or 48 kHz</strong> instead of querying the native rate — causes resampling, higher latency or loss of the fast path.</li>
+<li><strong>Mixing up samples, frames and bytes</strong> in buffer arithmetic (see the warning box in section 8).</li>
+<li><strong>Feeding planar data to an interleaved API</strong>, or the other way round.</li>
+<li><strong>Assuming a 44-byte WAV header.</strong> Parse RIFF chunks; extensible headers and <code>LIST</code> chunks are common.</li>
+<li><strong>Forgetting the format of raw PCM files</strong> — there is no header, so the reader must be told rate, channels and sample format.</li>
+<li><strong>Clipping when summing integer PCM.</strong> Mix in float or a wider integer type and limit at the end.</li>
+<li><strong>Reducing bit depth without dither</strong>, especially on fades and quiet material.</li>
+<li><strong>Generating oscillators or distortion naively</strong>, producing aliasing above Nyquist.</li>
+<li><strong>Using peak level as a loudness measure.</strong> Use LUFS (BS.1770) and also check true peak.</li>
+<li><strong>Forgetting that <code>loudnorm</code> outputs 192 kHz</strong> unless you set the output rate.</li>
+<li><strong>Ignoring encoder delay</strong> (priming samples) when concatenating or looping compressed audio, which produces gaps or clicks.</li>
+</ul>
+<h2 id="11-self-test">11. Self-test</h2>
+<p>Answer without notes, then check the answer key.</p>
+<ol>
+<li>What is the sample period at 48 kHz, in microseconds?</li>
+<li>State the Nyquist–Shannon theorem in one sentence. What is the Nyquist frequency at 44.1 kHz?</li>
+<li>A 40 kHz ultrasonic tone reaches an ADC sampling at 48 kHz with a poor anti-alias filter. At what frequency does it appear?</li>
+<li>Why are 44.1 kHz and 48 kHz both "enough" for human hearing, and why is 48 kHz preferred on phones? What happens when an app plays 44.1 kHz content?</li>
+<li>Derive the dynamic range of 16-bit PCM. Why do sources quote both 96 dB and 98 dB?</li>
+<li>What is the theoretical dynamic range of 24-bit PCM, and why do real converters not reach it?</li>
+<li>Why do audio engines use 32-bit float internally?</li>
+<li>What is dither and when should you apply it?</li>
+<li>How many bytes is one audio frame of 5.1 audio at 24-bit packed? Of stereo float?</li>
+<li>Describe the difference between interleaved and planar PCM, and name one API or format that uses each.</li>
+<li>What is the difference between a PCM "frame" and an AAC "frame"?</li>
+<li>A 997 Hz sine at −20 dBFS is present only in the left channel of a stereo file. What integrated loudness will BS.1770 report?</li>
+<li>Compute the raw bit rate of 48 kHz / 24-bit / 7.1.4 audio and the storage needed for one hour.</li>
+<li>What is the duration of a 240-frame burst at 48 kHz and at 44.1 kHz?</li>
+<li>How many AAC-LC frames per second are there at 44.1 kHz and at 48 kHz?</li>
+<li>What is the dynamic range of a 12-bit converter, with and without the 1.76 dB term?</li>
+<li>Why can a signal whose samples never exceed 0 dBFS still clip after D/A conversion or lossy encoding?</li>
+<li>Your app records with <code>AudioRecord</code> at 48 kHz mono 16-bit and saves raw PCM. A colleague opens it as 44.1 kHz stereo. Describe what they hear.</li>
+</ol>
+<h2 id="12-further-reading">12. Further reading</h2>
+<ul>
+<li><strong>Ken C. Pohlmann, <em>Principles of Digital Audio</em></strong> (McGraw-Hill) — the comprehensive reference for sampling, quantisation, dither and converters.</li>
+<li><strong>Steven W. Smith, <em>The Scientist and Engineer's Guide to Digital Signal Processing</em></strong> — free online at dspguide.com; chapters 3 (ADC/DAC) and 22 (audio processing) are directly relevant.</li>
+<li><strong>Julius O. Smith III, online books at CCRMA, Stanford</strong> (ccrma.stanford.edu/~jos) — <em>Mathematics of the Discrete Fourier Transform</em> and <em>Introduction to Digital Filters</em>.</li>
+<li><strong>Xiph.org, "Digital Show &amp; Dither"</strong> (video by Christopher "Monty" Montgomery, xiph.org/video) — a superb demonstration that sampled signals are not staircases, and of dither in action. See also his article "24/192 Music Downloads… and why they make no sense".</li>
+<li><strong>ITU-R Recommendation BS.1770</strong> — <em>Algorithms to measure audio programme loudness and true-peak audio level</em> (free from itu.int).</li>
+<li><strong>EBU R 128</strong> and the accompanying technical documents EBU Tech 3341/3342 (free from tech.ebu.ch).</li>
+<li><strong>Android Developers: "Audio latency"</strong> and the <strong>AAudio</strong> guide (developer.android.com/ndk/guides/audio) and the <strong>Oboe</strong> repository and wiki (github.com/google/oboe).</li>
+<li><strong>Apple Developer: AVAudioSession</strong> and <strong>AVAudioEngine</strong> documentation.</li>
+<li><strong>FFmpeg filters documentation</strong> — <code>aevalsrc</code>, <code>astats</code>, <code>ebur128</code>, <code>loudnorm</code>, <code>showspectrumpic</code> (ffmpeg.org/ffmpeg-filters.html).</li>
+</ul>
+<section class="answer-key" id="answers"><h2 id="answer-key">Answer key</h2>
+<ol>
+<li><em>T</em> = 1/48 000 s = <strong>20.83 µs</strong>.</li>
+<li>A signal with no content at or above half the sample rate is completely determined by its samples and can be reconstructed exactly. At 44.1 kHz the Nyquist frequency is <strong>22.05 kHz</strong>.</li>
+<li>|40 − 48| = <strong>8 kHz</strong> — squarely in the audible band.</li>
+<li>Both exceed twice the ~20 kHz limit of hearing, leaving a transition band for the anti-alias filter (2.05 kHz at 44.1 kHz, 4 kHz at 48 kHz). Phones prefer 48 kHz because their audio hardware and the video/broadcast world run at 48 kHz, and it divides evenly into video frame rates. 44.1 kHz content is resampled to 48 kHz (usually by AudioFlinger on Android or Core Audio on iOS), costing CPU/power and a little latency, and it can prevent low-latency fast paths; the audible quality loss with a good resampler is negligible.</li>
+<li>SQNR = 6.02·N + 1.76 = 6.02 × 16 + 1.76 ≈ <strong>98.1 dB</strong> for a full-scale sine with uniform quantisation noise; dropping the sine-specific 1.76 dB term gives <strong>96.3 dB</strong>, the figure most often quoted.</li>
+<li>6.02 × 24 ≈ <strong>144.5 dB</strong> (146.2 dB with the 1.76 dB term). Analogue noise in the microphone preamp, the converter's own thermal noise and reference noise limit real devices to roughly 110–120 dB.</li>
+<li>Float has a large exponent range, so intermediate results can exceed ±1.0 (e.g. summing tracks, EQ boosts) without clipping, and precision is relative rather than absolute, so quiet signals keep their resolution. Conversion to integer (and any clipping) happens only once, at the output.</li>
+<li>Dither is a small random noise (typically TPDF, ±1 LSB) added before re-quantising to fewer bits. It decorrelates the quantisation error from the signal, replacing distortion with a constant benign noise floor. Apply it whenever bit depth is reduced after processing (e.g. a float mix rendered to 16-bit); not for lossless format conversions.</li>
+<li>5.1 = 6 channels × 3 bytes = <strong>18 bytes</strong> per frame. Stereo float = 2 × 4 = <strong>8 bytes</strong>.</li>
+<li>Interleaved stores L R L R… in one buffer (<code>AudioTrack</code>, AAudio/Oboe, WAV, FFmpeg <code>s16</code>/<code>flt</code>); planar stores each channel in its own buffer (FFmpeg <code>fltp</code>/<code>s16p</code>, <code>AVAudioEngine</code>'s standard deinterleaved format).</li>
+<li>A PCM frame is one sample for every channel at a single instant (e.g. 4 bytes for 16-bit stereo). An AAC frame is a compressed unit covering 1024 samples per channel (21.33 ms at 48 kHz).</li>
+<li>The left channel's mean square is 0.005 → 10·log<sub>10</sub>(0.005) = −23.0; the right channel contributes nothing, so <strong>≈ −23.0 LUFS</strong> (3 dB less than the two-channel case's −20.0 LUFS).</li>
+<li>7.1.4 = 12 channels: 48 000 × 24 × 12 = <strong>13 824 000 bit/s ≈ 13.8 Mbit/s</strong>; per hour 13.824 × 10⁶ / 8 × 3600 = <strong>6.22 GB</strong>.</li>
+<li>240 / 48 000 = <strong>5.0 ms</strong>; 240 / 44 100 = <strong>5.44 ms</strong>.</li>
+<li>44 100 / 1024 ≈ <strong>43.07</strong> frames/s; 48 000 / 1024 = <strong>46.875</strong> frames/s.</li>
+<li>6.02 × 12 = <strong>72.2 dB</strong>; with the term, <strong>74.0 dB</strong>.</li>
+<li>The reconstructed analogue waveform can peak <em>between</em> samples above the largest sample value (inter-sample peaks), and lossy codecs change the waveform and can add overshoot. That is why true-peak (oversampled) measurement and a ceiling such as −1 dBTP are used.</li>
+<li>Interpreting mono as stereo pairs consecutive samples into L/R frames, halving the number of frames, and 44.1 kHz instead of 48 kHz slows playback slightly. Net effect: the recording plays in about 0.5 × 48/44.1 ≈ 0.54 of its real duration — i.e. about 1.84× faster and higher in pitch (by roughly 10.5 semitones) — with alternate samples sent to each ear.</li>
+</ol></section>
+    <div class="pager"><span></span><a href="week-02.html">Week 2: Digital Image Basics →</a></div>
+  </article>
+</div>
+<footer class="site">Prepared for Arunkumar Maniam Rajan · Built 2026-10-19 ·
+Progress checkmarks are stored only in this browser (localStorage).</footer></body></html>

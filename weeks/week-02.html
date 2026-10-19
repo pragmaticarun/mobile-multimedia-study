@@ -1,0 +1,629 @@
+<!doctype html><html lang="en-IN"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Week 2: Digital Image Basics — Mobile Multimedia Study</title>
+<link rel="stylesheet" href="../assets/pygments.css"><link rel="stylesheet" href="../assets/content.css">
+<link rel="stylesheet" href="../assets/site.css">
+<script defer src="../assets/app.js"></script></head><body><div class="topbar"><div class="inner">
+<a class="brand" href="../index.html">Mobile Multimedia Study<small>52-week roadmap</small></a>
+<nav><a href="week-01.html">W1</a><a href="week-02.html">W2</a><a href="week-03.html">W3</a><a href="week-04.html">W4</a><a href="../index.html">Roadmap</a></nav></div><div class="readbar"></div></div>
+<section class="wk-hero"><div class="inner">
+  <div class="kicker">Week 2 of 52 · Phase 1 — Foundations (weeks 1–5)</div>
+  <h1>Digital Image Basics</h1>
+  <div class="meta"><span><span class="badge b-sent">SENT</span></span><span>Tutorial § 1.2 Digital Image Basics</span>
+    <span>Sent: 2026-10-12</span><span>Study time: 8–10 hours</span></div>
+  <p class="summary">How light becomes pixels: sensors and Bayer mosaics, resolution and bit depth, colour spaces (primaries, white point, transfer function), Y′CbCr maths, limited vs full range, chroma subsampling, NV12/NV21/I420/P010 layouts and stride, and the image formats (JPEG, PNG, WebP, HEIF, AVIF, Ultra HDR, DNG) you meet on Android and iOS.</p>
+  <div class="actions">
+    <a class="btn" href="../pdf/Week02_Digital_Image_Basics.pdf" download>⬇ Download PDF · 17 pages</a>
+    <button class="btn secondary" id="mark-done" type="button">Mark week as completed</button>
+    <span id="items-progress" style="color:#4b5563;font-size:.92rem"></span>
+  </div>
+</div></section>
+<div class="layout">
+  <aside class="toc"><h4>On this page</h4><ol><li class="l2"><a href="#how-to-use-this-guide">How to use this guide</a></li><li class="l2"><a href="#1-from-light-to-pixels">1. From light to pixels</a></li><li class="l3"><a href="#11-the-image-sensor">1.1 The image sensor</a></li><li class="l3"><a href="#12-the-bayer-colour-filter-array">1.2 The Bayer colour filter array</a></li><li class="l3"><a href="#13-resolution-and-megapixels">1.3 Resolution and megapixels</a></li><li class="l2"><a href="#2-bit-depth-and-memory">2. Bit depth and memory</a></li><li class="l3"><a href="#21-bit-depth">2.1 Bit depth</a></li><li class="l3"><a href="#22-uncompressed-sizes">2.2 Uncompressed sizes</a></li><li class="l2"><a href="#3-colour-models-spaces-and-transfer-functions">3. Colour: models, spaces and transfer functions</a></li><li class="l3"><a href="#31-colour-models-vs-colour-spaces">3.1 Colour models vs colour spaces</a></li><li class="l3"><a href="#32-transfer-functions-gamma">3.2 Transfer functions (&quot;gamma&quot;)</a></li><li class="l2"><a href="#4-ycbcr-separating-brightness-from-colour">4. Y′CbCr: separating brightness from colour</a></li><li class="l3"><a href="#41-why-not-just-rgb">4.1 Why not just RGB?</a></li><li class="l3"><a href="#42-the-equations">4.2 The equations</a></li><li class="l3"><a href="#43-quantisation-and-range">4.3 Quantisation and range</a></li><li class="l3"><a href="#44-what-a-mismatch-looks-like">4.4 What a mismatch looks like</a></li><li class="l2"><a href="#5-chroma-subsampling">5. Chroma subsampling</a></li><li class="l3"><a href="#51-the-jab-notation">5.1 The J:a:b notation</a></li><li class="l3"><a href="#52-chroma-siting">5.2 Chroma siting</a></li><li class="l3"><a href="#53-when-subsampling-hurts">5.3 When subsampling hurts</a></li><li class="l2"><a href="#6-memory-layouts-on-mobile">6. Memory layouts on mobile</a></li><li class="l3"><a href="#61-planar-and-semi-planar-formats">6.1 Planar and semi-planar formats</a></li><li class="l3"><a href="#62-stride-pixel-stride-and-slice-height">6.2 Stride, pixel stride and slice height</a></li><li class="l2"><a href="#7-image-file-formats">7. Image file formats</a></li><li class="l3"><a href="#71-how-jpeg-works-a-preview-of-next-months-compression">7.1 How JPEG works (a preview of next month&#x27;s compression)</a></li><li class="l3"><a href="#72-the-format-landscape">7.2 The format landscape</a></li><li class="l2"><a href="#8-hands-on-exercises">8. Hands-on exercises</a></li><li class="l3"><a href="#exercise-a-inspect-a-phone-photo">Exercise A — Inspect a phone photo</a></li><li class="l3"><a href="#exercise-b-ycbcr-by-hand-then-check">Exercise B — Y′CbCr by hand, then check</a></li><li class="l3"><a href="#exercise-c-raw-yuv-sizes-and-viewing-raw-buffers">Exercise C — Raw YUV sizes and viewing raw buffers</a></li><li class="l3"><a href="#exercise-d-reproduce-the-stride-bug">Exercise D — Reproduce the stride bug</a></li><li class="l3"><a href="#exercise-e-compare-image-formats">Exercise E — Compare image formats</a></li><li class="l3"><a href="#exercise-f-observe-range-in-video">Exercise F — Observe range in video</a></li><li class="l2"><a href="#9-common-pitfalls">9. Common pitfalls</a></li><li class="l2"><a href="#10-self-test">10. Self-test</a></li><li class="l2"><a href="#11-further-reading">11. Further reading</a></li><li class="l2"><a href="#answer-key">Answer key</a></li></ol></aside>
+  <article class="content" data-week="2"><h2 id="how-to-use-this-guide">How to use this guide</h2>
+<p>This guide expands section <strong>1.2 Digital Image Basics</strong> of the tutorial. Last week you turned sound into numbers; this week you do the same for light. Almost every camera, decoder and display bug you will debug in your career — sheared frames, green images, washed-out video, wrong colours on one device — traces back to a concept in this guide.</p>
+<table>
+<thead>
+<tr>
+<th>Session</th>
+<th>Suggested activity</th>
+<th>Time</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>1</td>
+<td>Sections 1–2: sensors, Bayer, resolution, bit depth, memory. Exercise A.</td>
+<td>2 h</td>
+</tr>
+<tr>
+<td>2</td>
+<td>Section 3: colour spaces and transfer functions.</td>
+<td>1.5 h</td>
+</tr>
+<tr>
+<td>3</td>
+<td>Sections 4–5: Y′CbCr, range, chroma subsampling. Exercise B (by hand).</td>
+<td>2 h</td>
+</tr>
+<tr>
+<td>4</td>
+<td>Section 6: memory layouts and stride. Exercises C and D.</td>
+<td>2 h</td>
+</tr>
+<tr>
+<td>5</td>
+<td>Section 7: image formats. Exercise E on a real phone photo; self-test.</td>
+<td>2 h</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Learning objectives.</strong></p>
+<ol>
+<li>Explain how a Bayer sensor and demosaicing produce RGB pixels, and what pixel binning does.</li>
+<li>Compute megapixels and the uncompressed memory size of an image in RGB, RGBA and YUV formats.</li>
+<li>Define a colour space by its primaries, white point and transfer function, and name the ones used on phones.</li>
+<li>Convert R′G′B′ to Y′CbCr by hand (BT.601 and BT.709), in both limited and full range.</li>
+<li>Explain chroma subsampling notation and compute bytes per pixel for each scheme.</li>
+<li>Draw the memory layout of I420, NV12, NV21 and P010 and handle <code>rowStride</code>/<code>pixelStride</code> correctly.</li>
+<li>Choose between JPEG, PNG, WebP, HEIF, AVIF, Ultra HDR and DNG for a given job.</li>
+</ol>
+<h2 id="1-from-light-to-pixels">1. From light to pixels</h2>
+<h3 id="11-the-image-sensor">1.1 The image sensor</h3>
+<p>A camera sensor (almost always CMOS on phones) is a grid of <strong>photosites</strong>. Each photosite converts photons into electrons during the exposure; the charge is read out as a voltage, amplified (the analogue <em>gain</em>, which is what "ISO" controls) and digitised by an ADC, typically at 10–14 bits. A photosite on its own is colour-blind: it measures how much light arrived, not what colour it was.</p>
+<h3 id="12-the-bayer-colour-filter-array">1.2 The Bayer colour filter array</h3>
+<p>To see colour, each photosite sits under a red, green or blue filter. The most common arrangement, the <strong>Bayer pattern</strong>, repeats a 2×2 tile of one red, two green and one blue filter. Green gets twice the share because human luminance sensitivity peaks in the green part of the spectrum.</p>
+<figure id="fig-2-1"><img src="../figures/w02_bayer.svg" alt="The RGGB Bayer pattern. Each photosite records only one of the three colours." loading="lazy"><figcaption><b>Figure 2.1</b> — The RGGB Bayer pattern. Each photosite records only one of the three colours.</figcaption></figure>
+<p>The raw sensor output (a <strong>RAW</strong> or <strong>Bayer</strong> image) therefore has one value per pixel. <strong>Demosaicing</strong> — part of the phone's <strong>ISP</strong> (image signal processor) pipeline — interpolates the two missing colours at every pixel from neighbours. The ISP then performs black-level subtraction, lens shading correction, white balance, colour correction (a 3×3 matrix from sensor RGB to a standard colour space), noise reduction, tone mapping, sharpening, and finally converts to Y′CbCr for the encoder. You will study the ISP in Phase 4 and Phase 5; for now, note that the "pixels" you receive from a camera API are the end of a long computation.</p>
+<p>Many modern phone sensors use <strong>quad-Bayer</strong> (or "tetracell"/"nonacell") layouts, where each colour filter covers a 2×2 (or 3×3) group of photosites. In low light the group is <strong>binned</strong> into one pixel — a 48 MP sensor produces a 12 MP image with better signal-to-noise — and in good light the ISP "remosaics" to full resolution.</p>
+<h3 id="13-resolution-and-megapixels">1.3 Resolution and megapixels</h3>
+<p><strong>Resolution</strong> is width × height in pixels. Phone sensors are usually 4:3, so photos default to 4:3 and 16:9 photos/videos are crops.</p>
+<div class="admonition example">
+<p class="admonition-title">Worked example — megapixels</p>
+<ul>
+<li>4032 × 3024 = 12 192 768 pixels ≈ <strong>12.2 MP</strong> (a classic 12 MP phone photo).</li>
+<li>8000 × 6000 = 48 000 000 = <strong>48 MP</strong>; binned 2×2 → 4000 × 3000 = <strong>12 MP</strong>.</li>
+<li>3840 × 2160 (4K UHD video frame) = 8 294 400 ≈ <strong>8.3 MP</strong>; 1920 × 1080 = 2 073 600 ≈ <strong>2.1 MP</strong>.</li>
+</ul>
+</div>
+<p>Megapixels say nothing about sharpness on their own: lens quality, pixel size, noise and processing matter at least as much.</p>
+<h2 id="2-bit-depth-and-memory">2. Bit depth and memory</h2>
+<h3 id="21-bit-depth">2.1 Bit depth</h3>
+<p>Bit depth is bits <strong>per component</strong> (per channel). With 8 bits per channel there are 256 levels per channel and 256³ = <strong>16 777 216</strong> colours. With 10 bits per channel: 1024 levels, 1024³ = <strong>1 073 741 824</strong> colours.</p>
+<p>The practical difference is <strong>banding</strong>: smooth gradients (sky, walls, vignettes) show visible steps when there are too few levels, especially after editing or in HDR, where the same number of codes must cover a far larger brightness range. That is why HDR video and HDR photos use 10 bits or more, and why RAW files keep 10–14 bits.</p>
+<h3 id="22-uncompressed-sizes">2.2 Uncompressed sizes</h3>
+<p class="eq">bytes = width × height × (bits per pixel ÷ 8)</p>
+
+<table>
+<thead>
+<tr>
+<th>Format</th>
+<th>Bits per pixel</th>
+<th>4032 × 3024 (12.2 MP)</th>
+<th>1920 × 1080</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>RGB24 (8-bit R, G, B)</td>
+<td>24</td>
+<td>36 578 304 B ≈ 36.6 MB</td>
+<td>6 220 800 B</td>
+</tr>
+<tr>
+<td>RGBA / ARGB_8888</td>
+<td>32</td>
+<td>48 771 072 B ≈ 48.8 MB</td>
+<td>8 294 400 B</td>
+</tr>
+<tr>
+<td>RGBA_F16 (half-float)</td>
+<td>64</td>
+<td>97 542 144 B ≈ 97.5 MB</td>
+<td>16 588 800 B</td>
+</tr>
+<tr>
+<td>RGB_565</td>
+<td>16</td>
+<td>24 385 536 B</td>
+<td>4 147 200 B</td>
+</tr>
+<tr>
+<td>Y′CbCr 4:2:0, 8-bit (NV12/I420)</td>
+<td>12</td>
+<td>18 289 152 B ≈ 18.3 MB</td>
+<td>3 110 400 B</td>
+</tr>
+<tr>
+<td>Y′CbCr 4:2:0, 10-bit in 16-bit words (P010)</td>
+<td>24</td>
+<td>36 578 304 B</td>
+<td>6 220 800 B</td>
+</tr>
+<tr>
+<td>RAW Bayer, 12-bit packed</td>
+<td>12</td>
+<td>18 289 152 B</td>
+<td>—</td>
+</tr>
+</tbody>
+</table>
+<div class="admonition warning">
+<p class="admonition-title">Bitmaps are big</p>
+<p>On Android a 12 MP photo decoded to an <code>ARGB_8888</code> <code>Bitmap</code> takes about <strong>48.8 MB</strong> of memory, regardless of how small the JPEG was. Decoding a gallery of full-size images is the textbook cause of <code>OutOfMemoryError</code>. Decode at the size you will display (<code>ImageDecoder.setTargetSize</code>, <code>BitmapFactory.Options.inSampleSize</code>, or an image library such as Coil or Glide that does it for you), and consider <code>Bitmap.Config.HARDWARE</code> (API 26+) for images that are only drawn.</p>
+</div>
+<h2 id="3-colour-models-spaces-and-transfer-functions">3. Colour: models, spaces and transfer functions</h2>
+<h3 id="31-colour-models-vs-colour-spaces">3.1 Colour models vs colour spaces</h3>
+<p><strong>RGB</strong> is a colour <em>model</em>: a colour is a mix of red, green and blue light. But "red" is not a single thing — a laser-red and a TV-red are different colours. A <strong>colour space</strong> pins the model down with three things:</p>
+<ol>
+<li><strong>Primaries</strong> — the exact chromaticities of the R, G and B lights, usually given as CIE 1931 <em>xy</em> coordinates.</li>
+<li><strong>White point</strong> — the chromaticity of R = G = B. Nearly everything in consumer imaging uses <strong>D65</strong> (<em>x</em> = 0.3127, <em>y</em> = 0.3290), a standard daylight.</li>
+<li><strong>Transfer function</strong> — how code values relate to light intensity (the "gamma" curve).</li>
+</ol>
+<table>
+<thead>
+<tr>
+<th>Colour space</th>
+<th>Red (x, y)</th>
+<th>Green (x, y)</th>
+<th>Blue (x, y)</th>
+<th>White</th>
+<th>Used for</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>sRGB / BT.709</td>
+<td>0.640, 0.330</td>
+<td>0.300, 0.600</td>
+<td>0.150, 0.060</td>
+<td>D65</td>
+<td>The web, most Android UI, HD video (same primaries)</td>
+</tr>
+<tr>
+<td>Display P3</td>
+<td>0.680, 0.320</td>
+<td>0.265, 0.690</td>
+<td>0.150, 0.060</td>
+<td>D65</td>
+<td>iPhone/modern Android displays and photos (wide colour)</td>
+</tr>
+<tr>
+<td>BT.2020</td>
+<td>0.708, 0.292</td>
+<td>0.170, 0.797</td>
+<td>0.131, 0.046</td>
+<td>D65</td>
+<td>UHD and HDR video</td>
+</tr>
+</tbody>
+</table>
+<figure id="fig-2-2"><img src="../figures/w02_gamuts.svg" alt="The three gamuts as triangles in CIE xy space. Any colour inside a triangle can be reproduced by mixing that space&#x27;s primaries." loading="lazy"><figcaption><b>Figure 2.2</b> — The three gamuts as triangles in CIE xy space. Any colour inside a triangle can be reproduced by mixing that space&#x27;s primaries.</figcaption></figure>
+<p>Display P3 uses the DCI-P3 primaries with a D65 white point and the sRGB transfer function. On Android, <code>ColorSpace.Named.DISPLAY_P3</code> and wide-colour rendering (<code>Window.setColorMode(ActivityInfo.COLOR_MODE_WIDE_COLOR_GAMUT)</code>) let apps show P3 content on capable displays; iOS has handled P3 photos end-to-end since the iPhone 7.</p>
+<div class="admonition warning">
+<p class="admonition-title">Same numbers, different colours</p>
+<p>The pixel value (255, 0, 0) means a <em>different</em> red in sRGB and in Display P3. If a P3 photo is shown as if it were sRGB (because the colour profile was stripped or ignored), it looks dull; sRGB content shown as P3 looks oversaturated. Preserve and honour ICC profiles / colour-space tags.</p>
+</div>
+<h3 id="32-transfer-functions-gamma">3.2 Transfer functions ("gamma")</h3>
+<p>Human perception of brightness is roughly logarithmic: we notice a 1% change in a dark tone much more readily than in a bright one. If code values were proportional to light (linear), most of the 256 codes would be wasted on bright tones we cannot distinguish, and dark tones would band. Instead, images are stored <strong>gamma-encoded</strong> (non-linear): code values are roughly proportional to <em>perceived</em> brightness. The prime in R′G′B′ and Y′ marks gamma-encoded quantities.</p>
+<ul>
+<li><strong>sRGB</strong> (IEC 61966-2-1): <em>V</em> = 12.92·<em>L</em> for <em>L</em> ≤ 0.0031308; otherwise <em>V</em> = 1.055·<em>L</em><sup>1/2.4</sup> − 0.055. Overall close to a 1/2.2 power.</li>
+<li><strong>BT.709 OETF</strong> (camera side): <em>V</em> = 4.5·<em>L</em> for <em>L</em> &lt; 0.018; otherwise <em>V</em> = 1.099·<em>L</em><sup>0.45</sup> − 0.099. Displays are specified separately (BT.1886, roughly a 2.4 power), and the mismatch is deliberate: it boosts contrast for dim viewing environments.</li>
+<li><strong>PQ</strong> (SMPTE ST 2084) and <strong>HLG</strong> (ARIB STD-B67) are the HDR transfer functions — covered in Phase 6.</li>
+</ul>
+<figure id="fig-2-3"><img src="../figures/w02_transfer.svg" alt="sRGB and BT.709 spend more code values on dark tones than a linear encoding would." loading="lazy"><figcaption><b>Figure 2.3</b> — sRGB and BT.709 spend more code values on dark tones than a linear encoding would.</figcaption></figure>
+<div class="admonition example">
+<p class="admonition-title">Worked example — 18% grey</p>
+<p>A mid-grey card reflects about 18% of the light. In sRGB: 1.055 × 0.18<sup>1/2.4</sup> − 0.055 ≈ 0.461, i.e. 8-bit code <strong>≈ 118</strong>. Conversely, code 128 (0.502) decodes to ((0.502 + 0.055)/1.055)<sup>2.4</sup> ≈ <strong>0.216</strong>, about 22% linear light. Half the code range is "about one-fifth" of the light.</p>
+</div>
+<p><strong>Why this matters to you:</strong> image arithmetic — blending, resizing, blurring, averaging — is physically correct only in <strong>linear light</strong>. Scaling an sRGB image without linearising it darkens fine high-contrast detail. GPUs offer sRGB texture formats that linearise on sampling for this reason.</p>
+<h2 id="4-ycbcr-separating-brightness-from-colour">4. Y′CbCr: separating brightness from colour</h2>
+<h3 id="41-why-not-just-rgb">4.1 Why not just RGB?</h3>
+<p>Our visual system resolves fine detail in brightness much better than in colour. If we transform R′G′B′ into one brightness-like component and two colour-difference components, we can store colour at lower resolution with little visible loss (section 5). That transform is <strong>Y′CbCr</strong> (commonly, if imprecisely, called "YUV"; strictly, YUV is the analogue PAL-era form).</p>
+<h3 id="42-the-equations">4.2 The equations</h3>
+<p>Given gamma-encoded R′, G′, B′ in [0, 1] and two constants <em>K</em><sub>R</sub>, <em>K</em><sub>B</sub>:</p>
+<p class="eq">Y′ = K<sub>R</sub>·R′ + (1 − K<sub>R</sub> − K<sub>B</sub>)·G′ + K<sub>B</sub>·B′ <br>
+Cb = (B′ − Y′) / (2·(1 − K<sub>B</sub>)) &nbsp;&nbsp; Cr = (R′ − Y′) / (2·(1 − K<sub>R</sub>))</p>
+
+<p>Y′ lies in [0, 1]; Cb and Cr lie in [−0.5, +0.5]. The constants depend on the standard — this is the <strong>matrix coefficients</strong> metadata you will meet again next week:</p>
+<table>
+<thead>
+<tr>
+<th>Standard</th>
+<th>K<sub>R</sub></th>
+<th>K<sub>B</sub></th>
+<th>Y′ equation</th>
+<th>Used for</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>BT.601</td>
+<td>0.299</td>
+<td>0.114</td>
+<td>0.299 R′ + 0.587 G′ + 0.114 B′</td>
+<td>SD video; JPEG/JFIF</td>
+</tr>
+<tr>
+<td>BT.709</td>
+<td>0.2126</td>
+<td>0.0722</td>
+<td>0.2126 R′ + 0.7152 G′ + 0.0722 B′</td>
+<td>HD video, most phone video</td>
+</tr>
+<tr>
+<td>BT.2020 (NCL)</td>
+<td>0.2627</td>
+<td>0.0593</td>
+<td>0.2627 R′ + 0.6780 G′ + 0.0593 B′</td>
+<td>UHD/HDR video</td>
+</tr>
+</tbody>
+</table>
+<figure id="fig-2-4"><img src="../figures/w02_ycbcr_planes.svg" alt="An image split into Y′ (a greyscale picture that carries the detail) and the two chroma planes." loading="lazy"><figcaption><b>Figure 2.4</b> — An image split into Y′ (a greyscale picture that carries the detail) and the two chroma planes.</figcaption></figure>
+<h3 id="43-quantisation-and-range">4.3 Quantisation and range</h3>
+<p>The continuous values are scaled to integers in one of two ways:</p>
+<table>
+<thead>
+<tr>
+<th>Range</th>
+<th>Also called</th>
+<th>8-bit Y′</th>
+<th>8-bit Cb, Cr</th>
+<th>10-bit Y′</th>
+<th>10-bit Cb, Cr</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Limited</td>
+<td>TV, video, "studio", MPEG range</td>
+<td>16–235 (Y = 16 + 219·Y′)</td>
+<td>16–240 (C = 128 + 224·Cb)</td>
+<td>64–940</td>
+<td>64–960</td>
+</tr>
+<tr>
+<td>Full</td>
+<td>PC, JPEG range</td>
+<td>0–255 (Y = 255·Y′)</td>
+<td>0–255 (C = 128 + 255·Cb, clipped)</td>
+<td>0–1023</td>
+<td>0–1023</td>
+</tr>
+</tbody>
+</table>
+<p>Limited range dates from analogue video, where footroom and headroom absorbed overshoots from filtering. It is still the default for broadcast and nearly all video codecs' output. JPEG uses full range. Phone video is usually limited range, but some devices record full-range video — always read the tag (<code>color_range</code> in <code>ffprobe</code>, <code>KEY_COLOR_RANGE</code> in Android's <code>MediaFormat</code>).</p>
+<div class="admonition example">
+<p class="admonition-title">Worked example — pure red, by hand</p>
+<p>R′G′B′ = (1, 0, 0).</p>
+<p><strong>BT.709:</strong> Y′ = 0.2126. Cb = (0 − 0.2126) / (2 × 0.9278) = −0.1146. Cr = (1 − 0.2126) / (2 × 0.7874) = +0.5.
+Limited range 8-bit: Y = 16 + 219 × 0.2126 = 62.6 → <strong>63</strong>; Cb = 128 + 224 × (−0.1146) = 102.3 → <strong>102</strong>; Cr = 128 + 112 = <strong>240</strong>. Red = <strong>(63, 102, 240)</strong>.</p>
+<p><strong>BT.601:</strong> Y′ = 0.299 → Y = 16 + 65.5 = <strong>81</strong>; Cb = −0.299 / 1.772 = −0.1687 → 128 − 37.8 = <strong>90</strong>; Cr = <strong>240</strong>. Red = <strong>(81, 90, 240)</strong> — the classic value you will find in old test-pattern tables.</p>
+<p>Same red, different numbers. A decoder must know which matrix was used.</p>
+</div>
+<h3 id="44-what-a-mismatch-looks-like">4.4 What a mismatch looks like</h3>
+<p>Take the BT.601 limited-range red (81, 90, 240) and decode it with the BT.709 matrix: you get R′G′B′ ≈ (1.08, 0.10, −0.02) — clipped to (255, 24, 0) in 8-bit. A skin tone encoded with BT.601 as (167, 107, 154) and decoded as BT.709 comes out as about (222, 166, 131) instead of (217, 163, 133): slightly redder and more saturated. It is subtle on a single colour, obvious side by side, and it is exactly the "SD content looks slightly off" bug from the tutorial.</p>
+<p>Range mismatches are far more visible:</p>
+<figure id="fig-2-5"><img src="../figures/w02_range.svg" alt="Range mismatches. Limited data shown as full looks washed out (black becomes grey 16, white becomes 235); full data shown as limited loses shadow and highlight detail." loading="lazy"><figcaption><b>Figure 2.5</b> — Range mismatches. Limited data shown as full looks washed out (black becomes grey 16, white becomes 235); full data shown as limited loses shadow and highlight detail.</figcaption></figure>
+<h2 id="5-chroma-subsampling">5. Chroma subsampling</h2>
+<h3 id="51-the-jab-notation">5.1 The J:a:b notation</h3>
+<p>Subsampling is written <em>J</em>:<em>a</em>:<em>b</em>, describing a region <em>J</em> pixels wide and 2 rows high: <em>a</em> is the number of chroma samples in the first row, <em>b</em> the number of <em>additional</em> (new) chroma samples in the second row.</p>
+<ul>
+<li><strong>4:4:4</strong> — every pixel has its own Cb and Cr. No subsampling.</li>
+<li><strong>4:2:2</strong> — chroma halved horizontally; each row has its own chroma.</li>
+<li><strong>4:2:0</strong> — chroma halved horizontally <em>and</em> vertically: one Cb and one Cr per 2×2 block of pixels. (The "0" means the second row adds no new chroma samples.)</li>
+<li><strong>4:1:1</strong> — chroma quartered horizontally (legacy DV formats).</li>
+</ul>
+<figure id="fig-2-6"><img src="../figures/w02_subsampling.svg" alt="Luma samples (dots) and the area sharing each chroma pair (orange boxes) for common schemes." loading="lazy"><figcaption><b>Figure 2.6</b> — Luma samples (dots) and the area sharing each chroma pair (orange boxes) for common schemes.</figcaption></figure>
+<p class="eq">bits per pixel (8-bit) = 8 × (1 + 2 × chroma fraction): &nbsp; 4:4:4 → 24, &nbsp; 4:2:2 → 16, &nbsp; 4:2:0 → 12, &nbsp; 4:1:1 → 12</p>
+
+<h3 id="52-chroma-siting">5.2 Chroma siting</h3>
+<p>In 4:2:0, <em>where</em> is the shared chroma sample located relative to the four luma samples? MPEG-2, H.264 and HEVC default to "left" siting (horizontally co-sited with the left luma column, vertically halfway between rows); JPEG/JFIF uses the centre of the 2×2 block. Getting it wrong shifts colour by half a pixel — usually invisible, but measurable on sharp coloured edges and text.</p>
+<h3 id="53-when-subsampling-hurts">5.3 When subsampling hurts</h3>
+<p>Subsampling is nearly invisible in camera images, but it damages <strong>sharp colour edges</strong>: red text on blue, UI screenshots, chroma-keyed graphics. That is why screen recording and graphics pipelines sometimes use 4:4:4, and why a screenshot saved as JPEG (4:2:0) shows colour fringes around text while PNG does not.</p>
+<h2 id="6-memory-layouts-on-mobile">6. Memory layouts on mobile</h2>
+<h3 id="61-planar-and-semi-planar-formats">6.1 Planar and semi-planar formats</h3>
+<p>A 4:2:0 frame can be laid out in memory in several ways. You will meet these constantly in <code>MediaCodec</code>, <code>ImageReader</code>, CameraX, OpenGL/Vulkan, and FFmpeg:</p>
+<table>
+<thead>
+<tr>
+<th>Name</th>
+<th>FFmpeg <code>pix_fmt</code></th>
+<th>Layout</th>
+<th>Where you meet it</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>I420 (YUV420P)</td>
+<td><code>yuv420p</code></td>
+<td>Y plane, then U plane, then V plane</td>
+<td>Software codecs, FFmpeg, libyuv, WebRTC</td>
+</tr>
+<tr>
+<td>YV12</td>
+<td>(<code>yuv420p</code> with U/V swapped)</td>
+<td>Y, then V, then U</td>
+<td>Android legacy (<code>ImageFormat.YV12</code>)</td>
+</tr>
+<tr>
+<td>NV12</td>
+<td><code>nv12</code></td>
+<td>Y plane, then one plane of interleaved U, V</td>
+<td>Hardware decoders/encoders, iOS <code>420v</code>/<code>420f</code></td>
+</tr>
+<tr>
+<td>NV21</td>
+<td><code>nv21</code></td>
+<td>Y plane, then interleaved V, U</td>
+<td>Legacy Android Camera1 preview default</td>
+</tr>
+<tr>
+<td>P010</td>
+<td><code>p010le</code></td>
+<td>Like NV12, 10 bits stored in the high bits of 16-bit words</td>
+<td>10-bit HDR decode/capture</td>
+</tr>
+<tr>
+<td>YUV_420_888</td>
+<td>—</td>
+<td>Android's <em>flexible</em> descriptor: three planes with arbitrary row and pixel strides</td>
+<td>Camera2, CameraX <code>ImageAnalysis</code>, <code>MediaCodec.getOutputImage()</code></td>
+</tr>
+</tbody>
+</table>
+<figure id="fig-2-7"><img src="../figures/w02_layouts.svg" alt="Byte order of a tiny 8×4 frame in four common layouts." loading="lazy"><figcaption><b>Figure 2.7</b> — Byte order of a tiny 8×4 frame in four common layouts.</figcaption></figure>
+<div class="admonition example">
+<p class="admonition-title">Worked example — I420 plane offsets</p>
+<p>For a W × H frame (W, H even), I420 stores: Y at offset 0 (size W·H), U at offset W·H (size W·H/4), V at offset 5·W·H/4 (size W·H/4); total 3·W·H/2. For 1920 × 1080: Y = 2 073 600 bytes, U at 2 073 600, V at 2 592 000, total <strong>3 110 400</strong> bytes. For odd dimensions, chroma planes are ⌈W/2⌉ × ⌈H/2⌉.</p>
+</div>
+<h3 id="62-stride-pixel-stride-and-slice-height">6.2 Stride, pixel stride and slice height</h3>
+<p>Hardware rarely stores rows back-to-back. For DMA, caches and GPU tiling, each row may be padded to a multiple of 16, 64, 128 or more bytes. The distance in bytes between the start of one row and the next is the <strong>stride</strong> (Android: <code>rowStride</code>; iOS: <code>bytesPerRow</code>; FFmpeg: <code>linesize</code>). Similarly, decoders often pad the <em>height</em>: a 1080-line frame is commonly allocated as 1088 lines (a multiple of 16), signalled by <code>MediaFormat.KEY_SLICE_HEIGHT</code>.</p>
+<figure id="fig-2-8"><img src="../figures/w02_stride.svg" alt="Stride ≥ width. Always step between rows by the stride, never by the width." loading="lazy"><figcaption><b>Figure 2.8</b> — Stride ≥ width. Always step between rows by the stride, never by the width.</figcaption></figure>
+<p>Android's <code>Image.Plane</code> adds a <strong>pixel stride</strong>: the distance between adjacent pixels of the same plane. For planar (I420-like) chroma it is 1; for semi-planar (NV12/NV21-like) chroma it is 2, because U and V are interleaved. <code>YUV_420_888</code> guarantees that the Y plane has pixel stride 1 and that U and V share the same row stride and pixel stride — but nothing else. Code that assumes "pixel stride 2 means NV21" works on many phones and breaks on others.</p>
+<figure id="fig-2-9"><img src="../figures/w02_stride_bug.svg" alt="What happens when you ignore stride: every row starts a little too early and the image shears diagonally." loading="lazy"><figcaption><b>Figure 2.9</b> — What happens when you ignore stride: every row starts a little too early and the image shears diagonally.</figcaption></figure>
+<p>A correct, stride-aware conversion from <code>YUV_420_888</code> to NV21 (useful for libraries that only accept NV21):</p>
+<div class="highlight"><pre><span></span><code><span class="k">import</span><span class="w"> </span><span class="nn">android.graphics.ImageFormat</span>
+<span class="k">import</span><span class="w"> </span><span class="nn">android.media.Image</span>
+
+<span class="cm">/** Copies a YUV_420_888 Image into a tightly packed NV21 byte array, honouring strides. */</span>
+<span class="kd">fun</span><span class="w"> </span><span class="n">Image</span><span class="p">.</span><span class="nf">toNv21</span><span class="p">():</span><span class="w"> </span><span class="n">ByteArray</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="n">require</span><span class="p">(</span><span class="n">format</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="n">ImageFormat</span><span class="p">.</span><span class="na">YUV_420_888</span><span class="p">)</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="s">"Unsupported format </span><span class="si">$</span><span class="n">format</span><span class="s">"</span><span class="w"> </span><span class="p">}</span>
+<span class="w">    </span><span class="kd">val</span><span class="w"> </span><span class="nv">w</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">width</span>
+<span class="w">    </span><span class="kd">val</span><span class="w"> </span><span class="nv">h</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">height</span>
+<span class="w">    </span><span class="kd">val</span><span class="w"> </span><span class="nv">out</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">ByteArray</span><span class="p">(</span><span class="n">w</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="n">h</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="m">2</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="p">(</span><span class="n">w</span><span class="w"> </span><span class="o">/</span><span class="w"> </span><span class="m">2</span><span class="p">)</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="p">(</span><span class="n">h</span><span class="w"> </span><span class="o">/</span><span class="w"> </span><span class="m">2</span><span class="p">))</span>
+<span class="w">    </span><span class="kd">val</span><span class="w"> </span><span class="p">(</span><span class="nv">yPlane</span><span class="p">,</span><span class="w"> </span><span class="nv">uPlane</span><span class="p">,</span><span class="w"> </span><span class="nv">vPlane</span><span class="p">)</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">planes</span>
+
+<span class="w">    </span><span class="c1">// Y: pixel stride is guaranteed to be 1, but row stride may exceed the width.</span>
+<span class="w">    </span><span class="kd">val</span><span class="w"> </span><span class="nv">yBuf</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">yPlane</span><span class="p">.</span><span class="na">buffer</span>
+<span class="w">    </span><span class="kd">var</span><span class="w"> </span><span class="nv">pos</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="m">0</span>
+<span class="w">    </span><span class="k">for</span><span class="w"> </span><span class="p">(</span><span class="n">row</span><span class="w"> </span><span class="k">in</span><span class="w"> </span><span class="m">0</span><span class="w"> </span><span class="n">until</span><span class="w"> </span><span class="n">h</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="n">yBuf</span><span class="p">.</span><span class="na">position</span><span class="p">(</span><span class="n">row</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="n">yPlane</span><span class="p">.</span><span class="na">rowStride</span><span class="p">)</span>
+<span class="w">        </span><span class="n">yBuf</span><span class="p">.</span><span class="na">get</span><span class="p">(</span><span class="k">out</span><span class="p">,</span><span class="w"> </span><span class="n">pos</span><span class="p">,</span><span class="w"> </span><span class="n">w</span><span class="p">)</span>
+<span class="w">        </span><span class="n">pos</span><span class="w"> </span><span class="o">+=</span><span class="w"> </span><span class="n">w</span>
+<span class="w">    </span><span class="p">}</span>
+
+<span class="w">    </span><span class="c1">// Chroma: U and V share rowStride and pixelStride (guaranteed), which may be 1 or 2 (or more).</span>
+<span class="w">    </span><span class="kd">val</span><span class="w"> </span><span class="nv">uBuf</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">uPlane</span><span class="p">.</span><span class="na">buffer</span>
+<span class="w">    </span><span class="kd">val</span><span class="w"> </span><span class="nv">vBuf</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">vPlane</span><span class="p">.</span><span class="na">buffer</span>
+<span class="w">    </span><span class="kd">val</span><span class="w"> </span><span class="nv">cRowStride</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">uPlane</span><span class="p">.</span><span class="na">rowStride</span>
+<span class="w">    </span><span class="kd">val</span><span class="w"> </span><span class="nv">cPixStride</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">uPlane</span><span class="p">.</span><span class="na">pixelStride</span>
+<span class="w">    </span><span class="k">for</span><span class="w"> </span><span class="p">(</span><span class="n">row</span><span class="w"> </span><span class="k">in</span><span class="w"> </span><span class="m">0</span><span class="w"> </span><span class="n">until</span><span class="w"> </span><span class="n">h</span><span class="w"> </span><span class="o">/</span><span class="w"> </span><span class="m">2</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="k">for</span><span class="w"> </span><span class="p">(</span><span class="n">col</span><span class="w"> </span><span class="k">in</span><span class="w"> </span><span class="m">0</span><span class="w"> </span><span class="n">until</span><span class="w"> </span><span class="n">w</span><span class="w"> </span><span class="o">/</span><span class="w"> </span><span class="m">2</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">            </span><span class="kd">val</span><span class="w"> </span><span class="nv">i</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">row</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="n">cRowStride</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="n">col</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="n">cPixStride</span>
+<span class="w">            </span><span class="k">out</span><span class="o">[</span><span class="n">pos</span><span class="o">++]</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">vBuf</span><span class="p">.</span><span class="na">get</span><span class="p">(</span><span class="n">i</span><span class="p">)</span><span class="w">   </span><span class="c1">// NV21 = V first</span>
+<span class="w">            </span><span class="k">out</span><span class="o">[</span><span class="n">pos</span><span class="o">++]</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">uBuf</span><span class="p">.</span><span class="na">get</span><span class="p">(</span><span class="n">i</span><span class="p">)</span>
+<span class="w">        </span><span class="p">}</span>
+<span class="w">    </span><span class="p">}</span>
+<span class="w">    </span><span class="k">return</span><span class="w"> </span><span class="k">out</span>
+<span class="p">}</span>
+</code></pre></div>
+<p>This per-pixel loop is clear but slow for large frames; in production use <code>libyuv</code> (which ships optimised converters such as <code>Android420ToI420</code>), a GPU shader, or CameraX's built-in RGBA output (<code>ImageAnalysis.Builder().setOutputImageFormat(ImageAnalysis.OUTPUT_IMAGE_FORMAT_RGBA_8888)</code>).</p>
+<p><strong>On iOS</strong>, camera and decoder frames arrive as <code>CVPixelBuffer</code>s, typically <code>kCVPixelFormatType_420YpCbCr8BiPlanarVideoRange</code> (<code>'420v'</code>, NV12 limited range), <code>...FullRange</code> (<code>'420f'</code>), 10-bit <code>kCVPixelFormatType_420YpCbCr10BiPlanarVideoRange</code> (<code>'x420'</code>), or <code>kCVPixelFormatType_32BGRA</code>. Lock the buffer, then use <code>CVPixelBufferGetBaseAddressOfPlane</code> and <code>CVPixelBufferGetBytesPerRowOfPlane</code> — the same stride discipline applies.</p>
+<h2 id="7-image-file-formats">7. Image file formats</h2>
+<h3 id="71-how-jpeg-works-a-preview-of-next-months-compression">7.1 How JPEG works (a preview of next month's compression)</h3>
+<ol>
+<li>Convert RGB to Y′CbCr (BT.601 matrix, full range, per JFIF).</li>
+<li>Subsample chroma (usually 4:2:0 in phone cameras; 4:4:4 at high quality settings in some encoders).</li>
+<li>Split each plane into 8×8 blocks and apply the <strong>DCT</strong>, turning pixels into frequency coefficients.</li>
+<li><strong>Quantise</strong> each coefficient by a quantisation table (the quality setting scales the table) — the lossy step.</li>
+<li>Zig-zag scan, run-length encode the many zeros, and Huffman-code the result.</li>
+</ol>
+<p>You will study steps 3–5 in detail in Week 4. Two practical JPEG facts: <strong>EXIF metadata</strong> carries capture info and the <strong>Orientation</strong> tag (phones usually store sensor-orientation pixels and set the tag rather than rotating the pixels), and baseline JPEG is <strong>8-bit only</strong>.</p>
+<h3 id="72-the-format-landscape">7.2 The format landscape</h3>
+<table>
+<thead>
+<tr>
+<th>Format</th>
+<th>Compression</th>
+<th>Bit depth / alpha</th>
+<th>Strengths</th>
+<th>Mobile support notes</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>JPEG</td>
+<td>Lossy DCT</td>
+<td>8-bit, no alpha</td>
+<td>Universal</td>
+<td>Everywhere; <code>Bitmap.CompressFormat.JPEG</code></td>
+</tr>
+<tr>
+<td>PNG</td>
+<td>Lossless (prediction filters + DEFLATE)</td>
+<td>8/16-bit, alpha</td>
+<td>Exact pixels, UI assets, screenshots</td>
+<td>Everywhere</td>
+</tr>
+<tr>
+<td>WebP</td>
+<td>Lossy (VP8 intra) or lossless</td>
+<td>8-bit, alpha</td>
+<td>Smaller than JPEG/PNG for web/app assets</td>
+<td>Android natively; <code>CompressFormat.WEBP_LOSSY/LOSSLESS</code> (API 30+); iOS 14+ decodes</td>
+</tr>
+<tr>
+<td>HEIF / HEIC</td>
+<td>HEVC intra-coded images in an ISO BMFF container</td>
+<td>8/10-bit, alpha, depth, bursts</td>
+<td>~half JPEG size at similar quality</td>
+<td>iPhone default since iOS 11 (tiled as a grid of 512×512 HEVC images); Android 9+ decodes (<code>ImageDecoder</code>), <code>HeifWriter</code> in AndroidX to encode</td>
+</tr>
+<tr>
+<td>AVIF</td>
+<td>AV1 intra in HEIF container</td>
+<td>8/10/12-bit, alpha, HDR</td>
+<td>Excellent compression, royalty-free</td>
+<td>Android 12+ decodes; iOS 16+ decodes</td>
+</tr>
+<tr>
+<td>DNG (RAW)</td>
+<td>Usually lossless</td>
+<td>10–16-bit Bayer or linear</td>
+<td>Editing latitude</td>
+<td>Camera2 <code>ImageFormat.RAW_SENSOR</code> + <code>DngCreator</code>; Apple ProRAW</td>
+</tr>
+<tr>
+<td>Ultra HDR JPEG</td>
+<td>JPEG + embedded gain map</td>
+<td>8-bit base + gain map</td>
+<td>SDR-compatible HDR photos</td>
+<td>Android 14+ capture and display (Android "Ultra HDR image format" specification)</td>
+</tr>
+</tbody>
+</table>
+<div class="admonition note">
+<p class="admonition-title">Decoding APIs on Android</p>
+<p>Prefer <code>ImageDecoder</code> (API 28+): it handles JPEG, PNG, WebP (including animated), GIF, HEIF (API 28+) and AVIF (Android 12+), applies EXIF orientation, supports target-size decoding and returns hardware bitmaps by default. <code>BitmapFactory</code> remains for older APIs. Check <code>Bitmap.getColorSpace()</code> to see whether a decoded image is sRGB or Display P3.</p>
+</div>
+<h2 id="8-hands-on-exercises">8. Hands-on exercises</h2>
+<p>The expected outputs were produced with FFmpeg 7.1. Use a real 12 MP phone photo where indicated; synthetic numbers are provided where they are deterministic.</p>
+<h3 id="exercise-a-inspect-a-phone-photo">Exercise A — Inspect a phone photo</h3>
+<p>Copy a photo from your phone (Android: <code>adb pull /sdcard/DCIM/Camera/&lt;name&gt;.jpg</code>; iPhone: AirDrop, or export as "Most Compatible" for JPEG and as-is for HEIC).</p>
+<div class="highlight"><pre><span></span><code>ffprobe<span class="w"> </span>-v<span class="w"> </span>error<span class="w"> </span>-show_entries<span class="w"> </span><span class="nv">stream</span><span class="o">=</span>codec_name,width,height,pix_fmt,color_range,color_space<span class="w"> </span><span class="se">\</span>
+<span class="w">        </span>-of<span class="w"> </span><span class="nv">default</span><span class="o">=</span><span class="nv">noprint_wrappers</span><span class="o">=</span><span class="m">1</span><span class="w"> </span>photo.jpg
+exiftool<span class="w"> </span>-Orientation<span class="w"> </span>-ColorSpace<span class="w"> </span>-ProfileDescription<span class="w"> </span>-ImageSize<span class="w"> </span>photo.jpg<span class="w">     </span><span class="c1"># if installed</span>
+identify<span class="w"> </span>-verbose<span class="w"> </span>photo.jpg<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-iE<span class="w"> </span><span class="s2">"geometry|colorspace|sampling-factor|quality"</span><span class="w">   </span><span class="c1"># ImageMagick</span>
+</code></pre></div>
+<p><strong>Expected (typical phone JPEG):</strong> <code>codec_name=mjpeg</code>, <code>pix_fmt=yuvj420p</code> (the <em>j</em> means full "JPEG" range; 4:2:0 subsampling), <code>color_range=pc</code>, <code>color_space=bt470bg</code> (FFmpeg's name for the BT.601 matrix). ImageMagick shows <code>sampling-factor: 2x2,1x1,1x1</code> for 4:2:0. Compute the decoded size by hand: for 4032 × 3024, <strong>36 578 304</strong> bytes as RGB24, and compare with the file size (typically 2–5 MB) to get the compression ratio.</p>
+<p>If you have a HEIC from an iPhone, <code>ffprobe</code> shows several HEVC streams (the tiles of the grid) — note the tile size.</p>
+<h3 id="exercise-b-ycbcr-by-hand-then-check">Exercise B — Y′CbCr by hand, then check</h3>
+<ol>
+<li>By hand, convert pure green (0, 1, 0) and pure blue (0, 0, 1) to 8-bit limited-range Y′CbCr with BT.709 and BT.601.</li>
+<li>Check with a short script (Python, Kotlin scratch file, or Cursor's terminal):</li>
+</ol>
+<div class="highlight"><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">ycbcr</span><span class="p">(</span><span class="n">r</span><span class="p">,</span> <span class="n">g</span><span class="p">,</span> <span class="n">b</span><span class="p">,</span> <span class="n">kr</span><span class="p">,</span> <span class="n">kb</span><span class="p">):</span>
+    <span class="n">y</span> <span class="o">=</span> <span class="n">kr</span><span class="o">*</span><span class="n">r</span> <span class="o">+</span> <span class="p">(</span><span class="mi">1</span><span class="o">-</span><span class="n">kr</span><span class="o">-</span><span class="n">kb</span><span class="p">)</span><span class="o">*</span><span class="n">g</span> <span class="o">+</span> <span class="n">kb</span><span class="o">*</span><span class="n">b</span>
+    <span class="n">cb</span> <span class="o">=</span> <span class="p">(</span><span class="n">b</span> <span class="o">-</span> <span class="n">y</span><span class="p">)</span> <span class="o">/</span> <span class="p">(</span><span class="mi">2</span><span class="o">*</span><span class="p">(</span><span class="mi">1</span><span class="o">-</span><span class="n">kb</span><span class="p">));</span> <span class="n">cr</span> <span class="o">=</span> <span class="p">(</span><span class="n">r</span> <span class="o">-</span> <span class="n">y</span><span class="p">)</span> <span class="o">/</span> <span class="p">(</span><span class="mi">2</span><span class="o">*</span><span class="p">(</span><span class="mi">1</span><span class="o">-</span><span class="n">kr</span><span class="p">))</span>
+    <span class="k">return</span> <span class="nb">round</span><span class="p">(</span><span class="mi">16</span> <span class="o">+</span> <span class="mi">219</span><span class="o">*</span><span class="n">y</span><span class="p">),</span> <span class="nb">round</span><span class="p">(</span><span class="mi">128</span> <span class="o">+</span> <span class="mi">224</span><span class="o">*</span><span class="n">cb</span><span class="p">),</span> <span class="nb">round</span><span class="p">(</span><span class="mi">128</span> <span class="o">+</span> <span class="mi">224</span><span class="o">*</span><span class="n">cr</span><span class="p">)</span>
+
+<span class="k">for</span> <span class="n">name</span><span class="p">,</span> <span class="n">rgb</span> <span class="ow">in</span> <span class="p">{</span><span class="s2">"red"</span><span class="p">:</span> <span class="p">(</span><span class="mi">1</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">),</span> <span class="s2">"green"</span><span class="p">:</span> <span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="mi">0</span><span class="p">),</span> <span class="s2">"blue"</span><span class="p">:</span> <span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">1</span><span class="p">)}</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+    <span class="nb">print</span><span class="p">(</span><span class="n">name</span><span class="p">,</span> <span class="s2">"709:"</span><span class="p">,</span> <span class="n">ycbcr</span><span class="p">(</span><span class="o">*</span><span class="n">rgb</span><span class="p">,</span> <span class="mf">0.2126</span><span class="p">,</span> <span class="mf">0.0722</span><span class="p">),</span> <span class="s2">"601:"</span><span class="p">,</span> <span class="n">ycbcr</span><span class="p">(</span><span class="o">*</span><span class="n">rgb</span><span class="p">,</span> <span class="mf">0.299</span><span class="p">,</span> <span class="mf">0.114</span><span class="p">))</span>
+</code></pre></div>
+<p><strong>Expected:</strong></p>
+<div class="highlight"><pre><span></span><code>red 709: (63, 102, 240) 601: (81, 90, 240)
+green 709: (173, 42, 26) 601: (145, 54, 34)
+blue 709: (32, 240, 118) 601: (41, 240, 110)
+</code></pre></div>
+<h3 id="exercise-c-raw-yuv-sizes-and-viewing-raw-buffers">Exercise C — Raw YUV sizes and viewing raw buffers</h3>
+<div class="highlight"><pre><span></span><code><span class="c1"># Convert a photo (or any image) to raw NV12 and raw RGB24 - no headers, just bytes</span>
+ffmpeg<span class="w"> </span>-i<span class="w"> </span>photo.jpg<span class="w"> </span>-pix_fmt<span class="w"> </span>nv12<span class="w">  </span>-f<span class="w"> </span>rawvideo<span class="w"> </span>photo.nv12
+ffmpeg<span class="w"> </span>-i<span class="w"> </span>photo.jpg<span class="w"> </span>-pix_fmt<span class="w"> </span>rgb24<span class="w"> </span>-f<span class="w"> </span>rawvideo<span class="w"> </span>photo.rgb
+ls<span class="w"> </span>-l<span class="w"> </span>photo.nv12<span class="w"> </span>photo.rgb
+
+<span class="c1"># Raw files have no header: you must tell the reader the format, size and layout</span>
+ffplay<span class="w"> </span>-f<span class="w"> </span>rawvideo<span class="w"> </span>-pixel_format<span class="w"> </span>nv12<span class="w"> </span>-video_size<span class="w"> </span>4032x3024<span class="w"> </span>photo.nv12
+</code></pre></div>
+<p><strong>Expected</strong> for a 4032 × 3024 image: <code>photo.nv12</code> is <strong>18 289 152</strong> bytes and <code>photo.rgb</code> is <strong>36 578 304</strong> bytes — exactly 1.5 and 3 bytes per pixel. Now view the NV12 file as <code>-pixel_format nv21</code> instead. The brightness is identical (same Y plane) but colours swap: reds turn bluish and blues reddish, because U and V are read in the wrong order. Write down this symptom — "right picture, wrong colours" almost always means a chroma-order (NV12/NV21) or matrix mix-up.</p>
+<h3 id="exercise-d-reproduce-the-stride-bug">Exercise D — Reproduce the stride bug</h3>
+<p>Read the NV12 buffer with the wrong width, as code that ignores stride would:</p>
+<div class="highlight"><pre><span></span><code>ffmpeg<span class="w"> </span>-f<span class="w"> </span>rawvideo<span class="w"> </span>-pix_fmt<span class="w"> </span>nv12<span class="w"> </span>-s<span class="w"> </span>4032x3024<span class="w"> </span>-i<span class="w"> </span>photo.nv12<span class="w"> </span>-frames:v<span class="w"> </span><span class="m">1</span><span class="w"> </span>right.png
+ffmpeg<span class="w"> </span>-f<span class="w"> </span>rawvideo<span class="w"> </span>-pix_fmt<span class="w"> </span>nv12<span class="w"> </span>-s<span class="w"> </span>4016x3024<span class="w"> </span>-i<span class="w"> </span>photo.nv12<span class="w"> </span>-frames:v<span class="w"> </span><span class="m">1</span><span class="w"> </span>wrong.png
+</code></pre></div>
+<p><strong>Expected:</strong> <code>right.png</code> is your photo. <code>wrong.png</code> is sheared diagonally — each row starts 16 bytes earlier than the last — with smeared, misaligned colours from the chroma plane. FFmpeg will also warn that the input contains leftover bytes ("Invalid buffer size, packet size … &lt; expected frame_size"), because the buffer is bigger than the size it was told to expect. This is exactly the picture you get on a device whose decoder output has <code>stride = 4096</code> when your code assumes <code>stride = width</code>.</p>
+<p><strong>On the phone:</strong> in a CameraX <code>ImageAnalysis</code> analyser, log <code>image.width</code>, <code>image.height</code>, and for each plane <code>rowStride</code> and <code>pixelStride</code>, at two or three resolutions. Note any resolution where <code>rowStride &gt; width</code> and whether chroma <code>pixelStride</code> is 1 or 2. Compare two phones from different SoC vendors if you can.</p>
+<h3 id="exercise-e-compare-image-formats">Exercise E — Compare image formats</h3>
+<p>Using the same source photo:</p>
+<div class="highlight"><pre><span></span><code>ffmpeg<span class="w"> </span>-i<span class="w"> </span>photo.jpg<span class="w"> </span>-pix_fmt<span class="w"> </span>yuvj444p<span class="w"> </span>-q:v<span class="w"> </span><span class="m">2</span><span class="w"> </span>q2_444.jpg
+ffmpeg<span class="w"> </span>-i<span class="w"> </span>photo.jpg<span class="w"> </span>-pix_fmt<span class="w"> </span>yuvj420p<span class="w"> </span>-q:v<span class="w"> </span><span class="m">2</span><span class="w"> </span>q2_420.jpg
+ffmpeg<span class="w"> </span>-i<span class="w"> </span>photo.jpg<span class="w"> </span>-c:v<span class="w"> </span>libwebp<span class="w"> </span>-quality<span class="w"> </span><span class="m">85</span><span class="w"> </span>photo.webp
+ffmpeg<span class="w"> </span>-i<span class="w"> </span>photo.jpg<span class="w"> </span>-c:v<span class="w"> </span>libaom-av1<span class="w"> </span>-still-picture<span class="w"> </span><span class="m">1</span><span class="w"> </span>-crf<span class="w"> </span><span class="m">30</span><span class="w"> </span>-cpu-used<span class="w"> </span><span class="m">8</span><span class="w"> </span>photo.avif<span class="w">   </span><span class="c1"># if your build has libaom</span>
+ffmpeg<span class="w"> </span>-i<span class="w"> </span>photo.jpg<span class="w"> </span>photo.png
+ls<span class="w"> </span>-l<span class="w"> </span>q2_444.jpg<span class="w"> </span>q2_420.jpg<span class="w"> </span>photo.webp<span class="w"> </span>photo.avif<span class="w"> </span>photo.png
+</code></pre></div>
+<p><strong>Expected pattern:</strong> PNG is the largest by far (lossless); 4:2:0 JPEG is roughly half the size of 4:4:4 JPEG at the same <code>-q:v</code>; WebP and AVIF are smaller still. (On a 4032 × 3024 synthetic test image I measured PNG 5.7 MB, JPEG 4:4:4 1.48 MB, JPEG 4:2:0 0.76 MB, WebP 0.44 MB; real photos will differ, but the ordering usually holds.) Zoom into fine coloured detail in each and decide which differences you can see. Note: when FFmpeg converts an RGB input to JPEG without <code>-pix_fmt</code>, it keeps 4:4:4; phone cameras normally write 4:2:0.</p>
+<h3 id="exercise-f-observe-range-in-video">Exercise F — Observe range in video</h3>
+<p>Using any short video clip (your phone's, or one generated with <code>ffmpeg -f lavfi -i testsrc2=duration=2 -pix_fmt yuv420p clip.mp4</code>):</p>
+<div class="highlight"><pre><span></span><code>ffprobe<span class="w"> </span>-v<span class="w"> </span>error<span class="w"> </span>-select_streams<span class="w"> </span>v:0<span class="w"> </span>-show_entries<span class="w"> </span><span class="nv">stream</span><span class="o">=</span>pix_fmt,color_range,color_space<span class="w"> </span>-of<span class="w"> </span><span class="nv">default</span><span class="o">=</span><span class="nv">nw</span><span class="o">=</span><span class="m">1</span><span class="w"> </span>clip.mp4
+ffmpeg<span class="w"> </span>-i<span class="w"> </span>clip.mp4<span class="w"> </span>-frames:v<span class="w"> </span><span class="m">1</span><span class="w"> </span>correct.png
+ffmpeg<span class="w"> </span>-i<span class="w"> </span>clip.mp4<span class="w"> </span>-vf<span class="w"> </span><span class="nv">setparams</span><span class="o">=</span><span class="nv">range</span><span class="o">=</span>pc<span class="w"> </span>-frames:v<span class="w"> </span><span class="m">1</span><span class="w"> </span>mislabelled.png<span class="w">    </span><span class="c1"># pretend it is full range</span>
+</code></pre></div>
+<p><strong>Expected:</strong> <code>mislabelled.png</code> looks flatter — blacks lifted, whites dimmed — because limited-range data is being interpreted as full range. This is the "washed-out video" bug you will see when a player or GPU shader ignores the range flag.</p>
+<h2 id="9-common-pitfalls">9. Common pitfalls</h2>
+<ul>
+<li><strong>Ignoring stride</strong> (row stride or slice height) — sheared images and crashes from reading past the end of a plane.</li>
+<li><strong>Assuming a fixed chroma layout</strong> from <code>YUV_420_888</code> (e.g. "pixel stride 2 means NV21").</li>
+<li><strong>Swapping U and V</strong> (NV12 vs NV21, I420 vs YV12) — right picture, wrong colours.</li>
+<li><strong>Mixing up range</strong> — washed-out or crushed video. Range must be carried from decoder to renderer.</li>
+<li><strong>Using the wrong matrix</strong> (BT.601 vs BT.709) — subtle hue shifts, especially in skin tones.</li>
+<li><strong>Doing image maths on gamma-encoded values</strong> — dark halos when scaling, wrong blends.</li>
+<li><strong>Stripping colour profiles</strong> — P3 photos look dull when treated as sRGB.</li>
+<li><strong>Decoding full-size bitmaps</strong> for thumbnails — out-of-memory errors.</li>
+<li><strong>Ignoring EXIF orientation</strong> — sideways photos in your app when the gallery shows them correctly.</li>
+<li><strong>Saving screenshots/UI as JPEG</strong> — chroma fringes around text and ringing; use PNG or lossless WebP.</li>
+</ul>
+<h2 id="10-self-test">10. Self-test</h2>
+<ol>
+<li>How many megapixels is 4032 × 3024? How much memory does it need as an <code>ARGB_8888</code> bitmap and as NV12?</li>
+<li>Why does a Bayer sensor have twice as many green photosites as red or blue?</li>
+<li>What three things define a colour space? Give the white point used by sRGB, P3 and BT.2020.</li>
+<li>Why are images stored gamma-encoded rather than linear? Why should resizing be done in linear light?</li>
+<li>Write the BT.709 Y′ equation. Why does green have the largest coefficient?</li>
+<li>Convert R′G′B′ = (1, 1, 1) (white) and (0, 0, 0) (black) to 8-bit limited-range Y′CbCr. Does the matrix matter for these two colours?</li>
+<li>What do "limited" and "full" range mean for 8-bit and 10-bit luma? What does a limited-as-full mismatch look like?</li>
+<li>Explain 4:2:0. How many bytes does a 1280 × 720 8-bit 4:2:0 frame need?</li>
+<li>What is the difference between NV12 and NV21, and between NV12 and I420? What is a stride?</li>
+<li>In Android's <code>YUV_420_888</code>, what is a pixel stride, and what values do you expect for planar and semi-planar chroma?</li>
+<li>A decoder outputs 1920 × 1080 NV12 with <code>stride = 2048</code> and <code>slice-height = 1088</code>. How many bytes is the buffer, and at what offset does the UV plane begin?</li>
+<li>Why do screenshots look worse as JPEG than as PNG, even at high quality?</li>
+<li>Which formats can hold 10-bit images: JPEG, PNG, HEIF, AVIF, WebP?</li>
+<li>Why does a 12 MP HEIC from an iPhone show up in <code>ffprobe</code> as many HEVC streams?</li>
+<li>A colleague says "the JPEG is only 3 MB, so decoding it is cheap on memory". What do you reply?</li>
+<li>Your preview looks right but colours are swapped (faces look bluish). What two causes would you check first?</li>
+</ol>
+<h2 id="11-further-reading">11. Further reading</h2>
+<ul>
+<li><strong>Charles Poynton, <em>Digital Video and HD: Algorithms and Interfaces</em></strong> (2nd ed., Morgan Kaufmann) — chapters on colour science, gamma, Y′CbCr and subsampling are the gold standard. Poynton's free "Gamma FAQ" and "Color FAQ" (poynton.ca) are excellent short introductions.</li>
+<li><strong>ITU-R Recommendations BT.601, BT.709 and BT.2020</strong> — the primary sources for matrices, primaries and quantisation ranges (free from itu.int).</li>
+<li><strong>IEC 61966-2-1</strong> — the sRGB standard (the transfer function and primaries are widely reproduced, e.g. in the W3C CSS Color specifications).</li>
+<li><strong>Android Developers:</strong> <code>Image</code>, <code>Image.Plane</code> and <code>ImageFormat.YUV_420_888</code> reference pages; the CameraX <code>ImageAnalysis</code> guide; <code>ImageDecoder</code> reference; "Enhance graphics with wide color content".</li>
+<li><strong>libyuv</strong> (chromium.googlesource.com/libyuv/libyuv) — the reference library for fast YUV conversions on mobile; its format documentation is a useful glossary of FOURCCs.</li>
+<li><strong>Apple Developer:</strong> Core Video <code>CVPixelBuffer</code> reference and the AVFoundation "Capturing photos in HEIF/HEVC" documentation and WWDC sessions on wide colour.</li>
+<li><strong>FFmpeg documentation:</strong> the <code>pix_fmt</code> list (<code>ffmpeg -pix_fmts</code>), <code>scale</code> and <code>setparams</code> filters, and the <code>zscale</code> filter for accurate colour-space conversion.</li>
+</ul>
+<section class="answer-key" id="answers"><h2 id="answer-key">Answer key</h2>
+<ol>
+<li>4032 × 3024 = 12 192 768 ≈ <strong>12.2 MP</strong>. <code>ARGB_8888</code>: × 4 = <strong>48 771 072 bytes ≈ 48.8 MB</strong>. NV12: × 1.5 = <strong>18 289 152 bytes ≈ 18.3 MB</strong>.</li>
+<li>The eye's luminance sensitivity peaks in green, and green contributes most to perceived brightness and detail; sampling green more densely gives better luma resolution.</li>
+<li>Primaries (xy of R, G, B), white point, and transfer function. All three use <strong>D65</strong> (x = 0.3127, y = 0.3290).</li>
+<li>Perception is roughly logarithmic, so a non-linear encoding spends codes where the eye can see differences and avoids banding in shadows with 8 bits. Physical light adds linearly, so averaging/filtering gamma-encoded values gives wrong (too dark) results; linearise, process, re-encode.</li>
+<li>Y′ = 0.2126 R′ + 0.7152 G′ + 0.0722 B′. Green dominates human luminance sensitivity (and the coefficients are derived from the primaries' luminances and the white point).</li>
+<li>White: Y′ = 1, Cb = Cr = 0 → <strong>(235, 128, 128)</strong>. Black: <strong>(16, 128, 128)</strong>. The matrix does not matter for neutrals (any grey has Cb = Cr = 0), which is why matrix errors show only in colours.</li>
+<li>Limited: 8-bit Y 16–235 (C 16–240), 10-bit Y 64–940 (C 64–960). Full: 0–255 / 0–1023. Limited interpreted as full: blacks look grey, whites dim, low contrast ("washed out").</li>
+<li>One Cb and one Cr per 2×2 block of pixels. 1280 × 720 × 1.5 = <strong>1 382 400 bytes</strong>.</li>
+<li>NV12 stores Y then interleaved UV; NV21 stores Y then interleaved VU. I420 stores Y, U and V as three separate planes; NV12 has two planes. Stride is the number of bytes between the starts of consecutive rows, which can exceed width × bytes per pixel because of padding.</li>
+<li>Pixel stride is the byte distance between adjacent samples of the same plane. Planar chroma (I420-like): <strong>1</strong>. Semi-planar (NV12/NV21-like): <strong>2</strong>. Code must use whatever the plane reports.</li>
+<li>Y plane: 2048 × 1088 = 2 228 224 bytes, so the UV plane begins at <strong>offset 2 228 224</strong>. UV plane: 2048 × 544 = 1 114 112 bytes. Total <strong>3 342 336 bytes</strong> (versus 3 110 400 if tightly packed). (Some decoders do not pad the last plane's final rows; always use the reported values.)</li>
+<li>JPEG's 4:2:0 subsampling smears colour edges, and DCT quantisation causes ringing around sharp text edges; PNG is lossless and keeps full chroma.</li>
+<li><strong>PNG</strong> (16-bit), <strong>HEIF</strong>, and <strong>AVIF</strong>. Baseline JPEG and WebP are 8-bit.</li>
+<li>iPhone HEIC images are stored as a <strong>grid of tiles</strong> (512 × 512 HEVC-coded images) plus a derived-image item that tells the decoder how to stitch them; <code>ffprobe</code> lists the tiles as streams.</li>
+<li>The decoded bitmap size depends on pixel count, not file size: 12.2 MP × 4 bytes ≈ 48.8 MB as <code>ARGB_8888</code>. Decode at display size.</li>
+<li>U/V order (NV12 vs NV21, or I420 vs YV12) and R/B channel order (RGBA vs BGRA) in the conversion or texture upload. (A wrong matrix causes smaller hue shifts, not a swap.)</li>
+</ol></section>
+    <div class="pager"><a href="week-01.html">← Week 1: Digital Audio Basics</a><a href="week-03.html">Week 3: Digital Video Basics →</a></div>
+  </article>
+</div>
+<footer class="site">Prepared for Arunkumar Maniam Rajan · Built 2026-10-19 ·
+Progress checkmarks are stored only in this browser (localStorage).</footer></body></html>
